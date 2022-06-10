@@ -34,7 +34,7 @@ CREATE TABLE Ref.CircuitType
 (
 	ID INT IDENTITY(1,1) NOT NULL,
 	TypeRefID INT NOT NULL,
-	CircuitType varchar(30) NOT NULL	
+	CircuitType varchar(50) NOT NULL	
 )
 
 CREATE TABLE Ref.CircuitDirections
@@ -52,17 +52,13 @@ CREATE MAIN TABLES
 
 CREATE TABLE dbo.Drivers
 (
-	ID INT IDENTITY(1,1) NOT NULL,
 	DriverID INT NOT NULL,
-	DriverName nvarchar(50),	
+	Firstname varchar(50),	
+	Surname varchar(50),	
+	DriverName varchar(50),	
 	CountryID INT,
-	RaceEntries	INT,
-	RaceStarts INT,
-	PolePositions INT,
-	RaceWins INT,
-	Podiums INT,
-	FastestLaps INT,	
-	Points DECIMAL(6,2)
+	DriverURL varchar(1000)
+	
 );
 
 CREATE TABLE dbo.DriversStandings
@@ -181,4 +177,28 @@ DriverID INT NOT NULL,
 ConstructorID INT NOT NULL,
 SeasonID INT NOT NULL
 );
+
+CREATE TABLE dbo.GrandPrix
+(
+	ID INT IDENTITY(1,1),
+	GrandPrixID INT,
+	GrandPrix varchar(500)
+);
+
+CREATE TABLE CircuitsGrandPrix
+(
+	ID INT IDENTITY(1,1),
+	CircuitID INT,
+	GrandPrixID INT
+);
+
+CREATE TABLE SeasonsGrandPrix 
+(
+	ID INT IDENTITY(1,1),
+	CircuitID INT,
+	GrandPrixID INT,
+	SeasonsRefID INT
+);
+
+
 

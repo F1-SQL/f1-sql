@@ -1,91 +1,54 @@
-Adelaide Street Circuit,"Adelaide, Australia",Australian Grand Prix
-Ain-Diab Circuit,"Casablanca, Morocco",Moroccan Grand Prix
-Aintree Motor Racing Circuit,"Aintree, United Kingdom",British Grand Prix
-Autódromo do Estoril,"Estoril, Portugal",Portuguese Grand Prix
-Autodromo Enzo e Dino Ferrari,"Imola, Italy","Italian Grand Prix
-San Marino Grand Prix
-Emilia Romagna Grand Prix"
-Autódromo Hermanos Rodríguez,"Mexico City, Mexico","Mexican Grand Prix
-Mexico City Grand Prix"
-Algarve International Circuit,"Portimão, Portugal",Portuguese Grand Prix
-Autódromo Internacional do Rio de Janeiro,"Rio de Janeiro, Brazil",Brazilian Grand Prix
-Autodromo Internazionale del Mugello,"Scarperia e San Piero, Italy",Tuscan Grand Prix
-Autodromo José Carlos Pace,"São Paulo, Brazil","Brazilian Grand Prix
-São Paulo Grand Prix"
-Autódromo Juan y Oscar Gálvez,"Buenos Aires, Argentina",Argentine Grand Prix
-Autodromo Nazionale di Monza,"Monza, Italy",Italian Grand Prix
-AVUS,"Berlin, Germany",German Grand Prix
-Bahrain International Circuit,"Sakhir, Bahrain","Bahrain Grand Prix
-Sakhir Grand Prix"
-Baku City Circuit,"Baku, Azerbaijan","European Grand Prix
-Azerbaijan Grand Prix"
-Brands Hatch Circuit,"West Kingsdown, United Kingdom","British Grand Prix
-European Grand Prix"
-Buddh International Circuit,"Greater Noida, India",Indian Grand Prix
-Bugatti Au Mans,"Le Mans, France",French Grand Prix
-Caesars Palace Grand Prix Circuit,"Las Vegas, United States",Caesars Palace Grand Prix
-Charade Circuit,"Saint-Genès-Champanelle, France",French Grand Prix
-Circuit Bremgarten,"Bern, Switzerland",Swiss Grand Prix
-Circuit de Barcelona-Catalunya,"Montmeló, Spain",Spanish Grand Prix
-Circuit de Monaco,"Monte Carlo, Monaco",Monaco Grand Prix
-Circuit de Nevers Magny-Cours,"Magny-Cours, France",French Grand Prix
-Circuit de Pedralbes,"Barcelona, Spain",Spanish Grand Prix
-Circuit de Reims-Gueux,"Gueux, France",French Grand Prix
-Circuit de Spa-Francorchamps,"Spa, Belgium",Belgian Grand Prix
-Circuit Dijon-Prenois,"Prenois, France","French Grand Prix
-Swiss Grand Prix"
-Circuit Gilles-Villeneuve,"Montreal, Canada",Canadian Grand Prix
-Circuit Mont-Tremblant,"Mont-Tremblant, Canada",Canadian Grand Prix
-Circuit of the Americas,"Austin, United States",United States Grand Prix
-Circuit Paul Ricard,"Le Castellet, France",French Grand Prix
-Circuit Zandvoort,"Zandvoort, Netherlands",Dutch Grand Prix
-Circuit Zolder,"Heusden-Zolder, Belgium",Belgian Grand Prix
-Circuito da Boavista,"Porto, Portugal",Portuguese Grand Prix
-Circuito de Monsanto,"Lisbon, Portugal",Portuguese Grand Prix
-Circuito Permanente de Jerez,"Jerez de la Frontera, Spain","Spanish Grand Prix
-European Grand Prix"
-Circuito Permanente del Jarama,"San Sebastián de los Reyes, Spain",Spanish Grand Prix
-Complexe Européen de Nivelles-Baulers,"Nivelles, Belgium",Belgian Grand Prix
-Dallas Fair Park,"Dallas, United States",Dallas Grand Prix
-Detroit Street Circuit,"Detroit, United States",Detroit Grand Prix
-Donington Park,"Castle Donington, United Kingdom",European Grand Prix
-Fuji Speedway,"Oyama, Japan",Japanese Grand Prix
-Hockenheimring,"Hockenheim, Germany",German Grand Prix
-Hungaroring,"Mogyoród, Hungary",Hungarian Grand Prix
-Indianapolis Motor Speedway,"Speedway, United States","Indianapolis 500[b]
-United States Grand Prix"
-Intercity Istanbul Park,"Istanbul, Turkey",Turkish Grand Prix
-Jeddah Corniche Circuit,"Jeddah, Saudi Arabia",Saudi Arabian Grand Prix
-Korea International Circuit,"Yeongam, South Korea",Korean Grand Prix
-Kyalami Grand Prix Circuit,"Midrand, South Africa",South African Grand Prix
-Long Beach Street Circuit,"Long Beach, United States",United States Grand Prix West
-Losail International Circuit,"Lusail, Qatar",Qatar Grand Prix
-Marina Bay Street Circuit,"Marina Bay, Singapore",Singapore Grand Prix
-Melbourne Grand Prix Circuit,"Melbourne, Australia",Australian Grand Prix
-Miami International Autodrome,"Miami Gardens, United States",Miami Grand Prix
-Montjuïc circuit,"Barcelona, Spain",Spanish Grand Prix
-Mosport International Raceway,"Bowmanville, Canada",Canadian Grand Prix
-Nürburgring,"Nürburg, Germany","German Grand Prix
-European Grand Prix
-Luxembourg Grand Prix
-Eifel Grand Prix"
-Pescara Circuit,"Pescara, Italy",Pescara Grand Prix
-Phoenix Street Circuit,"Phoenix, United States",United States Grand Prix
-Prince George Circuit,"East London, South Africa",South African Grand Prix
-Red Bull Ring,"Spielberg, Austria","Austrian Grand Prix
-Styrian Grand Prix"
-Riverside International Raceway,"Moreno Valley, United States",United States Grand Prix
-Rouen-Les-Essarts,"Orival, France",French Grand Prix
-Scandinavian Raceway,"Anderstorp, Sweden",Swedish Grand Prix
-Sebring Raceway,"Sebring, United States",United States Grand Prix
-Sepang International Circuit,"Sepang, Malaysia",Malaysian Grand Prix
-Shanghai International Circuit,"Jiading, China",Chinese Grand Prix
-Silverstone Circuit,"Silverstone, United Kingdom","British Grand Prix
-70th Anniversary Grand Prix"
-Sochi Autodrom,"Sirius, Russia",Russian Grand Prix
-Suzuka International Racing Course,"Suzuka, Japan",Japanese Grand Prix
-TI Circuit Aida,"Mimasaka, Japan",Pacific Grand Prix
-Valencia Street Circuit,"Valencia, Spain",European Grand Prix
-Watkins Glen International,"Watkins Glen, United States",United States Grand Prix
-Yas Marina Circuit,"Abu Dhabi, United Arab Emirates",Abu Dhabi Grand Prix
-Zeltweg Airfield,"Zeltweg, Austria",Austrian Grand Prix
+name,GrandPrixID
+Australian Grand Prix,1
+Malaysian Grand Prix,2
+Chinese Grand Prix,3
+Bahrain Grand Prix,4
+Spanish Grand Prix,5
+Monaco Grand Prix,6
+Turkish Grand Prix,7
+British Grand Prix,8
+German Grand Prix,9
+Hungarian Grand Prix,10
+European Grand Prix,11
+Belgian Grand Prix,12
+Italian Grand Prix,13
+Singapore Grand Prix,14
+Japanese Grand Prix,15
+Brazilian Grand Prix,16
+Abu Dhabi Grand Prix,17
+Canadian Grand Prix,18
+French Grand Prix,19
+United States Grand Prix,20
+San Marino Grand Prix,21
+Austrian Grand Prix,22
+Argentine Grand Prix,23
+Luxembourg Grand Prix,24
+Portuguese Grand Prix,25
+Pacific Grand Prix,26
+South African Grand Prix,27
+Mexican Grand Prix,28
+Korean Grand Prix,29
+Detroit Grand Prix,30
+Dutch Grand Prix,31
+Dallas Grand Prix,32
+United States Grand Prix West,33
+Swiss Grand Prix,34
+Caesars Palace Grand Prix,35
+Swedish Grand Prix,36
+Indianapolis 500,37
+Moroccan Grand Prix,38
+Pescara Grand Prix,39
+Indian Grand Prix,40
+Russian Grand Prix,41
+Azerbaijan Grand Prix,42
+Styrian Grand Prix,43
+70th Anniversary Grand Prix,44
+Tuscan Grand Prix,45
+Eifel Grand Prix,46
+Emilia Romagna Grand Prix,47
+Sakhir Grand Prix,48
+Qatar Grand Prix,49
+Mexico City Grand Prix,50
+São Paulo Grand Prix,51
+Saudi Arabian Grand Prix,52
+Miami Grand Prix,53

@@ -212,6 +212,32 @@ SeasonID INT NOT NULL
 
 ALTER TABLE dbo.DriversTeams ADD CONSTRAINT PK_DriversTeams_DriverID PRIMARY KEY (DriverID);
 
+CREATE TABLE dbo.GrandPrix
+(
+	ID INT IDENTITY(1,1),
+	GrandPrixID INT,
+	GrandPrix varchar(500)
+);
+
+ALTER TABLE dbo.GrandPrix ADD CONSTRAINT PK_GrandPrix_GrandPrixID PRIMARY KEY (GrandPrixID);
+
+CREATE TABLE CircuitsGrandPrix
+(
+	ID INT IDENTITY(1,1),
+	CircuitID INT,
+	GrandPrixID INT
+);
+
+ALTER TABLE dbo.CircuitsGrandPrix ADD CONSTRAINT PK_CircuitsGrandPrix_ID PRIMARY KEY (ID);
+
+CREATE TABLE SeasonsGrandPrix 
+(
+	ID INT IDENTITY(1,1),
+	CircuitID INT,
+	GrandPrixID INT,
+	SeasonsRefID INT
+);
+
 /*
 ****************************
 CREATE THE RELATIONSHIPS 
@@ -253,3 +279,10 @@ ALTER TABLE dbo.ConstructorStandings ADD CONSTRAINT FK_ConstructorStandings_Seas
 
 ALTER TABLE dbo.DriversTeams ADD CONSTRAINT FK_DriversTeams_ConstructorID FOREIGN KEY (ConstructorID) REFERENCES [dbo].[Constructors] (ConstructorID);
 ALTER TABLE dbo.DriversTeams ADD CONSTRAINT FK_DriversTeams_SeasonID FOREIGN KEY (SeasonID) REFERENCES [Ref].[Seasons] (SeasonRefID);
+
+ALTER TABLE dbo.SeasonsGrandPrix ADD CONSTRAINT FK_SeasonsGrandPrix_CircuitID PRIMARY KEY (CircuitID);
+ALTER TABLE dbo.SeasonsGrandPrix ADD CONSTRAINT FK_SeasonsGrandPrix_GrandPrixID PRIMARY KEY (GrandPrixID);
+ALTER TABLE dbo.SeasonsGrandPrix ADD CONSTRAINT FK_SeasonsGrandPrix_SeasonsRefID PRIMARY KEY (SeasonsRefID);
+
+ALTER TABLE dbo.CircuitsGrandPrix ADD CONSTRAINT FK_CircuitsGrandPrix_CircuitID PRIMARY KEY (CircuitID);
+ALTER TABLE dbo.CircuitsGrandPrix ADD CONSTRAINT FK_CircuitsGrandPrix_GrandPrixID PRIMARY KEY (GrandPrixID);
