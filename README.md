@@ -236,4 +236,3 @@ This documentation is taken from [https://ergast.com/docs/f1db_user_guide.txt](h
 |----------|--------------|------|-----|---------|----------------|---------------------------------|
 | statusId | int          | NO   | PRI | NULL    | IDENTITY(1,1)  | Primary key                     |
 | status   | varchar(255) | NO   |     |         |                | Finishing status e.g. "Retired" |
->>>>>>> Stashed changes
