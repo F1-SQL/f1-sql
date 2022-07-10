@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-# RichInF1
-=======
 # RichInF1
 
 This project is based on the data provided under the creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License from https://ergast.com To view a copy of this license, visit: [http://creativecommons.org/licenses/by-nc-sa/3.0/](http://creativecommons.org/licenses/by-nc-sa/3.0/)
