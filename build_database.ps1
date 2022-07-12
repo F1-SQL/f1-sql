@@ -1,7 +1,20 @@
-$rootpath = "D:\workspace\richinf1"
-$sqlInstance = "localhost"
-$databaseName = "f1db"
-$testing = 1
+[CmdletBinding()]
+param (
+    [Parameter()]
+    [String]
+    $rootpath,
+    [string]
+    $sqlInstance,
+    [String]
+    $databaseName,
+    [int32]
+    $testing
+)
+
+# $rootpath = "D:\workspace\richinf1"
+# $sqlInstance = "localhost"
+# $databaseName = "f1db"
+# $testing = 0
 
 $svr = Connect-dbaInstance -SqlInstance $sqlInstance
 
