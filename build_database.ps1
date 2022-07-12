@@ -2,6 +2,9 @@ $rootpath = "D:\workspace\richinf1"
 $sqlInstance = "localhost"
 $databaseName = "f1db"
 
+#Rename the CSV Files to remove the underscores
+Get-ChildItem $rootpath -Filter *.csv | Rename-Item -NewName {$_.Name -replace '_'}
+
 $svr = Connect-dbaInstance -SqlInstance $sqlInstance
 
 $dbExists = Get-DbaDatabase -SqlInstance $svr -Database $databaseName | Select-Object -Property Name
