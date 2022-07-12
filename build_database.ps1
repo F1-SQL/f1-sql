@@ -1,24 +1,35 @@
 $rootpath = "D:\workspace\richinf1"
 $sqlInstance = "localhost"
 $databaseName = "f1db"
-
-$total = Get-ChildItem $rootpath -Filter *.csv | Measure-Object | ForEach-Object{$_.Count}  
-
-Write-Host "Found " $total ".csv files"
-
-#Rename the CSV Files to remove the underscores
-try {
-
-    Write-Host "Attempting to rename csv files to match table names" -ForegroundColor Yellow
-    Get-ChildItem $rootpath -Filter *.csv | Rename-Item -NewName {$_.Name -replace '_'}
-
-}
-catch
-{
-    Write-Host "Renaming files failed" -ForegroundColor Red
-}
+$testing = 1
 
 $svr = Connect-dbaInstance -SqlInstance $sqlInstance
+
+if($testing -eq 1)
+{
+    Write-Host "Running in test mode, attempting to drop " $databaseName " from " $sqlInstance -ForegroundColor Yellow
+    Remove-DbaDatabase -SqlInstance $svr -Database $databaseName -Confirm:$false
+}
+
+$files = Get-ChildItem $rootpath -Filter *.csv
+$total = $files | Measure-Object | ForEach-Object{$_.Count}  
+
+Write-Host "We found a total of " $total ".csv files" -ForegroundColor Yellow
+
+#Rename the CSV Files to remove the underscores
+foreach($file in $files)
+{
+    try {
+
+        Write-Host "Attempting to rename " $file.Name " to match table name" -ForegroundColor Yellow
+        Rename-Item $file.Name -NewName $file.Name.Replace("_","")
+        Write-Host "Renamed " $file.Name " sucessfully to match table name" -ForegroundColor Green
+
+    }
+    catch {
+        Write-Host "Renaming " $file.Name " failed" -ForegroundColor Red
+    }    
+}
 
 $dbExists = Get-DbaDatabase -SqlInstance $svr -Database $databaseName | Select-Object -Property Name
 
@@ -68,12 +79,16 @@ if($dbExists.Name.Length -gt 0)
 
 }
 
+Start-Sleep -Seconds 20
+
 $files = Get-ChildItem $rootpath -Filter *.csv
 
 foreach($file in $files)
 {
-    Write-Host "Attempting to import data into " $file.Name " from " $file -ForegroundColor Yellow
-    Import-Csv -Path $rootpath + '\' + $file -SqlInstance $svr -Database $databaseName -Table [System.IO.Path]::GetFileNameWithoutExtension($file) -Delimiter "," 
+    $fileWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($file)
+    Write-Host "Attempting to import data into " $fileWithoutExtension " from " $file -ForegroundColor Yellow
+    $filePath = $rootpath + "\" + $file.Name    
+    Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $fileWithoutExtension -Delimiter "," -NoProgress -KeepIdentity
 }
 
 if($null -eq $dbExists)
