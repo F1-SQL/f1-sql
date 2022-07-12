@@ -1,0 +1,11 @@
+version: "3.2"
+services:
+
+  sql-server-db:
+    container_name: richinf1
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - "1451:1433"
+    environment:
+      SA_PASSWORD: "SuperS3crets!"
+      ACCEPT_EULA: "Y"
