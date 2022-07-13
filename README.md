@@ -1,6 +1,12 @@
 # RichInF1
 
-This project is based on the data provided under the creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License from https://ergast.com To view a copy of this license, visit: [http://creativecommons.org/licenses/by-nc-sa/3.0/](http://creativecommons.org/licenses/by-nc-sa/3.0/)
+This project is based on the data provided under the creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License from https://ergast.com/mrd/ To view a copy of this license, visit: [http://creativecommons.org/licenses/by-nc-sa/3.0/](http://creativecommons.org/licenses/by-nc-sa/3.0/)
+
+## Last Updated
+
+The dataset was last updated by Ergast on the;
+
+**10/07/2022** - This includes data from the 2022 Austrian GP.
 
 ## Getting Started
 
@@ -19,13 +25,17 @@ The following parameters need to be set;
 
 * $rootpath - This is the source location of the downloaded or cloned repo.
 * $sqlInstance - The SQL Server Instance you would like the script executed against
-* $databaseName = - The database name you would like created
+* $databaseName - The database name you would like created
 
 Once all of the parameters are set, execute the script **Running the script will drop the database if it already exists**
 
 The script will output it's progress and any error's along the way...once complete, you should have a working copy of the Ergast formula one dataset in Microsoft SQL Server.
 
 ## Example Queries
+
+Example queries that you can run against the dataset are provided in the `example_queries` folder within the repo.
+
+If you would like to contribute to building a collection of queries for this dataset, please open a Pull Request.
 
 ## Database Relationship Diagram
 
