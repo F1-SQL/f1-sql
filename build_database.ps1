@@ -6,28 +6,26 @@ param (
     [string]
     $sqlInstance,
     [String]
-    $databaseName,
-    [int32]
-    $testing
+    $databaseName
 )
 
-# $rootpath = "D:\workspace\richinf1"
+# $rootpath = "D:\workspace\richinf1\source_files"
 # $sqlInstance = "localhost"
 # $databaseName = "f1db"
 # $testing = 0
 
+Write-Host "Atempting to open a connection to " $sqlInstance " ..." -ForegroundColor Yellow
 $svr = Connect-dbaInstance -SqlInstance $sqlInstance
 
-if($testing -eq 1)
-{
-    Write-Host "Running in test mode, attempting to drop " $databaseName " from " $sqlInstance -ForegroundColor Yellow
-    Remove-DbaDatabase -SqlInstance $svr -Database $databaseName -Confirm:$false
-}
+Write-Host "Running in test mode, attempting to drop " $databaseName " from " $sqlInstance -ForegroundColor Yellow
+Remove-DbaDatabase -SqlInstance $svr -Database $databaseName -Confirm:$false
 
+Write-Host "Getting all of the .csv files from " $rootpath -ForegroundColor Yellow
 $files = Get-ChildItem $rootpath -Filter *.csv
+
 $total = $files | Measure-Object | ForEach-Object{$_.Count}  
 
-Write-Host "We found a total of " $total ".csv files" -ForegroundColor Yellow
+Write-Host "A total of " $total ".csv files were found" -ForegroundColor Yellow
 
 #Rename the CSV Files to remove the underscores
 foreach($file in $files)
@@ -44,8 +42,10 @@ foreach($file in $files)
     }    
 }
 
+#Check if the database exists
 $dbExists = Get-DbaDatabase -SqlInstance $svr -Database $databaseName | Select-Object -Property Name
 
+#If the database doesn't exist and it shouldn't, as we dropped it at the top, create it. 
 if($null -eq $dbExists)
 {
     Write-Host "Database " $databaseName " doesn't exist attempting to create" -ForegroundColor Yellow
@@ -57,45 +57,13 @@ if($null -eq $dbExists)
 
 }
 
-if($dbExists.Name.Length -gt 0)
-{
-    Write-Host $databaseName " already exists, dropping keys and truncating tables" -ForegroundColor Yellow
-    $objects = @()
-    $objects += Get-DbaDbForeignKey -SqlInstance $svr -Database $databaseName
-    $objects += Get-DbaDbView -SqlInstance $svr -Database $databaseName -ExcludeSystemView
-
-    #https://jesspomfret.com/truncate-all-the-tables/
-
-    # Script out the create statements for objects
-    $createOptions = New-DbaScriptingOption
-    $createOptions.Permissions = $true
-    $createOptions.ScriptBatchTerminator = $true
-    $createOptions.AnsiFile = $true 
-    $objects | Export-DbaScript -FilePath ('{0}\CreateObjects.Sql' -f $rootpath) -ScriptingOptionsObject $createOptions
-
-    # Script out the drop statements for objects
-    $options = New-DbaScriptingOption
-    $options.ScriptDrops = $true
-    $objects | Export-DbaScript -FilePath ('{0}\DropObjects.Sql' -f $rootpath) -ScriptingOptionsObject $options
-
-    # Run the drop scripts
-    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\DropObjects.Sql' -f $rootpath)
-
-    # Truncate the tables
-    $svr.databases[$databaseName].Tables | ForEach-Object { $_.TruncateData() }
-    
-    # Run the create scripts
-    Invoke-DbaQuery -SqlInstance $svr -Database $database -File ('{0}\CreateObjects.Sql' -f $rootpath)
-
-    # Clear up the script files
-    Remove-Item ('{0}\DropObjects.Sql' -f $rootpath), ('{0}\CreateObjects.Sql' -f $rootpath)
-
-}
-
+#Pause the script for 20 seconds to make sure that the build database/table scripts has completed. 
 Start-Sleep -Seconds 20
 
+#Get all of the files again, do this now, as we renamed them earlier
 $files = Get-ChildItem $rootpath -Filter *.csv
 
+#Now we can attempt to import all of the CSV files 
 foreach($file in $files)
 {
     $fileWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($file)
@@ -104,6 +72,7 @@ foreach($file in $files)
     Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $fileWithoutExtension -Delimiter "," -NoProgress -KeepIdentity
 }
 
+#Once complete, add the keys to the tables
 if($null -eq $dbExists)
 {
     Write-Host "Creating keys" -ForegroundColor Yellow

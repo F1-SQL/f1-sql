@@ -4,6 +4,27 @@ This project is based on the data provided under the creative Commons Attributio
 
 ## Getting Started
 
+### Pre-Requisites
+
+* Your going to need DbaTools installed to be able to use the PowerShell script in this repo, to find out how to do that [see here](https://dbatools.io/download/)
+* PowerShell 6.1
+
+To get started clone the repository;
+
+`git clone https://github.com/RichInSQL/RichInF1.git`
+
+or download the latest release, once you have the repo cloned or the release downloaded, open PowerShell and edit the `build_database.ps1` file.
+
+The following parameters need to be set;
+
+* $rootpath - This is the source location of the downloaded or cloned repo.
+* $sqlInstance - The SQL Server Instance you would like the script executed against
+* $databaseName = - The database name you would like created
+
+Once all of the parameters are set, execute the script **Running the script will drop the database if it already exists**
+
+The script will output it's progress and any error's along the way...once complete, you should have a working copy of the Ergast formula one dataset in Microsoft SQL Server.
+
 ## Example Queries
 
 ## Database Relationship Diagram
