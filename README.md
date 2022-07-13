@@ -40,6 +40,7 @@ If you would like to contribute to building a collection of queries for this dat
 ## Database Relationship Diagram
 
 ![DatabaseDiagram](/images/ergast_db.png)
+*This image is provided by Ergast and is published here for continuity*
 
 ## Database Documentation
 
@@ -68,7 +69,7 @@ This documentation is taken from [https://ergast.com/docs/f1db_user_guide.txt](h
 | Dates and times are UTC                                          |
 | Strings use UTF-8 encoding                                       |
 | Primary keys are for internal use only                           |
-| Fields ending with "Ref" are unique identifiers for external use |
+| Fields ending with "Ref" are UNIQUEque identifiers for external use |
 | A grid position of '0' is used for starting from the pitlane     |
 | Labels used in the positionText fields:                          |
 |   "D" - disqualified                                             |
@@ -83,14 +84,14 @@ This documentation is taken from [https://ergast.com/docs/f1db_user_guide.txt](h
 | Field      | Type         | Null | Key | Default | Extra          | Description               |
 |------------|--------------|------|-----|---------|----------------|---------------------------|
 | circuitId  | int          | NO   | PRI | NULL    | IDENTITY(1,1)  | Primary key               |
-| circuitRef | varchar(255) | NO   |     |         |                | Unique circuit identifier |
+| circuitRef | varchar(255) | NO   |     |         |                | UNIQUEque circuit identifier |
 | name       | varchar(255) | NO   |     |         |                | Circuit name              |
 | location   | varchar(255) | YES  |     | NULL    |                | Location name             |
 | country    | varchar(255) | YES  |     | NULL    |                | Country name              |
 | lat        | float        | YES  |     | NULL    |                | Latitude                  |
 | lng        | float        | YES  |     | NULL    |                | Longitude                 |
 | alt        | int          | YES  |     | NULL    |                | Altitude (metres)         |
-| url        | varchar(255) | NO   | UNI |         |                | Circuit Wikipedia page    |
+| url        | varchar(255) | NO   | UNIQUE |         |                | Circuit Wikipedia page    |
 
 ## constructor_results table
 
@@ -119,8 +120,8 @@ This documentation is taken from [https://ergast.com/docs/f1db_user_guide.txt](h
 | Field          | Type         | Null | Key | Default | Extra          | Description                   |
 |----------------|--------------|------|-----|---------|----------------|-------------------------------|
 | constructorId  | int          | NO   | PRI | NULL    | IDENTITY(1,1)  | Primary key                   |
-| constructorRef | varchar(255) | NO   |     |         |                | Unique constructor identifier |
-| name           | varchar(255) | NO   | UNI |         |                | Constructor name              |
+| constructorRef | varchar(255) | NO   |     |         |                | UNIQUEque constructor identifier |
+| name           | varchar(255) | NO   | UNIQUE |         |                | Constructor name              |
 | nationality    | varchar(255) | YES  |     | NULL    |                | Constructor nationality       |
 | url            | varchar(255) | NO   |     |         |                | Constructor Wikipedia page    |
 
@@ -141,14 +142,14 @@ This documentation is taken from [https://ergast.com/docs/f1db_user_guide.txt](h
 | Field       | Type         | Null | Key | Default | Extra          | Description              |
 |-------------|--------------|------|-----|---------|----------------|--------------------------|
 | driverId    | int          | NO   | PRI | NULL    | IDENTITY(1,1)  | Primary key              |
-| driverRef   | varchar(255) | NO   |     |         |                | Unique driver identifier |
+| driverRef   | varchar(255) | NO   |     |         |                | UNIQUEque driver identifier |
 | number      | int          | YES  |     | NULL    |                | Permanent driver number  |
 | code        | varchar(3)   | YES  |     | NULL    |                | Driver code e.g. "ALO"   |
 | forename    | varchar(255) | NO   |     |         |                | Driver forename          |
 | surname     | varchar(255) | NO   |     |         |                | Driver surname           |
 | dob         | date         | YES  |     | NULL    |                | Driver date of birth     |
 | nationality | varchar(255) | YES  |     | NULL    |                | Driver nationality       |
-| url         | varchar(255) | NO   | UNI |         |                | Driver Wikipedia page    |
+| url         | varchar(255) | NO   | UNIQUE |         |                | Driver Wikipedia page    |
 
 ## lap_times table
 
@@ -198,7 +199,7 @@ This documentation is taken from [https://ergast.com/docs/f1db_user_guide.txt](h
 | name        | varchar(255) | NO   |     |            |                | Race name                          |
 | date        | date         | NO   |     | 0000-00-00 |                | Race date e.g. "1950-05-13"        |
 | time        | time         | YES  |     | NULL       |                | Race start time e.g."13:00:00"     |
-| url         | varchar(255) | YES  | UNI | NULL       |                | Race Wikipedia page                |
+| url         | varchar(255) | YES  | UNIQUE | NULL       |                | Race Wikipedia page                |
 | fp1_date    | date         | YES  |     | NULL       |                | FP1 date                           |
 | fp1_time    | time         | YES  |     | NULL       |                | FP1 start time                     |
 | fp2_date    | date         | YES  |     | NULL       |                | FP2 date                           |
@@ -259,7 +260,7 @@ This documentation is taken from [https://ergast.com/docs/f1db_user_guide.txt](h
 | Field | Type         | Null | Key | Default | Extra | Description           |
 |-------|--------------|------|-----|---------|-------|-----------------------|
 | year  | int          | NO   | PRI | 0       |       | Primary key e.g. 1950 |
-| url   | varchar(255) | NO   | UNI |         |       | Season Wikipedia page |
+| url   | varchar(255) | NO   | UNIQUE |         |       | Season Wikipedia page |
 
 ## status table
 
