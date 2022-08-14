@@ -189,7 +189,6 @@ CREATE TABLE sprintResults (
 
 ALTER TABLE sprintResults ADD CONSTRAINT PK_sprintResults_sprintResultId PRIMARY KEY (resultId)
 
-
 CREATE TABLE status (
   statusId INT  NOT NULL,
   status varchar(255) NOT NULL DEFAULT ''

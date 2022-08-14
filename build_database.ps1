@@ -50,7 +50,7 @@ if($null -eq $dbExists)
     Write-Host "Database" $databaseName" doesn't exist attempting to create" -ForegroundColor Yellow
     New-DbaDatabase -SqlInstance $svr -Name $databaseName
     Write-Host "Database" $databaseName" created" -ForegroundColor Green
-
+    
     Write-Host "Creating tables" -ForegroundColor Yellow
     Invoke-DbaQuery -SqlInstance $svr -File ('{0}\f1db_tables.sql' -f $rootpath)
 
@@ -60,6 +60,7 @@ if($null -eq $dbExists)
 Start-Sleep -Seconds 20
 
 #Get all of the files again, do this now, as we renamed them earlier
+
 $files = Get-ChildItem $csvRootPath -Filter *.csv
 
 #Now we can attempt to import all of the CSV files 
@@ -68,6 +69,7 @@ foreach($file in $files)
     $fileWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($file)
     Write-Host "Attempting to import data into" $fileWithoutExtension "from" $file -ForegroundColor Yellow
     $filePath = $csvRootPath + $file.Name    
+
     Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $fileWithoutExtension -Delimiter "," -NoProgress -KeepIdentity
 }
 
