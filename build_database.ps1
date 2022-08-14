@@ -1,44 +1,43 @@
-[CmdletBinding()]
-param (
-    [Parameter()]
-    [String]
-    $rootpath,
-    [string]
-    $sqlInstance,
-    [String]
-    $databaseName
-)
+$rootpath = $PSScriptRoot
+$csvRootPath = $PSScriptRoot + "\sourcefiles\"
+$sqlInstance = "localhost"
+$databaseName = "f1db"
 
-# $rootpath = "D:\workspace\richinf1\source_files"
-# $sqlInstance = "localhost"
-# $databaseName = "f1db"
-# $testing = 0
-
-Write-Host "Atempting to open a connection to " $sqlInstance " ..." -ForegroundColor Yellow
+Write-Host "Atempting to open a connection to" $sqlInstance" ..." -ForegroundColor Yellow
 $svr = Connect-dbaInstance -SqlInstance $sqlInstance
 
-Write-Host "Running in test mode, attempting to drop " $databaseName " from " $sqlInstance -ForegroundColor Yellow
+Write-Host "Attempting to drop" $databaseName" from" $sqlInstance -ForegroundColor Yellow
 Remove-DbaDatabase -SqlInstance $svr -Database $databaseName -Confirm:$false
 
-Write-Host "Getting all of the .csv files from " $rootpath -ForegroundColor Yellow
-$files = Get-ChildItem $rootpath -Filter *.csv
+Write-Host "Getting all of the .csv files from" $csvRootPath -ForegroundColor Yellow
+$files = Get-ChildItem $csvRootPath -Filter *.csv
 
 $total = $files | Measure-Object | ForEach-Object{$_.Count}  
 
-Write-Host "A total of " $total ".csv files were found" -ForegroundColor Yellow
+Write-Host "A total of" $total ".csv files were found" -ForegroundColor Yellow
 
 #Rename the CSV Files to remove the underscores
 foreach($file in $files)
 {
-    try {
+    try {       
 
-        Write-Host "Attempting to rename " $file.Name " to match table name" -ForegroundColor Yellow
-        Rename-Item $file.Name -NewName $file.Name.Replace("_","")
-        Write-Host "Renamed " $file.Name " sucessfully to match table name" -ForegroundColor Green
+        Write-Host "Attempting to rename" $path "to match table name" $file.Name.Replace("_","")  -ForegroundColor Yellow
+        Rename-Item $path -NewName $path.Replace("_","") 
+        Write-Host "Renamed" $file.Name "sucessfully to match table name" -ForegroundColor Green
 
     }
     catch {
-        Write-Host "Renaming " $file.Name " failed" -ForegroundColor Red
+        Write-Host "Renaming" $path "failed" -ForegroundColor Red
+    }
+    
+    try {
+        $path = $csvRootPath + $file.Name
+        Write-Host "Attempting to replace \N values with empty strings in" $path -ForegroundColor Yellow
+        $result = Get-Content $path
+        $result | ForEach-Object {$_-replace ('\\N')," "} | Set-Content $path
+    }
+    catch {
+        Write-Host "Replacing the \N values in" $path" failed" -ForegroundColor Red
     }    
 }
 
@@ -48,10 +47,10 @@ $dbExists = Get-DbaDatabase -SqlInstance $svr -Database $databaseName | Select-O
 #If the database doesn't exist and it shouldn't, as we dropped it at the top, create it. 
 if($null -eq $dbExists)
 {
-    Write-Host "Database " $databaseName " doesn't exist attempting to create" -ForegroundColor Yellow
+    Write-Host "Database" $databaseName" doesn't exist attempting to create" -ForegroundColor Yellow
     New-DbaDatabase -SqlInstance $svr -Name $databaseName
-    Write-Host "Database " $databaseName " created" -ForegroundColor Green
-
+    Write-Host "Database" $databaseName" created" -ForegroundColor Green
+    
     Write-Host "Creating tables" -ForegroundColor Yellow
     Invoke-DbaQuery -SqlInstance $svr -File ('{0}\f1db_tables.sql' -f $rootpath)
 
@@ -61,14 +60,16 @@ if($null -eq $dbExists)
 Start-Sleep -Seconds 20
 
 #Get all of the files again, do this now, as we renamed them earlier
-$files = Get-ChildItem $rootpath -Filter *.csv
+
+$files = Get-ChildItem $csvRootPath -Filter *.csv
 
 #Now we can attempt to import all of the CSV files 
 foreach($file in $files)
 {
     $fileWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($file)
-    Write-Host "Attempting to import data into " $fileWithoutExtension " from " $file -ForegroundColor Yellow
-    $filePath = $rootpath + "\" + $file.Name    
+    Write-Host "Attempting to import data into" $fileWithoutExtension "from" $file -ForegroundColor Yellow
+    $filePath = $csvRootPath + $file.Name    
+
     Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $fileWithoutExtension -Delimiter "," -NoProgress -KeepIdentity
 }
 

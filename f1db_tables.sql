@@ -44,7 +44,7 @@ CREATE TABLE constructors (
   constructorRef varchar(255) NOT NULL DEFAULT '',
   name varchar(255) NOT NULL DEFAULT '',
   nationality varchar(255) DEFAULT NULL,
-  url varchar(255) NOT NULL DEFAULT ''
+  url varchar(2048) NOT NULL DEFAULT ''
 );
 
 ALTER TABLE constructors ADD CONSTRAINT PK_constructors_constructorId PRIMARY KEY (constructorId)
@@ -71,7 +71,7 @@ CREATE TABLE drivers (
   surname varchar(255) NOT NULL DEFAULT '',
   dob date DEFAULT NULL,
   nationality varchar(255) DEFAULT NULL,
-  url varchar(255) NOT NULL DEFAULT ''
+  url varchar(2048) NOT NULL DEFAULT ''
 );
 
 ALTER TABLE drivers ADD CONSTRAINT PK_driverss_driverId PRIMARY KEY (driverId)
@@ -121,7 +121,7 @@ CREATE TABLE races (
   name varchar(255) NOT NULL DEFAULT '',
   date date NOT NULL DEFAULT '0000-00-00',
   time time DEFAULT NULL,
-  url varchar(255) DEFAULT NULL,
+  url varchar(2048) DEFAULT NULL,
   fp1_date date DEFAULT NULL,
   fp1_time time DEFAULT NULL,
   fp2_date date DEFAULT NULL,
@@ -162,14 +162,14 @@ ALTER TABLE results ADD CONSTRAINT PK_results_resultId PRIMARY KEY (resultId)
 
 CREATE TABLE seasons (
   year INT NOT NULL DEFAULT 0,
-  url varchar(255) NOT NULL DEFAULT ''
+  url varchar(2048) NOT NULL DEFAULT ''
 );
 
 ALTER TABLE seasons ADD CONSTRAINT PK_seasons_year PRIMARY KEY (year)
 
 
 CREATE TABLE sprintResults (
-  sprintResultId INT  NOT NULL,
+  resultId INT  NOT NULL,
   raceId INT NOT NULL DEFAULT 0,
   driverId INT NOT NULL DEFAULT 0,
   constructorId INT NOT NULL DEFAULT 0,
@@ -187,8 +187,7 @@ CREATE TABLE sprintResults (
   statusId INT NOT NULL DEFAULT 0
 );
 
-ALTER TABLE sprintResults ADD CONSTRAINT PK_sprintResults_sprintResultId PRIMARY KEY (sprintResultId)
-
+ALTER TABLE sprintResults ADD CONSTRAINT PK_sprintResults_sprintResultId PRIMARY KEY (resultId)
 
 CREATE TABLE status (
   statusId INT  NOT NULL,

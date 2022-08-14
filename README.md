@@ -1,16 +1,21 @@
-# RichInF1
+# Formula One Database
+The Formula One database is developed and maintained for education and demonstration purposes using open source Formula One Data. 
 
-This project is based on the data provided under the creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License from https://ergast.com/mrd/ To view a copy of this license, visit: [http://creativecommons.org/licenses/by-nc-sa/3.0/](http://creativecommons.org/licenses/by-nc-sa/3.0/)
+* Open Source
+* Free
+ ## Source Of Data
 
-## Last Updated
+Data used in this project was obtained from publicly available sources, no data included in this project was from subscription based services or services provided by Formula One exclusively to members. 
 
-The dataset was last updated by Ergast on the;
+* [Circuits](https://en.wikipedia.org/wiki/List_of_Formula_One_circuits)
+* [Constructors](https://en.wikipedia.org/wiki/List_of_Formula_One_constructors)
+* [Drivers](https://en.wikipedia.org/wiki/List_of_Formula_One_drivers)
 
-**10/07/2022** - This includes data from the 2022 Austrian GP.
+**01/08/2022** - This includes data from the 2022 Hungarian GP.
 
-## Getting Started
+The Import data was manipulated manually from multiple sources into an Excel Workbook to create a relational dataset, the import data is provided within this repo. 
 
-### Pre-Requisites
+If any data is missing or incorrect please submit an issue and it can be updated or feel free to submit a pull request.
 
 * Your going to need DbaTools installed to be able to use the PowerShell script in this repo, to find out how to do that [see here](https://dbatools.io/download/)
 * PowerShell 6.1
@@ -23,11 +28,10 @@ or download the latest release, once you have the repo cloned or the release dow
 
 The following parameters need to be set;
 
-* $rootpath - This is the source location of the downloaded or cloned repo.
 * $sqlInstance - The SQL Server Instance you would like the script executed against
 * $databaseName - The database name you would like created
 
-Once all of the parameters are set, execute the script **Running the script will drop the database if it already exists**
+Once all of the parameters are set, execute the script by using `.\build_database.ps1` **Running the script will drop the database if it already exists**
 
 The script will output it's progress and any error's along the way...once complete, you should have a working copy of the Ergast formula one dataset in Microsoft SQL Server.
 
