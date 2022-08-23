@@ -33,3 +33,8 @@ FROM
 	INNER JOIN [dbo].[status] [status] ON results.statusId = status.statusId
 
 	INNER JOIN [dbo].[seasons] seasons ON races.year = seasons.year
+
+ORDER BY 
+	seasons.year DESC,
+	races.date,
+	[positionOrder] ASC
