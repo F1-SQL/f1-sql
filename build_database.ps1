@@ -2,6 +2,7 @@ $rootpath = $PSScriptRoot
 $csvRootPath = $PSScriptRoot + "\sourcefiles\"
 $sqlInstance = "localhost"
 $databaseName = "f1db"
+$replacementChar = "_"
 
 Write-Host "Atempting to open a connection to" $sqlInstance" ..." -ForegroundColor Yellow
 $svr = Connect-dbaInstance -SqlInstance $sqlInstance
@@ -10,9 +11,12 @@ Write-Host "Attempting to drop" $databaseName" from" $sqlInstance -ForegroundCol
 Remove-DbaDatabase -SqlInstance $svr -Database $databaseName -Confirm:$false
 
 Write-Host "Getting all of the .csv files from" $csvRootPath -ForegroundColor Yellow
-$files = Get-ChildItem $csvRootPath -Filter *.csv
 
-$total = $files | Measure-Object | ForEach-Object{$_.Count}  
+$allFiles = Get-ChildItem $csvRootPath -Filter *.csv
+
+$files = Get-ChildItem $csvRootPath -Filter *.csv | Where-Object -FilterScript {$_.Name -match $replacementChar}
+
+$total = $allFiles | Measure-Object | ForEach-Object{$_.Count}  
 
 Write-Host "A total of" $total ".csv files were found" -ForegroundColor Yellow
 
@@ -21,24 +25,31 @@ foreach($file in $files)
 {
     try {       
 
-        Write-Host "Attempting to rename" $path "to match table name" $file.Name.Replace("_","")  -ForegroundColor Yellow
-        Rename-Item $path -NewName $path.Replace("_","") 
+        Write-Host "Attempting to rename" $file "to match table name" $file.Name.Replace("_","")  -ForegroundColor Yellow
+        Rename-Item $path -NewName $path.Replace("_","") -Force
         Write-Host "Renamed" $file.Name "sucessfully to match table name" -ForegroundColor Green
 
     }
     catch {
-        Write-Host "Renaming" $path "failed" -ForegroundColor Red
+        Write-Host "Renaming"$path"failed The Error was: $_" -ForegroundColor Red
     }
-    
+}
+
+$total = $files | Measure-Object | ForEach-Object{$_.Count}  
+
+Write-Host "A total of"$total" .csv files were found that need renaming." -ForegroundColor Yellow
+
+foreach($file in $allFiles)
+{
     try {
         $path = $csvRootPath + $file.Name
         Write-Host "Attempting to replace \N values with empty strings in" $path -ForegroundColor Yellow
         $result = Get-Content $path
-        $result | ForEach-Object {$_-replace ('\\N')," "} | Set-Content $path
+        $result | ForEach-Object {$_-replace ('\\N'),''} | Set-Content $path
     }
     catch {
         Write-Host "Replacing the \N values in" $path" failed" -ForegroundColor Red
-    }    
+    }  
 }
 
 #Check if the database exists
