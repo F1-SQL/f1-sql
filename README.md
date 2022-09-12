@@ -5,35 +5,38 @@ The Formula One database is developed and maintained for education and demonstra
 * Free
  ## Source Of Data
 
-Data used in this project was obtained from publicly available sources, no data included in this project was from subscription based services or services provided by Formula One exclusively to members. 
+Data used in this project was obtained from the [Ergast database image project](https://ergast.com/mrd/db/). 
 
-* [Circuits](https://en.wikipedia.org/wiki/List_of_Formula_One_circuits)
-* [Constructors](https://en.wikipedia.org/wiki/List_of_Formula_One_constructors)
-* [Drivers](https://en.wikipedia.org/wiki/List_of_Formula_One_drivers)
-
-**01/08/2022** - This includes data from the 2022 Hungarian GP.
-
-The Import data was manipulated manually from multiple sources into an Excel Workbook to create a relational dataset, the import data is provided within this repo. 
+**12/09/2022** - This includes data from the 2022 Italian GP.
 
 If any data is missing or incorrect please submit an issue and it can be updated or feel free to submit a pull request.
 
-* Your going to need DbaTools installed to be able to use the PowerShell script in this repo, to find out how to do that [see here](https://dbatools.io/download/)
-* PowerShell 6.1
+## Getting Started
 
-To get started clone the repository;
+First, you are going to need to clone the repo.
 
 `git clone https://github.com/RichInSQL/RichInF1.git`
 
-or download the latest release, once you have the repo cloned or the release downloaded, open PowerShell and edit the `build_database.ps1` file.
+Alternatively you can download the latest release. 
+
+Once you have the repo cloned or the release downloaded, open up a PowerShell terminal and navigate to the location you cloned the repo to 
+
+`cd D:\your\location`
+
+You can then execute the script
+
+`.\build_database.ps1`
 
 The following parameters need to be set;
 
-* $sqlInstance - The SQL Server Instance you would like the script executed against
-* $databaseName - The database name you would like created
+* -sqlInstance - The SQL Server Instance you would like the script executed against
+* -databaseName - The database name you would like created
 
-Once all of the parameters are set, execute the script by using `.\build_database.ps1` **Running the script will drop the database if it already exists**
+Once all of the parameters are set, you should have something that looks like this **Running the script will drop the database if it already exists**
 
-The script will output it's progress and any error's along the way...once complete, you should have a working copy of the Ergast formula one dataset in Microsoft SQL Server.
+`.\build_database.ps1 -sqlInstance localhost -databaseName f1db`
+
+The script will output it's progress and any error's along the way...once complete, you should have a working copy of the Ergast Formula one dataset inside Microsoft SQL Server.
 
 ## Example Queries
 
