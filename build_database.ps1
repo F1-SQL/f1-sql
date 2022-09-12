@@ -1,3 +1,30 @@
+[CmdletBinding()]
+Param(
+    [Parameter(Mandatory=$True, Position=0, ValueFromPipeline=$false)]
+    [System.String]
+    $databaseName,
+    [Parameter(Mandatory=$True, Position=1, ValueFromPipeline=$false)]
+    [System.String]
+    $sqlInstance   
+)
+
+$sqlInstance = "localhost"
+$databaseName = "f1db"
+
+$testing = 0
+
+if($testing -eq 1)
+{
+    $rootpath = 'D:\workspace\RichInF1'
+} else 
+{
+    $rootpath = $PSScriptRoot
+}
+
+$csvRootPath = $rootpath + "\sourcefiles\"
+$sqlInstance = "localhost"
+$databaseName = "f1db"
+
 $testing = 0
 
 if($testing -eq 1)
@@ -8,8 +35,6 @@ if($testing -eq 1)
     $rootpath = $PSScriptRoot
 }
 $csvRootPath = $rootpath + "\sourcefiles\"
-$sqlInstance = "localhost"
-$databaseName = "f1db"
 $replacementChar = "_"
 $zipLocation = $rootpath + '\f1db_csv.zip'
 $global:progressPreference = 'silentlyContinue'
