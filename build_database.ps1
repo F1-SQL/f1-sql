@@ -1,7 +1,28 @@
+[CmdletBinding()]
+Param(
+    [Parameter(Mandatory=$True, Position=0, ValueFromPipeline=$false)]
+    [System.String]
+    $databaseName,
+    [Parameter(Mandatory=$True, Position=1, ValueFromPipeline=$false)]
+    [System.String]
+    $sqlInstance   
+)
+
 $rootpath = $PSScriptRoot
 $csvRootPath = $PSScriptRoot + "\sourcefiles\"
 $sqlInstance = "localhost"
 $databaseName = "f1db"
+
+$testing = 0
+
+if($testing -eq 1)
+{
+    $rootpath = 'D:\workspace\RichInF1'
+} else 
+{
+    $rootpath = $PSScriptRoot
+}
+$csvRootPath = $rootpath + "\sourcefiles\"
 $replacementChar = "_"
 
 Write-Host "Atempting to open a connection to" $sqlInstance" ..." -ForegroundColor Yellow
