@@ -1,8 +1,38 @@
-$rootpath = $PSScriptRoot
-$csvRootPath = $PSScriptRoot + "\sourcefiles\"
+$testing = 0
+
+if($testing -eq 1)
+{
+    $rootpath = 'D:\workspace\RichInF1'
+} else 
+{
+    $rootpath = $PSScriptRoot
+}
+$csvRootPath = $rootpath + "\sourcefiles\"
 $sqlInstance = "localhost"
 $databaseName = "f1db"
 $replacementChar = "_"
+$zipLocation = $rootpath + '\f1db_csv.zip'
+$global:progressPreference = 'silentlyContinue'
+
+if(-Not(Test-Path -Path $csvRootPath))
+{
+    Write-Host "Attempting to create the directory $csvRootPath" -ForegroundColor Yellow
+    New-Item -ItemType Directory -Path $ -Force -ErrorAction Stop
+} else {
+    Write-Host "The directory $csvRootPath already exists" -ForegroundColor Red
+}
+
+Write-Host "Removing an existing files from the source file location" -ForegroundColor Yellow
+Get-ChildItem $csvRootPath | Remove-Item -Recurse -Force
+
+Write-Host "Attemptint to download zip file to $ziplocation" -ForegroundColor Yellow
+Invoke-WebRequest -Uri https://ergast.com/downloads/f1db_csv.zip -OutFile $zipLocation
+
+Write-Host "Attempting to extract files from $ziplocation into $csvRootPath" -ForegroundColor Yellow
+Expand-Archive $zipLocation -DestinationPath $csvRootPath
+
+Write-Host "Deleting $ziplocation" -ForegroundColor Yellow
+Remove-Item $zipLocation -Force
 
 Write-Host "Atempting to open a connection to" $sqlInstance" ..." -ForegroundColor Yellow
 $svr = Connect-dbaInstance -SqlInstance $sqlInstance
@@ -11,9 +41,6 @@ Write-Host "Attempting to drop" $databaseName" from" $sqlInstance -ForegroundCol
 Remove-DbaDatabase -SqlInstance $svr -Database $databaseName -Confirm:$false
 
 Write-Host "Getting all of the .csv files from" $csvRootPath -ForegroundColor Yellow
-
-$allFiles = Get-ChildItem $csvRootPath -Filter *.csv
-
 $files = Get-ChildItem $csvRootPath -Filter *.csv | Where-Object -FilterScript {$_.Name -match $replacementChar}
 
 $total = $allFiles | Measure-Object | ForEach-Object{$_.Count}  
@@ -26,12 +53,12 @@ foreach($file in $files)
     try {       
 
         Write-Host "Attempting to rename" $file "to match table name" $file.Name.Replace("_","")  -ForegroundColor Yellow
-        Rename-Item $path -NewName $path.Replace("_","") -Force
+        Rename-Item -path $file -NewName $file.Name.Replace("_","") -Force
         Write-Host "Renamed" $file.Name "sucessfully to match table name" -ForegroundColor Green
 
     }
     catch {
-        Write-Host "Renaming"$path"failed The Error was: $_" -ForegroundColor Red
+        Write-Host "Renaming" $file "failed The Error was: $_" -ForegroundColor Red
     }
 }
 
@@ -39,10 +66,12 @@ $total = $files | Measure-Object | ForEach-Object{$_.Count}
 
 Write-Host "A total of"$total" .csv files were found that need renaming." -ForegroundColor Yellow
 
-foreach($file in $allFiles)
+$allFiles = Get-ChildItem $csvRootPath -Filter *.csv
+
+foreach($renamedfile in $allFiles)
 {
     try {
-        $path = $csvRootPath + $file.Name
+        $path = $csvRootPath + $renamedfile.Name
         Write-Host "Attempting to replace \N values with empty strings in" $path -ForegroundColor Yellow
         $result = Get-Content $path
         $result | ForEach-Object {$_-replace ('\\N'),''} | Set-Content $path
