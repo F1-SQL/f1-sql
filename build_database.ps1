@@ -11,45 +11,20 @@ Param(
     $downloadFiles   
 )
 
-
-$sqlInstance = "localhost"
-$databaseName = "f1db"
-
-$testing = 0
-
-if($testing -eq 1)
-{
-    $rootpath = 'D:\workspace\RichInF1'
-} else 
-{
-    $rootpath = $PSScriptRoot
-}
-
-$sourceLocation = 'https://ergast.com/downloads/f1db_csv.zip'
+$runDate = (Get-Date).Date.ToString("yyyy-MM-dd")
+$rootpath = $PSScriptRoot
+$archiveLocation = $rootpath + "\archivedfiles\"
 $csvRootPath = $rootpath + "\sourcefiles\"
-
-if($downloadFiles -eq $True)
-{
-    Write-Host "Attempting to download latest zip file $sourceLocation to $csvRootPath" -ForegroundColor Yellow
-    Invoke-WebRequest -Uri $sourceLocation -OutFile $csvRootPath
-}
-
-$sqlInstance = "localhost"
-$databaseName = "f1db"
-
-$testing = 0
-
-if($testing -eq 1)
-{
-    $rootpath = 'D:\workspace\RichInF1'
-} else 
-{
-    $rootpath = $PSScriptRoot
-}
-$csvRootPath = $rootpath + "\sourcefiles\"
+$sourceLocation = "https://ergast.com/downloads/f1db_csv.zip"
 $replacementChar = "_"
-$zipLocation = $rootpath + '\f1db_csv.zip'
+$zipLocation = $rootpath + '\sourcefiles\f1db_csv.zip'
 $global:progressPreference = 'silentlyContinue'
+
+if(-Not(Test-Path -Path $archiveLocation))
+{
+    Write-Host "Attempting to create the directory $archiveLocation" -ForegroundColor Yellow
+    New-Item -ItemType Directory -Path $archiveLocation -Force -ErrorAction Stop
+}
 
 if(-Not(Test-Path -Path $csvRootPath))
 {
@@ -59,14 +34,27 @@ if(-Not(Test-Path -Path $csvRootPath))
     Write-Host "The directory $csvRootPath already exists" -ForegroundColor Red
 }
 
+$existingFiles = Get-ChildItem -Path $csvRootPath -Recurse
+
+Write-Host "Moving files to the archive"
+$existingFiles | Move-Item $archiveLocation + ""
+
 Write-Host "Removing an existing files from the source file location" -ForegroundColor Yellow
-Get-ChildItem $csvRootPath | Remove-Item -Recurse -Force
+$existingFiles | Remove-Item -Recurse -Force
 
-Write-Host "Attemptint to download zip file to $ziplocation" -ForegroundColor Yellow
-Invoke-WebRequest -Uri https://ergast.com/downloads/f1db_csv.zip -OutFile $zipLocation
+if($downloadFiles -eq $true)
+{
+    Write-Host "Attemptint to download zip file from $sourceLocaiton to $ziplocation" -ForegroundColor Yellow
+    Invoke-WebRequest -Uri $sourceLocation -OutFile $zipLocation
+}
 
-Write-Host "Attempting to extract files from $ziplocation into $csvRootPath" -ForegroundColor Yellow
-Expand-Archive $zipLocation -DestinationPath $csvRootPath
+if(Test-Path $zipLocation -PathType Leaf)
+{
+    Write-Host "Attempting to extract files from $ziplocation into $csvRootPath" -ForegroundColor Yellow
+    Expand-Archive $zipLocation -DestinationPath $csvRootPath
+} else {
+    Write-Host "Zip file does not exist in $zipLocation" -ForegroundColor Red
+}
 
 Write-Host "Deleting $ziplocation" -ForegroundColor Yellow
 Remove-Item $zipLocation -Force
@@ -137,7 +125,6 @@ if($null -eq $dbExists)
 Start-Sleep -Seconds 20
 
 #Get all of the files again, do this now, as we renamed them earlier
-
 $files = Get-ChildItem $csvRootPath -Filter *.csv
 
 #Now we can attempt to import all of the CSV files 
@@ -156,3 +143,5 @@ if($null -eq $dbExists)
     Write-Host "Creating keys" -ForegroundColor Yellow
     Invoke-DbaQuery -SqlInstance $svr -File ('{0}\f1db_foreign_keys.sql' -f $rootpath)
 }
+
+Write-Host "Database build has been completed" -ForegroundColor Green
