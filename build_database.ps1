@@ -5,8 +5,12 @@ Param(
     $databaseName,
     [Parameter(Mandatory=$True, Position=1, ValueFromPipeline=$false)]
     [System.String]
-    $sqlInstance   
+    $sqlInstance,
+    [Parameter(Mandatory=$True, Position=2, ValueFromPipeline=$false)]
+    [System.String]
+    $downloadFiles   
 )
+
 
 $sqlInstance = "localhost"
 $databaseName = "f1db"
@@ -21,7 +25,15 @@ if($testing -eq 1)
     $rootpath = $PSScriptRoot
 }
 
+$sourceLocation = 'https://ergast.com/downloads/f1db_csv.zip'
 $csvRootPath = $rootpath + "\sourcefiles\"
+
+if($downloadFiles -eq $True)
+{
+    Write-Host "Attempting to download latest zip file $sourceLocation to $csvRootPath" -ForegroundColor Yellow
+    Invoke-WebRequest -Uri $sourceLocation -OutFile $csvRootPath
+}
+
 $sqlInstance = "localhost"
 $databaseName = "f1db"
 
