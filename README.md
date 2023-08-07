@@ -1,5 +1,5 @@
 # Formula One Database
-The Formula One database is developed and maintained for education and demonstration purposes using open source Formula One Data. 
+The Formula One Microsoft SQL Server database is developed and maintained for education and demonstration purposes using open source Formula One Data freely available from the [Ergast API](https://ergast.com/mrd/) 
 
 * Open Source
 * Free
@@ -7,7 +7,7 @@ The Formula One database is developed and maintained for education and demonstra
 
 Data used in this project was obtained from the [Ergast database image project](https://ergast.com/mrd/db/). 
 
-**12/09/2022** - This includes data from the 2022 Italian GP.
+**07/08/2023** - This includes data from the 2023 Belgian GP.
 
 If any data is missing or incorrect please submit an issue and it can be updated or feel free to submit a pull request.
 
@@ -31,6 +31,8 @@ The following parameters need to be set;
 
 * -sqlInstance - The SQL Server Instance you would like the script executed against
 * -databaseName - The database name you would like created
+* -cleanInstance - Do you want the database dropping after processing, this is used in conjunction with backupDatabase
+* -backupDatabase - Do you want to backup the database during processing?
 
 Once all of the parameters are set, you should have something that looks like this **Running the script will drop the database if it already exists**
 
