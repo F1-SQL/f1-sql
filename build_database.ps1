@@ -31,22 +31,22 @@
         https://richinsql.com/projects/formula-one-database/
 
     .EXAMPLE
-        PS C:\> .\build_database.ps1 -databaseName f1db -sqlInstance 'loclhost' -downloadFiles $true -cleanInstance $false
+        PS C:\> .\build_database.ps1 -databaseName RichInF1 -sqlInstance 'loclhost' -downloadFiles $true -cleanInstance $false
 
         This will perform a full database backup on the databases HR and Finance on SQL Server Instance Server1 to Server1 default backup directory.
 
     .EXAMPLE
-        PS C:\> .\build_database.ps1 -databaseName f1db -sqlInstance 'loclhost' -downloadFiles $true -cleanInstance $true
+        PS C:\> .\build_database.ps1 -databaseName RichInF1 -sqlInstance 'loclhost' -downloadFiles $true -cleanInstance $true
 
         Backs up AdventureWorks2014 to sql2016 C:\temp folder.
 
     .EXAMPLE
-        PS C:\> .\build_database.ps1 -databaseName f1db -sqlInstance 'loclhost' -downloadFiles $false -cleanInstance $true
+        PS C:\> .\build_database.ps1 -databaseName RichInF1 -sqlInstance 'loclhost' -downloadFiles $false -cleanInstance $true
 
         Performs a full backup of all databases on the sql2016 instance to their own containers under the https://dbatoolsaz.blob.core.windows.net/azbackups/ container on Azure blob storage using the sql credential "dbatoolscred" registered on the sql2016 instance.
 
     .EXAMPLE
-        PS C:\> .\build_database.ps1 -databaseName f1db -sqlInstance 'loclhost' -downloadFiles $false -cleanInstance $false
+        PS C:\> .\build_database.ps1 -databaseName RichInF1 -sqlInstance 'loclhost' -downloadFiles $false -cleanInstance $false
 
         Performs a full backup of all databases on the sql2016 instance to the https://dbatoolsaz.blob.core.windows.net/azbackups/ container on Azure blob storage using the Shared Access Signature sql credential "https://dbatoolsaz.blob.core.windows.net/azbackups" registered on the sql2016 instance.
     #>
@@ -88,7 +88,7 @@
 
     $sourceLocation = "https://ergast.com/downloads/f1db_csv.zip"
     
-    $zipName = 'f1db_csv_' + $raceName + '.zip'
+    $zipName = 'RichInF1_csv_' + $raceName + '.zip'
     $zipLocation = $rootpath + $sourceFiles 
     $zipLocationFull = $zipLocation + $zipName
 
@@ -210,8 +210,7 @@
         
         $backupName = $version + "_" + $databaseName + "_" + $raceName + ".bak"
         $backupFolder = "\backups\"
-        $backupRaceFolder = $backupFolder + $raceName
-        $backupLocation = $rootpath + $backupRaceFolder
+        $backupLocation = $rootpath + $backupFolder
         $backupFullPath = $backupLocation + "\" + $backupName  
 
         if(-Not(Test-Path -Path $tableFilesFullPath))
@@ -272,7 +271,7 @@
         if($database)
         {
             Write-Host "INFO: Creating tables" -ForegroundColor Yellow
-            Invoke-DbaQuery -SqlInstance $svr -File ('{0}\src\f1db_tables.sql' -f $rootpath)
+            Invoke-DbaQuery -SqlInstance $svr -File ('{0}\src\RichInF1_tables.sql' -f $rootpath)
             #Pause the script for 20 seconds to make sure that the build database/table scripts has completed. 
             Start-Sleep -Seconds 20
             
@@ -297,7 +296,7 @@
         if($null -eq $database)
         {
             Write-Host "INFO: Creating keys" -ForegroundColor Yellow
-            Invoke-DbaQuery -SqlInstance $svr -File ('{0}\src\f1db_foreign_keys.sql' -f $rootpath)
+            Invoke-DbaQuery -SqlInstance $svr -File ('{0}\src\RichInF1_foreign_keys.sql' -f $rootpath)
         }    
         
         $options = New-DbaScriptingOption
