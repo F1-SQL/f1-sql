@@ -67,11 +67,11 @@ Param(
     $backupDatabase   
 )
 
-Write-Host "INFO: Atempting to open a connection to $sqlInstance ..." -ForegroundColor Yellow
-$svr = Connect-dbaInstance -SqlInstance $sqlInstance
+$sqlInstance = "localhost"
+$databaseName = "f1db"
 
 $currentYear = (Get-Date).Year.ToString()
-$version = Get-DbaBuildReference -SqlInstance $svr | Select-Object -ExpandProperty NameLevel
+$sqlVersion = Get-DbaBuildReference -SqlInstance $svr | Select-Object -ExpandProperty NameLevel
 
 $races=@("Bahrain","Saudi Arabia","Australia","Azerbaijan","United States","Monaco","Spain","Canada","Austria","Great Britain","Hungary","Belgium","Italy","Belgium","Japan","Qatar","Austin","Mexico","Brazil","Las Vegas","Abu Dhabi")
 $raceName = $races | Out-GridView -PassThru
@@ -88,7 +88,7 @@ $archiveFolder = "\archivedfiles\"
 $archiveLocation = $rootpath + $archiveFolder
 $archiveLocationDate = $archiveLocation + $raceName + "\"
 
-$backupName = $version + "_" + $databaseName + "_" + $raceName + ".bak"
+$backupName = $sqlVersion + "_" + $databaseName + "_" + $raceName + ".bak"
 $backupFolder = "\backups\"
 $backupRaceFolder = $backupFolder + $raceName
 $backupLocation = $rootpath + $backupRaceFolder
@@ -101,6 +101,54 @@ $zipLocation = $rootpath + $sourceFiles
 $zipLocationFull = $zipLocation + $zipName
 
 $replacementChar = "_"
+
+$global:progressPreference = 'silentlyContinue'
+
+if(-Not(Test-Path -Path $archiveLocation))
+{
+    $rootpath = 'D:\workspace\RichInF1'
+} else 
+{
+    $rootpath = $PSScriptRoot
+}
+
+$csvRootPath = $rootpath + "\sourcefiles\"
+$sqlInstance = "localhost"
+$databaseName = "f1db"
+
+$testing = 0
+
+if($testing -eq 1)
+{
+    $rootpath = 'D:\workspace\RichInF1'
+} else 
+{
+    $rootpath = $PSScriptRoot
+}
+$csvRootPath = $rootpath + "\sourcefiles\"
+$replacementChar = "_"
+$zipLocation = $rootpath + '\f1db_csv.zip'
+$global:progressPreference = 'silentlyContinue'
+
+if(-Not(Test-Path -Path $csvRootPath))
+{
+    Write-Host "Attempting to create the directory $csvRootPath" -ForegroundColor Yellow
+    New-Item -ItemType Directory -Path $ -Force -ErrorAction Stop
+} else {
+    Write-Host "The directory $csvRootPath already exists" -ForegroundColor Red
+}
+
+Write-Host "Removing an existing files from the source file location" -ForegroundColor Yellow
+Get-ChildItem $csvRootPath | Remove-Item -Recurse -Force
+
+Write-Host "Attemptint to download zip file to $ziplocation" -ForegroundColor Yellow
+Invoke-WebRequest -Uri https://ergast.com/downloads/f1db_csv.zip -OutFile $zipLocation
+
+Write-Host "Attempting to extract files from $ziplocation into $csvRootPath" -ForegroundColor Yellow
+Expand-Archive $zipLocation -DestinationPath $csvRootPath
+
+Write-Host "Deleting $ziplocation" -ForegroundColor Yellow
+Remove-Item $zipLocation -Force
 
 $global:progressPreference = 'silentlyContinue'
 
