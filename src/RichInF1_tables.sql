@@ -1,4 +1,3 @@
-USE f1db
 SET NOCOUNT ON;
 
 CREATE TABLE circuits (

@@ -1,5 +1,3 @@
-USE f1db
-
 /* FOREIGN KEYS */
 
 /*constructorResults*/
