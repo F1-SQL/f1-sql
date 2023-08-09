@@ -1,3 +1,5 @@
+![](images/git-banner.png)
+
 # Formula One Database
 The Formula One Microsoft SQL Server database is developed and maintained for education and demonstration purposes using open source Formula One Data freely available from the [Ergast API](https://ergast.com/mrd/) 
 
@@ -19,26 +21,7 @@ First, you are going to need to clone the repo.
 
 Alternatively you can download the latest release. 
 
-Once you have the repo cloned or the release downloaded, open up a PowerShell terminal and navigate to the location you cloned the repo to 
-
-`cd D:\your\location`
-
-You can then execute the script
-
-`.\build_database.ps1`
-
-The following parameters need to be set;
-
-* -sqlInstance - The SQL Server Instance you would like the script executed against
-* -databaseName - The database name you would like created
-* -cleanInstance - Do you want the database dropping after processing, this is used in conjunction with backupDatabase
-* -backupDatabase - Do you want to backup the database during processing?
-
-Once all of the parameters are set, you should have something that looks like this **Running the script will drop the database if it already exists**
-
-`.\build_database.ps1 -sqlInstance localhost -databaseName f1db`
-
-The script will output it's progress and any error's along the way...once complete, you should have a working copy of the Ergast Formula one dataset inside Microsoft SQL Server.
+Once you have the repo cloned navigate to the backups folder in the root of the download and restore a backup to your version of SQL Server, it is that simple.
 
 ## Example Queries
 
