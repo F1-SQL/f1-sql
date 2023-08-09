@@ -271,7 +271,7 @@
         if($database)
         {
             Write-Host "INFO: Creating tables" -ForegroundColor Yellow
-            Invoke-DbaQuery -SqlInstance $svr -File ('{0}\src\RichInF1_tables.sql' -f $rootpath)
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\RichInF1_tables.sql' -f $rootpath)
             #Pause the script for 20 seconds to make sure that the build database/table scripts has completed. 
             Start-Sleep -Seconds 20
             
@@ -296,7 +296,7 @@
         if($null -eq $database)
         {
             Write-Host "INFO: Creating keys" -ForegroundColor Yellow
-            Invoke-DbaQuery -SqlInstance $svr -File ('{0}\src\RichInF1_foreign_keys.sql' -f $rootpath)
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\RichInF1_foreign_keys.sql' -f $rootpath)
         }    
         
         $options = New-DbaScriptingOption
