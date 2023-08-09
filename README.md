@@ -1,30 +1,31 @@
 ![](images/git-banner.png)
 
-![Linter](https://github.com/richinsql/richinf1/actions/workflows/powershell.yml/badge.svg)
-![GitHub Repo stars](https://img.shields.io/github/stars/richinsql/richinf1?style=social)
+![Linter](https://github.com/richinsql/Sequel-Formula/actions/workflows/powershell.yml/badge.svg)
+![GitHub Repo stars](https://img.shields.io/github/stars/richinsql/Sequel-Formulastyle=social)
 ![Prs Welcome](https://badgen.net/badge/PRs/Welcome/orange)
 ![Prs Welcome](https://badgen.net/badge/license/MIT/orange)
 
-# Formula One Database
-The Formula One Microsoft SQL Server database is developed and maintained for education and demonstration purposes using open source Formula One Data freely available from the [Ergast API](https://ergast.com/mrd/) 
 
-* Open Source
-* Free
- ## Source Of Data
+# Sequel Formula
+Sequel Formula is a Microsoft SQL Server database designed and developed using the freely available data from [Ergast API](https://ergast.com/mrd/) 
 
-Data used in this project was obtained from the [Ergast database image project](https://ergast.com/mrd/db/). 
+This project is maintained for education and demonstration purposes.
+
+ ## Latest Release
+
+You can download the latest release from the releases section of this repo, below is the latest race included within that release. 
 
 **07/08/2023** - This includes data from the 2023 Belgian GP.
 
-If any data is missing or incorrect please submit an issue and it can be updated or feel free to submit a pull request.
+If any data is missing or incorrect please submit an issue so that it can be updated, we also welcome pull requests, so if that is your bag feel free to submit one and we will review it as soon as possible.
 
 ## Getting Started
 
 First, you are going to need to clone the repo.
 
-`git clone https://github.com/RichInSQL/RichInF1.git`
+`git clone https://github.com/RichInSQL/Sequel-Formula.git`
 
-Alternatively you can download the latest release. 
+Alternatively you can download the [latest release](https://github.com/Rich-In-SQL/Sequel-Formula/releases/latest). 
 
 Once you have the repo cloned navigate to the backups folder in the root of the download and restore a backup to your version of SQL Server, it is that simple.
 
