@@ -1,5 +1,10 @@
 ![](images/git-banner.png)
 
+![Linter](https://github.com/richinsql/richinf1/actions/workflows/powershell.yml/badge.svg)
+![GitHub Repo stars](https://img.shields.io/github/stars/richinsql/richinf1?style=social)
+![Prs Welcome](https://badgen.net/badge/PRs/Welcome/orange)
+![Prs Welcome](https://badgen.net/badge/license/MIT/orange)
+
 # Formula One Database
 The Formula One Microsoft SQL Server database is developed and maintained for education and demonstration purposes using open source Formula One Data freely available from the [Ergast API](https://ergast.com/mrd/) 
 
