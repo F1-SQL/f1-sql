@@ -181,21 +181,6 @@
     }
 
     $existingFiles = Get-ChildItem -Path $sourceFilesFullPath -Filter *.csv -Recurse
-        
-    foreach($fileName in $existingFiles)
-    {
-        $file = [io.path]::GetFileNameWithoutExtension($fileName)
-        $extension = [io.path]::GetExtension($fileName)
-        $newName = $archiveLocationDate + $file + "_" + $raceName +  $extension
-        Write-Host "INFO: Moving $filename to the archive" -ForegroundColor Yellow
-        Move-Item -Path $filename -Destination $newName -Force
-        
-        if(Test-Path -Path $filename)
-        {
-            Write-Host "INFO: $filename archived, deleting" -ForegroundColor Yellow
-            Remove-Item -Path $fileName -Force
-        }
-    }
 
     foreach($instance in $sqlInstance)
     {
@@ -271,7 +256,7 @@
         if($database)
         {
             Write-Host "INFO: Creating tables" -ForegroundColor Yellow
-            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\RichInF1_tables.sql' -f $rootpath)
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\SequelFormula_tables.sql' -f $rootpath)
             #Pause the script for 20 seconds to make sure that the build database/table scripts has completed. 
             Start-Sleep -Seconds 20
             
@@ -293,10 +278,10 @@
             Exit
         }
     
-        if($null -eq $database)
+        if($database)
         {
             Write-Host "INFO: Creating keys" -ForegroundColor Yellow
-            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\RichInF1_foreign_keys.sql' -f $rootpath)
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\SequelFormula_foreign_keys.sql' -f $rootpath)
         }    
         
         $options = New-DbaScriptingOption
@@ -322,12 +307,16 @@
         {
             Write-Host "WARN: Database backup already exists, removing" -ForegroundColor Red
             Remove-Item -Path $backupFullPath
-        }
-        
-        Write-Host "INFO: Attempting to create a database backup." -ForegroundColor Yellow
-        Backup-DbaDatabase -SqlInstance $svr -Database $databaseName -Path $backupLocation -FilePath $backupName -Type Full 
-        Write-Host "SUCCESS: Database backup has been completed." -ForegroundColor Green
-        
+        }        
+
+        if($backupDatabase -eq $True)
+        {
+            Write-Host "INFO: Attempting to create a database backup." -ForegroundColor Yellow
+            Backup-DbaDatabase -SqlInstance $svr -Database $databaseName -Path $backupLocation -FilePath $backupName -Type Full 
+            Write-Host "SUCCESS: Database backup has been completed." -ForegroundColor Green
+        } else {
+            Write-Host "WARN: No backup has been taken as backupDatabase is set to False." -ForegroundColor Red
+        }        
         
         if($cleanInstance -eq $True -and $backupDatabase -eq $True)
         {
@@ -338,4 +327,19 @@
         }
 
         Write-Host "SUCCESS: Database build complete on $instance" -ForegroundColor Green
+    }
+
+    foreach($fileName in $existingFiles)
+    {
+        $file = [io.path]::GetFileNameWithoutExtension($fileName)
+        $extension = [io.path]::GetExtension($fileName)
+        $newName = $archiveLocationDate + $file + "_" + $raceName +  $extension
+        Write-Host "INFO: Moving $filename to the archive" -ForegroundColor Yellow
+        Move-Item -Path $filename -Destination $newName -Force
+        
+        if(Test-Path -Path $filename)
+        {
+            Write-Host "INFO: $filename archived, deleting" -ForegroundColor Yellow
+            Remove-Item -Path $fileName -Force
+        }
     }
