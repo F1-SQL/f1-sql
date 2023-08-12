@@ -1,35 +1,45 @@
 name: Data Quality
 description: File an issue with our data
-labels: ["bug", "triage required"]
+labels: ["data quality", "triage required"]
 body:
   - type: markdown
     id: intro-md
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report!
+        Thanks for taking the time to fill out this report!
         Please ensure you provide as much information as possible to help us resolve the issue.
   - type: dropdown
     id: existing-issue
     attributes:
-      label: "Verified issue does not already exist?"
-      description: "Please search to see if an issue already exists for the bug you encountered."
+      label: "Verified this issue does not already exist?"
+      description: "Please search to see if an issue already exists for the issue you have encountered."
       options:
         - "No, I did not search"
         - "I have searched and found no existing issue"
     validations:
       required: true
-  - type: textarea
-    id: errors-received
+  - type: dropdown
+    id: type
     attributes:
-      label: "What error did you receive?"
-      description: "If you received an error, please paste it in full below"
+      label: "What type of problem have you found?"
+      description: "Please select one of the below options to let us know what type of issue you have found."
+      options:
+        - "Data is missing"
+        - "Data is incorrect"
     validations:
       required: true
   - type: textarea
-    id: command-run
+    id: problem-found
     attributes:
-      label: "Steps to Reproduce"
-      description: "What can we do to reproduce the reported error?"
+      label: "What is missing or needs adding?"
+      description: "Please provide as much information on what is wrong or what needs adding"
+    validations:
+      required: true
+  - type: textarea
+    id: more-info
+    attributes:
+      label: "Where can we find more information."
+      description: "Where can we find more information on this, is there a link that has the data etc."
     validations:
       required: true
   - type: textarea
