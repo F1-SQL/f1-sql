@@ -39,27 +39,3 @@ body:
       description: "Please provide any other information that may assist us with this issue."
     validations:
       required: false
-  - type: markdown
-    id: env-info
-    attributes:
-      value: "## Environment Details"
-  - type: dropdown
-    id: host-detail
-    attributes:
-      label: "What version of SQL Server are you running?"
-      multiple: true
-      options:
-        - SQL Server 2014
-        - SQL Server 2016
-        - SQL Server 2022
-        - SQL Server 2019
-        - SQL Server 2022
-    validations:
-      required: true
-  - type: textarea
-    id: sql-version
-    attributes:
-      label: "SQL Server Build number"
-      description: "You can provide the output from: SELECT @@VERSION"
-    validations:
-      required: true
