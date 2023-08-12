@@ -1,11 +1,11 @@
 blank_issues_enabled: false
-contact_links:
-  - name: Want to report an issue?
-    url: https://github.com/Rich-In-SQL/Sequel-Formula/issues/new
-    about: Open an issue
-  - name: Issues found with our documentation?
-    url: https://github.com/Rich-In-SQL/Sequel-Formula/issues/new
-    about: Open an issue
-  - name: Ask a question about Sequel Formula or get support
-    url: https://github.com/Rich-In-SQL/Sequel-Formula/discussions/new/choose
-    about: Get support via chat
+# contact_links:
+#   - name: Want to report an issue?
+#     url: https://github.com/Rich-In-SQL/Sequel-Formula/issues/new
+#     about: Open an issue
+#   - name: Issues found with our documentation?
+#     url: https://github.com/Rich-In-SQL/Sequel-Formula/issues/new
+#     about: Open an issue
+#   - name: Ask a question about Sequel Formula or get support
+#     url: https://github.com/Rich-In-SQL/Sequel-Formula/discussions/new/choose
+#     about: Get support via chat
