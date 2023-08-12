@@ -2,8 +2,8 @@ blank_issues_enabled: false
 contact_links:
   - name: Want to report an issue?
     url: https://github.com/Rich-In-SQL/Sequel-Formula/issues/new
-  - name: Issues found with our documentation?
-    url: https://github.com/Rich-In-SQL/Sequel-Formula/issues/new
-  - name: Ask a question about Sequel Formula or get support
-    url: https://github.com/Rich-In-SQL/Sequel-Formula/discussions/new/choose
-    about: Get support via chat
+  # - name: Issues found with our documentation?
+  #   url: https://github.com/Rich-In-SQL/Sequel-Formula/issues/new
+  # - name: Ask a question about Sequel Formula or get support
+  #   url: https://github.com/Rich-In-SQL/Sequel-Formula/discussions/new/choose
+  #   about: Get support via chat
