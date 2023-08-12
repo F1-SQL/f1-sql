@@ -30,11 +30,22 @@ DECLARE @temp_primary_keys TABLE (
    [TABLE_NAME] SYSNAME NOT NULL,
    [COLUMN_NAME] SYSNAME NOT NULL
 )
-
---insert disclaimer into output in italics
---date in unambiguous month format d/MMM/YYYY (because, Aussie here)
-INSERT INTO @temp_lines ([line])
-SELECT  N'*This page was generated from a script at ' + FORMAT(GETDATE(), 'hh:mmtt d/MMM/yyyy') + N'*'
+--temp table for just foreign keys
+DECLARE @temp_foreign_keys TABLE (
+	[TABLE_SCHEMA] SYSNAME NOT NULL,
+	[FKTableName] SYSNAME NOT NULL,
+	[NameOfForeignKey] SYSNAME NOT NULL,
+	[FKColumn] SYSNAME NOT NULL,
+	[ReferencedTable] SYSNAME NOT NULL,
+	[ReferencedColumn] SYSNAME NOT NULL
+)
+--temp table for just default constraints
+DECLARE @temp_constraints_keys TABLE (
+	[TABLE_SCHEMA] SYSNAME NOT NULL,
+	[TABLE_NAME] SYSNAME NOT NULL,
+	[COLUMN_NAME] SYSNAME NOT NULL,
+	[ValueOfConstraint] SYSNAME NOT NULL
+)
 
 --get tables into temp table (will not include system tables)
 INSERT INTO @temp_all_tables
@@ -71,12 +82,58 @@ WHERE   --user (not system) tables only
        --primary keys only
        i.[is_primary_key] = 1
 
+--gets foreign keys
+INSERT INTO @temp_foreign_keys
+SELECT
+	s.name,
+	t.name,
+	fk.name,
+	pc.name,
+	rt.name,
+	c.name
+FROM sys.foreign_key_columns AS fkc
+INNER JOIN sys.foreign_keys AS fk 
+	ON fkc.constraint_object_id = fk.object_id
+INNER JOIN sys.tables AS t 
+	ON fkc.parent_object_id = t.object_id
+INNER JOIN sys.schemas AS s 
+	ON s.schema_id = t.schema_id
+INNER JOIN sys.tables AS rt 
+	ON fkc.referenced_object_id = rt.object_id
+INNER JOIN sys.columns AS pc 
+	ON fkc.parent_object_id = pc.object_id
+	AND fkc.parent_column_id = pc.column_id
+INNER JOIN sys.columns AS c 
+	ON fkc.referenced_object_id = c.object_id
+	AND fkc.referenced_column_id = c.column_id
+
+INSERT INTO @temp_constraints_keys
+-- returns name of a column's default value constraint 
+SELECT
+	schemas.name,
+	tables.name,
+	all_columns.name,
+	REPLACE(REPLACE(REPLACE(default_constraints.definition,'(',''),')',''),'''','')
+FROM 
+    sys.all_columns
+
+        INNER JOIN
+    sys.tables
+        ON all_columns.object_id = tables.object_id
+
+        INNER JOIN 
+    sys.schemas
+        ON tables.schema_id = schemas.schema_id
+
+        INNER JOIN
+    sys.default_constraints
+        ON all_columns.default_object_id = default_constraints.object_id
+WHERE 
+	LEN(REPLACE(REPLACE(REPLACE(default_constraints.definition,'(',''),')',''),'''','')) > 0 
+	AND REPLACE(REPLACE(REPLACE(default_constraints.definition,'(',''),')',''),'''','') <> 'NULL'
+
 --current table loop index (start at 1, unless there's no tables)
 DECLARE @current_loop_table_index INT = (SELECT MIN([id]) FROM @temp_all_tables)
-
---output section heading for tables
-INSERT INTO @temp_lines ([line])
-SELECT  N'## Tables'
 
 --loop through each table
 WHILE @current_loop_table_index IS NOT NULL BEGIN
@@ -86,7 +143,7 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
 
    --output schema & table name as heading 3, make into an anchor
    INSERT INTO @temp_lines ([line])
-   SELECT  N'### [' + @current_loop_table_schema + N'.' + @current_loop_table_name + N'](#' + @current_loop_table_schema + N'.' + @current_loop_table_name + N')'
+   SELECT  N'### [' + @current_loop_table_schema + N'.' + @current_loop_table_name + N']'
 
    --output extended property for table, allow up to 2,000 characters
    --adapted from https://gist.github.com/mwinckler/2577364
@@ -107,9 +164,9 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
 
    --output markdown table header for columns
    INSERT INTO @temp_lines ([line])
-   SELECT  N'| Column name | Description | Data type | Allow NULLs |'
+   SELECT  N'| Column name | Key | Data type | Allow NULLs | Default | Description |'
    UNION ALL
-   SELECT  N'| ------- | ------- | ------- | ------- |'
+   SELECT  N'| ------- | ------- | ------- | ------- | ------- | ------- |'
 
    --output columns from INFORMATION_SCHEMA.COLUMNS
    --as markdown table rows
@@ -118,24 +175,30 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
    INSERT INTO @temp_lines ([line])
    SELECT  --column name as bold text
            N'| **' + COLUMNS.[COLUMN_NAME] + N'**' +
-           --if this column is a primary key, add star symbol (ideally could use "key" emoji)
-           CASE
+		   /*Sort out the primary key here */
+           N' | ' +  CASE
                WHEN EXISTS (
                      SELECT  1
                      FROM    @temp_primary_keys p
                      WHERE   COLUMNS.[TABLE_SCHEMA] = p.[TABLE_SCHEMA] AND
                              COLUMNS.[TABLE_NAME] = p.[TABLE_NAME] AND
                              COLUMNS.[COLUMN_NAME] = p.[COLUMN_NAME]
-                    ) THEN N' ★'
+                    ) THEN N' Primary Key'
+				WHEN EXISTS (
+                     SELECT  1
+                     FROM    @temp_foreign_keys f
+                     WHERE   
+							COLUMNS.[TABLE_SCHEMA] = f.[TABLE_SCHEMA] AND
+							COLUMNS.[TABLE_NAME] = f.FKTableName AND
+                            COLUMNS.[COLUMN_NAME] = f.FKColumn
+                    ) THEN (SELECT f.NameOfForeignKey + ' (' + CONCAT(f.TABLE_SCHEMA,'.',f.ReferencedTable, ' ', f.ReferencedColumn) + ')'
+                     FROM    @temp_foreign_keys f
+                     WHERE   
+							COLUMNS.[TABLE_SCHEMA] = f.[TABLE_SCHEMA] AND
+							COLUMNS.[TABLE_NAME] = f.FKTableName AND
+                            COLUMNS.[COLUMN_NAME] = f.FKColumn)
                ELSE N''
-           END +
-           --get description for extended properties
-           --if there's no trailing full stop, add one
-           N' | ' + LTRIM(RTRIM(CONVERT(NVARCHAR(2000), ep.[value]))) +
-           CASE
-               WHEN RIGHT(LTRIM(RTRIM(CONVERT(NVARCHAR(2000), ep.[value]))), 1) != N'.' THEN N'.'
-               ELSE N''
-           END +
+           END +      
            --put together data type
            N' | ' + UPPER(COLUMNS.[DATA_TYPE]) +
            --append precision in brackets, for certain data types only
@@ -160,8 +223,24 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
                --empty check box if not nullable
                ELSE N'☐'
            END +
-           --close table row
-           N' |'
+		   N' | ' +  CASE
+               WHEN EXISTS (
+                     SELECT  1
+                     FROM    @temp_constraints_keys c
+                     WHERE   COLUMNS.[TABLE_SCHEMA] = c.[TABLE_SCHEMA] AND
+                             COLUMNS.[TABLE_NAME] = c.[TABLE_NAME] AND
+                             COLUMNS.[COLUMN_NAME] = c.[COLUMN_NAME]
+                    ) THEN (SELECT c.ValueOfConstraint FROM @temp_constraints_keys c  WHERE   COLUMNS.[TABLE_SCHEMA] = c.[TABLE_SCHEMA] AND
+                             COLUMNS.[TABLE_NAME] = c.[TABLE_NAME] AND
+                             COLUMNS.[COLUMN_NAME] = c.[COLUMN_NAME])                 
+               ELSE N'' END +
+				--get description for extended properties
+           --if there's no trailing full stop, add one
+           N' | ' + LTRIM(RTRIM(CONVERT(NVARCHAR(2000), ep.[value]))) +
+           CASE
+               WHEN RIGHT(LTRIM(RTRIM(CONVERT(NVARCHAR(2000), ep.[value]))), 1) != N'.' THEN N'.'
+               ELSE N''
+           END +  N' | '
    FROM    INFORMATION_SCHEMA.COLUMNS LEFT OUTER JOIN
                sys.extended_properties ep ON
                    ep.[name] = N'MS_Description' AND
@@ -183,73 +262,6 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
    SET @current_loop_table_index = (SELECT MIN([id]) FROM @temp_all_tables WHERE [id] > @current_loop_table_index)
 END
 
---are there any views?
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.VIEWS) BEGIN
-   --output section heading for views
-   INSERT INTO @temp_lines ([line])
-   SELECT  N'## Views'
-
-   --for views, output name as heading, and definition as code block
-   INSERT INTO @temp_lines ([line])
-   SELECT  N'### ' + [TABLE_SCHEMA] + N'.' + [TABLE_NAME] + CHAR(13) +
-           --if definition is longer than 4,000 characters, will be NULL
-           CASE
-               WHEN [VIEW_DEFINITION] IS NULL THEN N'*Text too large to display*'
-               ELSE
-                   --start code block
-                   N'````' + CHAR(13) +
-                   --first 3,000 characters of definition
-                   --need to remove leading and trailing linebreaks
-                   TRIM(CONVERT(NVARCHAR(3000), TRIM(CHAR(13) FROM TRIM(CHAR(10) FROM TRIM(CHAR(13) FROM [VIEW_DEFINITION]))))) +
-                   --if definition is longer than 3,000 characters, add ellipses
-                   (CASE WHEN LEN([VIEW_DEFINITION]) > 3000 THEN N'...' ELSE N'' END) + CHAR(13) +
-                   --end of code block
-                   N'````' + CHAR(13)
-           END
-   FROM    INFORMATION_SCHEMA.VIEWS
-   ORDER BY [TABLE_SCHEMA], [TABLE_NAME]
-END
-
---are there any (non-system) stored procedures?
-IF EXISTS(SELECT * FROM sys.procedures WHERE [is_ms_shipped] = 0) BEGIN
-   --output section heading for stored procedures
-   INSERT INTO @temp_lines ([line])
-   SELECT  N'## Stored procedures'
-
-   --stored procedures, output name and description separated by line break
-   INSERT INTO @temp_lines ([line])
-   SELECT  N'**' + procs.[name] + N'**' + CHAR(13) + LTRIM(RTRIM(CONVERT(NVARCHAR(2000), ep.[value])))
-   FROM    sys.procedures procs LEFT OUTER JOIN
-               sys.extended_properties ep ON
-                       ep.[name] = N'MS_Description' AND
-                       ep.[major_id] = procs.[object_id] AND
-                       --stored procedure comments (not parameters)
-                       ep.[minor_id] = 0
-   WHERE   --not system stored procs
-           procs.[is_ms_shipped] = 0
-   ORDER BY procs.[name]
-END
-
---are there any functions?
-IF EXISTS(SELECT * FROM sys.objects WHERE [type] = 'FN' AND [is_ms_shipped] = 0) BEGIN
-   --output section heading for functions
-   INSERT INTO @temp_lines ([line])
-   SELECT  N'## Functions'
-
-   --functions, output name and metadata separated by line break
-   INSERT INTO @temp_lines ([line])
-   SELECT  N'**' + o.[name] + N'**' + CHAR(13) + LTRIM(RTRIM(CONVERT(NVARCHAR(2000), ep.[value])))
-   FROM    sys.objects o LEFT OUTER JOIN
-               sys.extended_properties ep ON
-                       ep.[name] = N'MS_Description' AND
-                       ep.[major_id] = o.[object_id] AND
-                       ep.[minor_id] = 0
-   WHERE   --functions
-           o.[type] = 'FN' AND
-           --not system functions
-           o.[is_ms_shipped] = 0
-   ORDER BY o.[name]
-END
 
 SET NOCOUNT OFF
 
