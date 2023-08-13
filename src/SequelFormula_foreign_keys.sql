@@ -12,12 +12,14 @@ ALTER TABLE [dbo].[sprintResults] ADD CONSTRAINT FK_SprintResults_DriverID FOREI
 ALTER TABLE [dbo].[sprintResults] ADD CONSTRAINT FK_SprintResults_RaceID FOREIGN KEY (RaceID) REFERENCES dbo.races (RaceID)
 ALTER TABLE [dbo].[sprintResults] ADD CONSTRAINT FK_SprintResults_ConstructorID FOREIGN KEY (ConstructorID) REFERENCES dbo.constructors (ConstructorID)
 ALTER TABLE [dbo].[sprintResults] ADD CONSTRAINT FK_SprintResults_StatusID FOREIGN KEY (StatusID) REFERENCES dbo.[Status] (StatusID)
+ALTER TABLE [dbo].[sprintResults] ADD CONSTRAINT FK_SprintResults_PositionTextID FOREIGN KEY (positionTextID) REFERENCES [dbo].[positionText] (positionTextID) 
 
 /*Results*/
 ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_DriverID FOREIGN KEY (driverID) REFERENCES dbo.drivers (driverID)
 ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_RaceID FOREIGN KEY (RaceID) REFERENCES dbo.races (RaceID)
 ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_ConstructorID FOREIGN KEY (ConstructorID) REFERENCES dbo.constructors (ConstructorID)
 ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_StatusID FOREIGN KEY (StatusID) REFERENCES dbo.[Status] (StatusID)
+ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_PositionTextID FOREIGN KEY (positionTextID) REFERENCES [dbo].[positionText] (positionTextID) 
 
 /*Pit Stops*/
 ALTER TABLE [dbo].[PitStops] ADD CONSTRAINT FK_PitStops_DriverID FOREIGN KEY (driverID) REFERENCES dbo.drivers (driverID)
