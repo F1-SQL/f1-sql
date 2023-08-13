@@ -278,6 +278,19 @@
             Exit
         }
     
+
+        if($database)
+        {
+            Write-Host "INFO: Performing Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\SequelFormula_data_updates.sql' -f $rootpath)
+        } 
+
+        if($database)
+        {
+            Write-Host "INFO: Running data quality fixes" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\SequelFormula_data_quality.sql' -f $rootpath)
+        } 
+
         if($database)
         {
             Write-Host "INFO: Creating keys" -ForegroundColor Yellow
