@@ -82,6 +82,8 @@
     $sourceFiles = "\src\csv\"
     $sourceFilesFullPath = $rootpath + $sourceFiles
 
+    $supplementaryData = $sourceFilesFullPath + "\supplementarydata"
+
     $archiveFolder = "\src\archivedfiles\"
     $archiveLocation = $rootpath + $archiveFolder
     $archiveLocationDate = $archiveLocation + $raceName + "\"
@@ -272,12 +274,27 @@
             
                 Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $fileWithoutExtension -Delimiter "," -NoProgress -KeepIdentity
             }
-        } else {
+            } else {
+                
+                Write-Host "WARN: Creating tables not possible, $databaseName doesn't exist" -ForegroundColor Red
+                Exit
+            }
+
+        if($supplementaryData)
+        {
+            $supplementaryDataFiles = Get-ChildItem -Path $supplementaryData -Filter *.csv  
             
-            Write-Host "WARN: Creating tables not possible, $databaseName doesn't exist" -ForegroundColor Red
-            Exit
-        }
-    
+            foreach($supplementaryDataFile in $supplementaryDataFiles)
+            {
+                $supplementaryDataWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($supplementaryDataFile)
+                Write-Host "INFO: Attempting to import data from" $supplementaryDataFile -ForegroundColor Yellow
+                $filePath = $supplementaryData + $supplementaryDataFile.Name    
+            }
+            
+            Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $supplementaryDataWithoutExtension -Delimiter "," -NoProgress -KeepIdentity
+        } else {
+            Write-Host "WARN: No supplementary data to import" -ForegroundColor Red
+        }    
 
         if($database)
         {

@@ -266,7 +266,7 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
 				/*constructors [dbo].[constructors]*/
 				WHEN COLUMNS.[TABLE_NAME] = 'constructors' AND COLUMNS.[COLUMN_NAME] = 'constructorRef' THEN 'Unique constructor identifier'
 				WHEN COLUMNS.[TABLE_NAME] = 'constructors' AND COLUMNS.[COLUMN_NAME] = 'name' THEN 'Constructor name'
-				WHEN COLUMNS.[TABLE_NAME] = 'constructors' AND COLUMNS.[COLUMN_NAME] = 'nationality' THEN 'Constructor nationality'
+				WHEN COLUMNS.[TABLE_NAME] = 'constructors' AND COLUMNS.[COLUMN_NAME] = 'nationalityID' THEN 'Constructor nationality'
 				WHEN COLUMNS.[TABLE_NAME] = 'constructors' AND COLUMNS.[COLUMN_NAME] = 'url' THEN 'Constructor Wikipedia page'
 				/*drivers*/
 				WHEN COLUMNS.[TABLE_NAME] = 'drivers' AND COLUMNS.[COLUMN_NAME] = 'driverRef' THEN 'Unique driver identifier'
@@ -275,7 +275,7 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
 				WHEN COLUMNS.[TABLE_NAME] = 'drivers' AND COLUMNS.[COLUMN_NAME] = 'forename' THEN 'Driver forename'
 				WHEN COLUMNS.[TABLE_NAME] = 'drivers' AND COLUMNS.[COLUMN_NAME] = 'surname' THEN 'Driver surname'
 				WHEN COLUMNS.[TABLE_NAME] = 'drivers' AND COLUMNS.[COLUMN_NAME] = 'dob' THEN 'Driver date of birth'
-				WHEN COLUMNS.[TABLE_NAME] = 'drivers' AND COLUMNS.[COLUMN_NAME] = 'nationality' THEN 'Driver Wikipedia page'
+				WHEN COLUMNS.[TABLE_NAME] = 'drivers' AND COLUMNS.[COLUMN_NAME] = 'nationalityID' THEN 'Driver Wikipedia page'
 				WHEN COLUMNS.[TABLE_NAME] = 'drivers' AND COLUMNS.[COLUMN_NAME] = 'url' THEN 'Driver Wikipedia page'
 				/*driverStandings*/
 				WHEN COLUMNS.[TABLE_NAME] = 'driverStandings' AND COLUMNS.[COLUMN_NAME] = 'raceId' THEN 'Foreign key link to races table'
@@ -292,7 +292,7 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
 				WHEN COLUMNS.[TABLE_NAME] = 'lapTimes' AND COLUMNS.[COLUMN_NAME] = 'time' THEN 'Lap time in milliseconds'
 				WHEN COLUMNS.[TABLE_NAME] = 'lapTimes' AND COLUMNS.[COLUMN_NAME] = 'milliseconds' THEN 'Lap time in milliseconds'
 				/*nationalities*/
-				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'nationality' THEN 'Nationality E.G. British'
+				WHEN COLUMNS.[TABLE_NAME] = 'nationalities' AND COLUMNS.[COLUMN_NAME] = 'nationality' THEN 'Nationality E.G. British'
 				/*pitStops*/
 				WHEN COLUMNS.[TABLE_NAME] = 'pitStops' AND COLUMNS.[COLUMN_NAME] = 'races' THEN 'Foreign key link to races table'
 				WHEN COLUMNS.[TABLE_NAME] = 'pitStops' AND COLUMNS.[COLUMN_NAME] = 'driverId' THEN 'Foreign key link to drivers table'
