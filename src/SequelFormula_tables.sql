@@ -272,10 +272,10 @@ VALUES
 (604,'Retired','R'),
 (605,'Withdrew','W')
 
-CREATE TABLE dbo.country
+CREATE TABLE dbo.countries
 (
 	countryID INT NOT NULL,
 	country varchar(255)
 );
 
-ALTER TABLE dbo.country ADD CONSTRAINT PK_country_countryID PRIMARY KEY (countryID);
+ALTER TABLE dbo.countries ADD CONSTRAINT PK_countries_countryID PRIMARY KEY (countryID);
