@@ -40,3 +40,6 @@ ALTER TABLE [dbo].[constructorStandings] ADD CONSTRAINT FK_ConstructorStandings_
 /*Constructor Results*/
 ALTER TABLE [dbo].[constructorResults] ADD CONSTRAINT FK_ConstructorResults_ConstructorID FOREIGN KEY (constructorID) REFERENCES dbo.constructors (constructorID)
 ALTER TABLE [dbo].[constructorResults] ADD CONSTRAINT FK_ConstructorResults_RaceID FOREIGN KEY (RaceID) REFERENCES dbo.races (RaceID)
+
+/*Circuits */
+ALTER TABLE [dbo].[circuits] ADD CONSTRAINT FK_Circuits_CountryID  FOREIGN KEY (CountryID) REFERENCES [dbo].[countries] (CountryID)
