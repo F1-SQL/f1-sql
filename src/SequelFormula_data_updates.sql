@@ -4,11 +4,12 @@ GO
 
 UPDATE d 
 
- SET d.nationalityID = n.nationalityID 
+SET d.nationalityID = n.nationalityID 
 
 FROM [dbo].[drivers] d
 
-INNER JOIN dbo.nationality n ON d.nationality = n.nationality
+INNER JOIN [dbo].[nationalities] n ON d.nationality = n.nationality
+
 
 GO
 
@@ -26,7 +27,7 @@ UPDATE c
 
 FROM [dbo].[constructors] c
 
-INNER JOIN dbo.nationality n ON c.nationality = n.nationality
+INNER JOIN dbo.nationalities n ON c.nationality = n.nationality
 
 GO
 
@@ -73,6 +74,8 @@ ALTER TABLE [dbo].[positionText] DROP COLUMN postitionCode
 GO
 
 ALTER TABLE [dbo].[circuits] ADD countryID INT;
+ALTER TABLE [dbo].[circuits] ADD circuitDirectionID INT;
+ALTER TABLE [dbo].[circuits] ADD circuitTypeID INT;
 
 GO
 
@@ -85,7 +88,40 @@ FROM [dbo].[circuits] cir
 INNER JOIN [dbo].[countries] c ON cir.[country] = c.[country]
 
 GO
-
-ALTER TABLE [dbo].[circuits] DROP COLUMN countryID; 
+ALTER TABLE [dbo].[circuits] DROP CONSTRAINT DF_circuits_country; 
 GO
 ALTER TABLE [dbo].[circuits] DROP COLUMN country; 
+
+GO
+
+ALTER TABLE [dbo].[circuits] ADD locationID INT;
+
+GO
+
+UPDATE cir
+
+ SET cir.locationID = l.locationID 
+
+FROM [dbo].[circuits] cir
+
+INNER JOIN [dbo].[locations] l ON cir.[location] = l.[locationName]
+ 
+GO
+ALTER TABLE [dbo].[circuits] DROP COLUMN location; 
+
+GO
+
+UPDATE c SET 
+
+
+c.circuitDirectionID = tc.circuitDirectionID,
+c.circuitTypeID = tc.circuitTypeID
+
+FROM 
+	[RichInF1].[dbo].[tempCircuits] tc
+
+INNER JOIN [dbo].[circuits] c ON c.name = tc.circuit
+
+GO
+
+DROP TABLE [dbo].[tempCircuits]
