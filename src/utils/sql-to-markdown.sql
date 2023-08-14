@@ -240,7 +240,7 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
 			CASE
 				/*circuitDirection[dbo].[circuitDirection]*/
 				WHEN COLUMNS.[TABLE_NAME] = 'circuitDirection' AND COLUMNS.[COLUMN_NAME] = 'circuitDirection' THEN 'Direction of circuit E.G. Clockwise'
-				/*circtuits*/
+				/*circuits*/
 				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'circuitRef' THEN 'Unique circuit identifier'
 				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'name' THEN 'Circuit name'
 				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'location' THEN 'Location name'
