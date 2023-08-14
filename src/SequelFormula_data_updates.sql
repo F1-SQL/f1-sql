@@ -69,3 +69,23 @@ GO
 ALTER TABLE [dbo].[sprintResults] DROP COLUMN postitionText 
 GO
 ALTER TABLE [dbo].[positionText] DROP COLUMN postitionCode
+
+GO
+
+ALTER TABLE [dbo].[circuits] ADD countryID INT;
+
+GO
+
+UPDATE cir
+
+ SET cir.countryID = c.countryID 
+
+FROM [dbo].[circuits] cir
+
+INNER JOIN [dbo].[countries] c ON cir.[country] = c.[country]
+
+GO
+
+ALTER TABLE [dbo].[circuits] DROP COLUMN countryID; 
+GO
+ALTER TABLE [dbo].[circuits] DROP COLUMN country; 
