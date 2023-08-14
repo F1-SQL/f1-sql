@@ -4,11 +4,11 @@ CREATE TABLE circuits (
   circuitId int  NOT NULL,
   circuitRef varchar(255) NOT NULL DEFAULT '',
   name varchar(255) NOT NULL DEFAULT '',
-  location varchar(255) DEFAULT NULL,
-  country varchar(255) DEFAULT NULL,
-  lat float DEFAULT NULL,
-  lng float DEFAULT NULL,
-  alt int DEFAULT NULL,
+  location varchar(255),
+  country varchar(255),
+  lat float,
+  lng float,
+  alt int,
   url varchar(255) NOT NULL DEFAULT ''
 )
 
@@ -19,8 +19,8 @@ CREATE TABLE constructorResults (
   constructorResultsId int  NOT NULL,
   raceId int NOT NULL DEFAULT 0,
   constructorId int NOT NULL DEFAULT 0,
-  points float DEFAULT NULL,
-  status varchar(255) DEFAULT NULL
+  points float,
+  status varchar(255)
 ) 
 
 ALTER TABLE constructorResults ADD CONSTRAINT PK_constructorResults_constructorResultsId PRIMARY KEY (constructorResultsId);
@@ -31,8 +31,8 @@ CREATE TABLE constructorStandings (
   raceId INT NOT NULL DEFAULT 0,
   constructorId INT NOT NULL DEFAULT 0,
   points float NOT NULL DEFAULT 0,
-  position INT DEFAULT NULL,
-  positionText varchar(255) DEFAULT NULL,
+  position INT,
+  positionText varchar(255),
   wins INT NOT NULL DEFAULT 0
 );
 
@@ -42,7 +42,7 @@ CREATE TABLE constructors (
   constructorId INT  NOT NULL,
   constructorRef varchar(255) NOT NULL DEFAULT '',
   name varchar(255) NOT NULL DEFAULT '',
-  nationality varchar(255) DEFAULT NULL,
+  nationality varchar(255),
   url varchar(2048) NOT NULL DEFAULT ''
 );
 
@@ -54,8 +54,8 @@ CREATE TABLE driverStandings (
   raceId INT NOT NULL DEFAULT 0,
   driverId INT NOT NULL DEFAULT 0,
   points float NOT NULL DEFAULT 0,
-  position INT DEFAULT NULL,
-  positionText varchar(255) DEFAULT NULL,
+  position INT,
+  positionText varchar(255),
   wins INT NOT NULL DEFAULT 0
 );
 
@@ -64,12 +64,12 @@ ALTER TABLE driverStandings ADD CONSTRAINT PK_driverStandings_driverStandingsId 
 CREATE TABLE drivers (
   driverId INT  NOT NULL,
   driverRef varchar(255) NOT NULL DEFAULT '',
-  number INT DEFAULT NULL,
-  code varchar(3) DEFAULT NULL,
+  number INT,
+  code varchar(3),
   forename varchar(255) NOT NULL DEFAULT '',
   surname varchar(255) NOT NULL DEFAULT '',
-  dob date DEFAULT NULL,
-  nationality varchar(255) DEFAULT NULL,
+  dob date,
+  nationality varchar(255),
   url varchar(2048) NOT NULL DEFAULT ''
 );
 
@@ -79,9 +79,9 @@ CREATE TABLE lapTimes (
   raceId INT NOT NULL,
   driverId INT NOT NULL,
   lap INT NOT NULL,
-  position INT DEFAULT NULL,
-  time varchar(255) DEFAULT NULL,
-  milliseconds INT DEFAULT NULL
+  position INT,
+  time varchar(255),
+  milliseconds INT
 );
 
 ALTER TABLE lapTimes ADD CONSTRAINT PK_lapTimes_raceId_driverId_lap PRIMARY KEY (raceId,driverId,lap)
@@ -92,8 +92,8 @@ CREATE TABLE pitStops (
   stop INT NOT NULL,
   lap INT NOT NULL,
   time time NOT NULL,
-  duration varchar(255) DEFAULT NULL,
-  milliseconds INT DEFAULT NULL
+  duration varchar(255),
+  milliseconds INT
 );
 
 ALTER TABLE pitStops ADD CONSTRAINT PK_pitStops_raceId_driverId_stop PRIMARY KEY (raceId,driverId,stop)
@@ -104,10 +104,10 @@ CREATE TABLE qualifying (
   driverId INT NOT NULL DEFAULT 0,
   constructorId INT NOT NULL DEFAULT 0,
   number INT NOT NULL DEFAULT 0,
-  position INT DEFAULT NULL,
-  q1 varchar(255) DEFAULT NULL,
-  q2 varchar(255) DEFAULT NULL,
-  q3 varchar(255) DEFAULT NULL
+  position INT,
+  q1 varchar(255),
+  q2 varchar(255),
+  q3 varchar(255)
 );
 
 ALTER TABLE qualifying ADD CONSTRAINT PK_qualifying_qualifyId PRIMARY KEY (qualifyId)
@@ -119,18 +119,18 @@ CREATE TABLE races (
   circuitId INT NOT NULL DEFAULT 0,
   name varchar(255) NOT NULL DEFAULT '',
   date date NOT NULL DEFAULT '0000-00-00',
-  time time DEFAULT NULL,
-  url varchar(2048) DEFAULT NULL,
-  fp1_date date DEFAULT NULL,
-  fp1_time time DEFAULT NULL,
-  fp2_date date DEFAULT NULL,
-  fp2_time time DEFAULT NULL,
-  fp3_date date DEFAULT NULL,
-  fp3_time time DEFAULT NULL,
-  quali_date date DEFAULT NULL,
-  quali_time time DEFAULT NULL,
-  sprint_date date DEFAULT NULL,
-  sprint_time time DEFAULT NULL
+  time time,
+  url varchar(2048),
+  fp1_date date,
+  fp1_time time,
+  fp2_date date,
+  fp2_time time,
+  fp3_date date,
+  fp3_time time,
+  quali_date date,
+  quali_time time,
+  sprint_date date,
+  sprint_time time
 );
 
 ALTER TABLE races ADD CONSTRAINT PK_races_raceId PRIMARY KEY (raceId)
@@ -143,17 +143,17 @@ CREATE TABLE results (
   constructorId INT NOT NULL DEFAULT 0,
   number INT NULL,
   grid INT NOT NULL DEFAULT 0,
-  position INT DEFAULT NULL,
+  position INT,
   positionText varchar(255) NOT NULL DEFAULT '',
   positionOrder INT NOT NULL DEFAULT 0,
   points float NOT NULL DEFAULT 0,
   laps INT NOT NULL DEFAULT 0,
-  time varchar(255) DEFAULT NULL,
-  milliseconds INT DEFAULT NULL,
-  fastestLap INT DEFAULT NULL,
+  time varchar(255),
+  milliseconds INT,
+  fastestLap INT,
   rank INT DEFAULT 0,
-  fastestLapTime varchar(255) DEFAULT NULL,
-  fastestLapSpeed varchar(255) DEFAULT NULL,
+  fastestLapTime varchar(255),
+  fastestLapSpeed varchar(255),
   statusId INT NOT NULL DEFAULT 0
 );
 
@@ -174,15 +174,15 @@ CREATE TABLE sprintResults (
   constructorId INT NOT NULL DEFAULT 0,
   number INT NOT NULL DEFAULT 0,
   grid INT NOT NULL DEFAULT 0,
-  position INT DEFAULT NULL,
+  position INT,
   positionText varchar(255) NOT NULL DEFAULT '',
   positionOrder INT NOT NULL DEFAULT 0,
   points float NOT NULL DEFAULT 0,
   laps INT NOT NULL DEFAULT 0,
-  time varchar(255) DEFAULT NULL,
-  milliseconds INT DEFAULT NULL,
-  fastestLap INT DEFAULT NULL,
-  fastestLapTime varchar(255) DEFAULT NULL,
+  time varchar(255),
+  milliseconds INT,
+  fastestLap INT,
+  fastestLapTime varchar(255),
   statusId INT NOT NULL DEFAULT 0
 );
 
@@ -279,3 +279,11 @@ CREATE TABLE dbo.countries
 );
 
 ALTER TABLE dbo.countries ADD CONSTRAINT PK_countries_countryID PRIMARY KEY (countryID);
+
+CREATE TABLE dbo.locations
+(
+	locationID INT NOT NULL,
+	locationName varchar(255)
+);
+
+ALTER TABLE dbo.locations ADD CONSTRAINT PK_locations_locationID PRIMARY KEY (locationID);
