@@ -31,22 +31,22 @@
         https://richinsql.com/projects/formula-one-database/
 
     .EXAMPLE
-        PS C:\> .\build_database.ps1 -databaseName RichInF1 -sqlInstance 'loclhost' -downloadFiles $true -cleanInstance $false
+        PS C:\> .\build_database.ps1 -databaseName SequelFormula -sqlInstance 'loclhost' -downloadFiles $true -cleanInstance $false
 
         This will perform a full database backup on the databases HR and Finance on SQL Server Instance Server1 to Server1 default backup directory.
 
     .EXAMPLE
-        PS C:\> .\build_database.ps1 -databaseName RichInF1 -sqlInstance 'loclhost' -downloadFiles $true -cleanInstance $true
+        PS C:\> .\build_database.ps1 -databaseName SequelFormula -sqlInstance 'loclhost' -downloadFiles $true -cleanInstance $true
 
         Backs up AdventureWorks2014 to sql2016 C:\temp folder.
 
     .EXAMPLE
-        PS C:\> .\build_database.ps1 -databaseName RichInF1 -sqlInstance 'loclhost' -downloadFiles $false -cleanInstance $true
+        PS C:\> .\build_database.ps1 -databaseName SequelFormula -sqlInstance 'loclhost' -downloadFiles $false -cleanInstance $true
 
         Performs a full backup of all databases on the sql2016 instance to their own containers under the https://dbatoolsaz.blob.core.windows.net/azbackups/ container on Azure blob storage using the sql credential "dbatoolscred" registered on the sql2016 instance.
 
     .EXAMPLE
-        PS C:\> .\build_database.ps1 -databaseName RichInF1 -sqlInstance 'loclhost' -downloadFiles $false -cleanInstance $false
+        PS C:\> .\build_database.ps1 -databaseName SequelFormula -sqlInstance 'loclhost' -downloadFiles $false -cleanInstance $false
 
         Performs a full backup of all databases on the sql2016 instance to the https://dbatoolsaz.blob.core.windows.net/azbackups/ container on Azure blob storage using the Shared Access Signature sql credential "https://dbatoolsaz.blob.core.windows.net/azbackups" registered on the sql2016 instance.
     #>
@@ -90,7 +90,7 @@
 
     $sourceLocation = "https://ergast.com/downloads/f1db_csv.zip"
     
-    $zipName = 'RichInF1_csv_' + $raceName + '.zip'
+    $zipName = 'SequelFormula_csv_' + $raceName + '.zip'
     $zipLocation = $rootpath + $sourceFiles 
     $zipLocationFull = $zipLocation + $zipName
 
