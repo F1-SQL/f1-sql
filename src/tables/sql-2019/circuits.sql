@@ -1,5 +1,5 @@
 /*
-	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS19 at 08/08/2023 19:48:51
+	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS19 at 08/15/2023 09:41:36
 	See https://dbatools.io/Export-DbaScript for more information
 */
 SET ANSI_NULLS ON
@@ -16,6 +16,10 @@ CREATE TABLE [dbo].[circuits](
 	[lng] [float] NULL,
 	[alt] [int] NULL,
 	[url] [varchar](255) COLLATE Latin1_General_CI_AS NOT NULL,
+	[locationID] [int] NULL,
+	[countryID] [int] NULL,
+	[circuitDirectionID] [int] NULL,
+	[circuitTypeID] [int] NULL,
  CONSTRAINT [PK_circuits_circuitId] PRIMARY KEY CLUSTERED 
 (
 	[circuitId] ASC

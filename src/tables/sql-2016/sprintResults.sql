@@ -1,5 +1,5 @@
 /*
-	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS16 at 08/08/2023 19:48:00
+	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS16 at 08/15/2023 09:40:32
 	See https://dbatools.io/Export-DbaScript for more information
 */
 SET ANSI_NULLS ON
@@ -14,7 +14,6 @@ CREATE TABLE [dbo].[sprintResults](
 	[number] [int] NOT NULL,
 	[grid] [int] NOT NULL,
 	[position] [int] NULL,
-	[positionText] [varchar](255) COLLATE Latin1_General_CI_AS NOT NULL,
 	[positionOrder] [int] NOT NULL,
 	[points] [float] NOT NULL,
 	[laps] [int] NOT NULL,
@@ -23,6 +22,7 @@ CREATE TABLE [dbo].[sprintResults](
 	[fastestLap] [int] NULL,
 	[fastestLapTime] [varchar](255) COLLATE Latin1_General_CI_AS NULL,
 	[statusId] [int] NOT NULL,
+	[positionTextID] [int] NULL,
  CONSTRAINT [PK_sprintResults_sprintResultId] PRIMARY KEY CLUSTERED 
 (
 	[resultId] ASC

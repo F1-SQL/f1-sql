@@ -1,5 +1,5 @@
 /*
-	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS17 at 08/08/2023 19:48:28
+	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS17 at 08/15/2023 09:41:05
 	See https://dbatools.io/Export-DbaScript for more information
 */
 SET ANSI_NULLS ON
@@ -25,6 +25,7 @@ CREATE TABLE [dbo].[results](
 	[fastestLapTime] [varchar](255) COLLATE Latin1_General_CI_AS NULL,
 	[fastestLapSpeed] [varchar](255) COLLATE Latin1_General_CI_AS NULL,
 	[statusId] [int] NOT NULL,
+	[positionTextID] [int] NULL,
  CONSTRAINT [PK_results_resultId] PRIMARY KEY CLUSTERED 
 (
 	[resultId] ASC
