@@ -243,19 +243,21 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
 				/*circuits*/
 				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'circuitRef' THEN 'Unique circuit identifier'
 				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'name' THEN 'Circuit name'
-				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'location' THEN 'Location name'
-				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'country' THEN 'Country name'
+				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'locationID' THEN 'Foreign key links to locations'
+				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'countryID' THEN 'Foreign Key link to countries'
 				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'lat' THEN 'Latitude'
 				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'lng' THEN 'Longitude'
 				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'alt' THEN 'Altitude (metres)'
 				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'url' THEN 'Circuit Wikipedia page'
+				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'circuitDirectionID' THEN 'Foreign key link to circuitDirection'
+				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'circuitTypeID' THEN 'Foreign key link to circuitType'
 				/*circuitTypes*/
 				WHEN COLUMNS.[TABLE_NAME] = 'circuits' AND COLUMNS.[COLUMN_NAME] = 'circuitType' THEN 'Type of circuit E.G. Street'
 				/*constructorResults[dbo].[constructorResults]*/
 				WHEN COLUMNS.[TABLE_NAME] = 'constructorResults' AND COLUMNS.[COLUMN_NAME] = 'raceId' THEN 'Foreign key link to races table'
 				WHEN COLUMNS.[TABLE_NAME] = 'constructorResults' AND COLUMNS.[COLUMN_NAME] = 'constructorId' THEN 'Foreign key link to constructors'
 				WHEN COLUMNS.[TABLE_NAME] = 'constructorResults' AND COLUMNS.[COLUMN_NAME] = 'points' THEN 'Constructor points for race'
-				WHEN COLUMNS.[TABLE_NAME] = 'constructorResults' AND COLUMNS.[COLUMN_NAME] = 'status' THEN '"D" for disqualified (or null)'
+				WHEN COLUMNS.[TABLE_NAME] = 'constructorResults' AND COLUMNS.[COLUMN_NAME] = 'positionTextID' THEN 'Foreign Key link to postitionText'
 				/*constructorStandings [dbo].[constructorStandings]*/
 				WHEN COLUMNS.[TABLE_NAME] = 'constructorStandings' AND COLUMNS.[COLUMN_NAME] = 'raceId' THEN 'Foreign key link to races table'
 				WHEN COLUMNS.[TABLE_NAME] = 'constructorStandings' AND COLUMNS.[COLUMN_NAME] = 'constructorId' THEN 'Foreign key link to constructors'
@@ -266,7 +268,7 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
 				/*constructors [dbo].[constructors]*/
 				WHEN COLUMNS.[TABLE_NAME] = 'constructors' AND COLUMNS.[COLUMN_NAME] = 'constructorRef' THEN 'Unique constructor identifier'
 				WHEN COLUMNS.[TABLE_NAME] = 'constructors' AND COLUMNS.[COLUMN_NAME] = 'name' THEN 'Constructor name'
-				WHEN COLUMNS.[TABLE_NAME] = 'constructors' AND COLUMNS.[COLUMN_NAME] = 'nationalityID' THEN 'Constructor nationality'
+				WHEN COLUMNS.[TABLE_NAME] = 'constructors' AND COLUMNS.[COLUMN_NAME] = 'nationalityID' THEN 'Foreign Key to nationalities'
 				WHEN COLUMNS.[TABLE_NAME] = 'constructors' AND COLUMNS.[COLUMN_NAME] = 'url' THEN 'Constructor Wikipedia page'
 				/*drivers*/
 				WHEN COLUMNS.[TABLE_NAME] = 'drivers' AND COLUMNS.[COLUMN_NAME] = 'driverRef' THEN 'Unique driver identifier'
@@ -275,7 +277,7 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
 				WHEN COLUMNS.[TABLE_NAME] = 'drivers' AND COLUMNS.[COLUMN_NAME] = 'forename' THEN 'Driver forename'
 				WHEN COLUMNS.[TABLE_NAME] = 'drivers' AND COLUMNS.[COLUMN_NAME] = 'surname' THEN 'Driver surname'
 				WHEN COLUMNS.[TABLE_NAME] = 'drivers' AND COLUMNS.[COLUMN_NAME] = 'dob' THEN 'Driver date of birth'
-				WHEN COLUMNS.[TABLE_NAME] = 'drivers' AND COLUMNS.[COLUMN_NAME] = 'nationalityID' THEN 'Driver Wikipedia page'
+				WHEN COLUMNS.[TABLE_NAME] = 'drivers' AND COLUMNS.[COLUMN_NAME] = 'nationalityID' THEN 'Foreign Key to nationalities'
 				WHEN COLUMNS.[TABLE_NAME] = 'drivers' AND COLUMNS.[COLUMN_NAME] = 'url' THEN 'Driver Wikipedia page'
 				/*driverStandings*/
 				WHEN COLUMNS.[TABLE_NAME] = 'driverStandings' AND COLUMNS.[COLUMN_NAME] = 'raceId' THEN 'Foreign key link to races table'
@@ -302,7 +304,7 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
 				WHEN COLUMNS.[TABLE_NAME] = 'pitStops' AND COLUMNS.[COLUMN_NAME] = 'duration' THEN 'Duration of stop in milliseconds'
 				WHEN COLUMNS.[TABLE_NAME] = 'pitStops' AND COLUMNS.[COLUMN_NAME] = 'milliseconds' THEN 'Duration of stop in milliseconds'
 				/*positionText*/
-				WHEN COLUMNS.[TABLE_NAME] = 'positionText' AND COLUMNS.[COLUMN_NAME] = 'positionText' THEN ''
+				WHEN COLUMNS.[TABLE_NAME] = 'positionText' AND COLUMNS.[COLUMN_NAME] = 'positionText' THEN 'Text of the outcome of the race, E.G. "D" for Disqualified'
 				/*qualifying*/
 				WHEN COLUMNS.[TABLE_NAME] = 'qualifying' AND COLUMNS.[COLUMN_NAME] = 'raceId' THEN 'Foreign key link to races table '
 				WHEN COLUMNS.[TABLE_NAME] = 'qualifying' AND COLUMNS.[COLUMN_NAME] = 'driverId' THEN 'Foreign key link to drivers table'
@@ -337,7 +339,7 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
 				WHEN COLUMNS.[TABLE_NAME] = 'results' AND COLUMNS.[COLUMN_NAME] = 'number' THEN 'Driver number'
 				WHEN COLUMNS.[TABLE_NAME] = 'results' AND COLUMNS.[COLUMN_NAME] = 'grid' THEN 'Starting grid position'
 				WHEN COLUMNS.[TABLE_NAME] = 'results' AND COLUMNS.[COLUMN_NAME] = 'position' THEN 'Official classification, if applicable'
-				WHEN COLUMNS.[TABLE_NAME] = 'results' AND COLUMNS.[COLUMN_NAME] = 'positionTextID' THEN 'Driver position string e.g. "1" or "R"'
+				WHEN COLUMNS.[TABLE_NAME] = 'results' AND COLUMNS.[COLUMN_NAME] = 'positionTextID' THEN 'Foreign Key link to positionText'
 				WHEN COLUMNS.[TABLE_NAME] = 'results' AND COLUMNS.[COLUMN_NAME] = 'positionOrder' THEN 'Driver position for ordering purposes'
 				WHEN COLUMNS.[TABLE_NAME] = 'results' AND COLUMNS.[COLUMN_NAME] = 'points' THEN 'Driver points for race'
 				WHEN COLUMNS.[TABLE_NAME] = 'results' AND COLUMNS.[COLUMN_NAME] = 'laps' THEN 'Number of completed laps'
@@ -358,7 +360,7 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
 				WHEN COLUMNS.[TABLE_NAME] = 'sprintResults' AND COLUMNS.[COLUMN_NAME] = 'number' THEN 'Driver number'
 				WHEN COLUMNS.[TABLE_NAME] = 'sprintResults' AND COLUMNS.[COLUMN_NAME] = 'grid' THEN 'Starting grid position'
 				WHEN COLUMNS.[TABLE_NAME] = 'sprintResults' AND COLUMNS.[COLUMN_NAME] = 'position' THEN 'Official classification, if applicable'
-				WHEN COLUMNS.[TABLE_NAME] = 'sprintResults' AND COLUMNS.[COLUMN_NAME] = 'positionTextID' THEN 'Driver position string e.g. "1" or "R"'
+				WHEN COLUMNS.[TABLE_NAME] = 'sprintResults' AND COLUMNS.[COLUMN_NAME] = 'positionTextID' THEN 'Foreign key link to positionText'
 				WHEN COLUMNS.[TABLE_NAME] = 'sprintResults' AND COLUMNS.[COLUMN_NAME] = 'positionOrder' THEN 'Driver position for ordering purposes'
 				WHEN COLUMNS.[TABLE_NAME] = 'sprintResults' AND COLUMNS.[COLUMN_NAME] = 'points' THEN 'Driver points for race'
 				WHEN COLUMNS.[TABLE_NAME] = 'sprintResults' AND COLUMNS.[COLUMN_NAME] = 'laps' THEN 'Number of completed laps'
@@ -369,6 +371,10 @@ WHILE @current_loop_table_index IS NOT NULL BEGIN
 				WHEN COLUMNS.[TABLE_NAME] = 'sprintResults' AND COLUMNS.[COLUMN_NAME] = 'statusId' THEN 'Foreign key link to status table'
 				/*status*/
 				WHEN COLUMNS.[TABLE_NAME] = 'status' AND COLUMNS.[COLUMN_NAME] = 'status' THEN 'Finishing status e.g. "Retired"'
+				/*status*/
+				WHEN COLUMNS.[TABLE_NAME] = 'countries' AND COLUMNS.[COLUMN_NAME] = 'country' THEN 'Name of the country, E.G. United States'
+				/*status*/
+				WHEN COLUMNS.[TABLE_NAME] = 'locations' AND COLUMNS.[COLUMN_NAME] = 'locationName' THEN 'Location Name E.G. Las Vegas'
            END +  N' | '
    FROM    INFORMATION_SCHEMA.COLUMNS LEFT OUTER JOIN
                sys.extended_properties ep ON
