@@ -64,7 +64,7 @@ c.circuitDirectionID = tc.circuitDirectionID,
 c.circuitTypeID = tc.circuitTypeID
 
 FROM 
-	[RichInF1].[dbo].[tempCircuits] tc
+	[dbo].[tempCircuits] tc
 
 INNER JOIN [dbo].[circuits] c ON c.name = tc.circuit
 
