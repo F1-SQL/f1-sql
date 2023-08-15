@@ -82,7 +82,7 @@
     $sourceFiles = "\src\csv\"
     $sourceFilesFullPath = $rootpath + $sourceFiles
 
-    $supplementaryData = $sourceFilesFullPath + "\supplementarydata"
+    $supplementaryData = $rootpath + "\src\supplementarydata"
 
     $archiveFolder = "\src\archivedfiles\"
     $archiveLocation = $rootpath + $archiveFolder
@@ -287,11 +287,10 @@
             foreach($supplementaryDataFile in $supplementaryDataFiles)
             {
                 $supplementaryDataWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($supplementaryDataFile)
-                Write-Host "INFO: Attempting to import data from" $supplementaryDataFile -ForegroundColor Yellow
-                $filePath = $supplementaryData + $supplementaryDataFile.Name    
+                Write-Host "INFO: Attempting to import data from " $supplementaryDataFile.FullName " into " $supplementaryDataWithoutExtension -ForegroundColor Yellow
+                Import-DbaCsv -Path $supplementaryDataFile.FullName -SqlInstance $svr -Database $databaseName -Table $supplementaryDataWithoutExtension -Delimiter "," -NoProgress
             }
             
-            Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $supplementaryDataWithoutExtension -Delimiter "," -NoProgress -KeepIdentity
         } else {
             Write-Host "WARN: No supplementary data to import" -ForegroundColor Red
         }    
@@ -353,7 +352,7 @@
             Write-Host "INFO: Dropping database $databaseName from $instance" -ForegroundColor Yellow
             Remove-DbaDatabase -SqlInstance $svr -Database $databaseName -Confirm:$false 
         } else {
-            Write-Host "WARN: $databaseName not dropped as database is not set to backup"
+            Write-Host "WARN: $databaseName not dropped as database is not set to backup" -ForegroundColor Red
         }
 
         Write-Host "SUCCESS: Database build complete on $instance" -ForegroundColor Green
