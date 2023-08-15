@@ -144,7 +144,7 @@ CREATE TABLE results (
   number INT NULL,
   grid INT NOT NULL DEFAULT 0,
   position INT,
-  positionText varchar(255) NOT NULL DEFAULT '',
+  positionText varchar(255) NOT NULL,
   positionOrder INT NOT NULL DEFAULT 0,
   points float NOT NULL DEFAULT 0,
   laps INT NOT NULL DEFAULT 0,
@@ -175,7 +175,7 @@ CREATE TABLE sprintResults (
   number INT NOT NULL DEFAULT 0,
   grid INT NOT NULL DEFAULT 0,
   position INT,
-  positionText varchar(255) NOT NULL DEFAULT '',
+  positionText varchar(255) NOT NULL,
   positionOrder INT NOT NULL DEFAULT 0,
   points float NOT NULL DEFAULT 0,
   laps INT NOT NULL DEFAULT 0,
@@ -208,7 +208,7 @@ ALTER TABLE dbo.circuitTypes ADD CONSTRAINT PK_circuitTypes_circuitTypeID PRIMAR
 CREATE TABLE dbo.circuitDirection
 (
 	circuitDirectionID INT NOT NULL,
-	circuitDirection varchar(50)
+	circuitDirection varchar(255)
 );
 
 ALTER TABLE dbo.circuitDirection ADD CONSTRAINT PK_circuitDirection_circuitDirectionID PRIMARY KEY (circuitDirectionID);
@@ -287,3 +287,25 @@ CREATE TABLE dbo.locations
 );
 
 ALTER TABLE dbo.locations ADD CONSTRAINT PK_locations_locationID PRIMARY KEY (locationID);
+
+CREATE TABLE [dbo].[tempCircuits](
+	[Circuit] [nvarchar](50) NOT NULL,
+	[circuitTypeID] [tinyint] NOT NULL,
+	[circuitDirectionID] [tinyint] NOT NULL,
+	[Location] [nvarchar](50) NOT NULL,
+	[Country] [nvarchar](50) NOT NULL,
+	[LastLengthUsed] [nvarchar](50) NOT NULL,
+	[GrandsPrix] [nvarchar](50) NOT NULL,
+	[Season] [nvarchar](150) NOT NULL,
+	[GrandsPrixHeld] [tinyint] NOT NULL
+);
+
+ALTER TABLE [dbo].[Results] ADD positionTextID INT;
+ALTER TABLE [dbo].[circuits] ADD locationID INT;
+ALTER TABLE [dbo].[circuits] ADD countryID INT;
+ALTER TABLE [dbo].[circuits] ADD circuitDirectionID INT;
+ALTER TABLE [dbo].[circuits] ADD circuitTypeID INT;
+ALTER TABLE [dbo].[sprintResults] ADD positionTextID INT;
+ALTER TABLE [dbo].[constructors] ADD nationalityID INT; 
+ALTER TABLE [dbo].[drivers] ADD nationalityID INT;
+ALTER TABLE [dbo].[constructorResults] ADD positionTextID INT;
