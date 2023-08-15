@@ -1,4 +1,4 @@
-﻿Circuit,circuitTypeID,circuitDirectionID,Location,Country,Last length used,Grands Prix,Season(s),Grands Prix held
+﻿Circuit,circuitTypeID,circuitDirectionID,Location,Country,LastLengthUsed,GrandsPrix,Season,GrandsPrixHeld
 Adelaide Street Circuit,1,1,Adelaide,Australia,3.780 km (2.349 mi),Australian Grand Prix,1985–1995,11
 Ain Diab,3,1,Casablanca,Morocco,7.618 km (4.734 mi),Moroccan Grand Prix,1958,1
 Aintree,3,1,Aintree,United Kingdom,4.828 km (3.000 mi),British Grand Prix,"1955, 1957, 1959, 1961–1962",5
