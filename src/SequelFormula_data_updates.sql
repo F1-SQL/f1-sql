@@ -93,5 +93,5 @@ ALTER TABLE [dbo].[circuits] DROP COLUMN [country];
 ALTER TABLE [dbo].[results] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[drivers] DROP COLUMN [nationality]; 
 ALTER TABLE [dbo].[sprintResults] DROP COLUMN [positionText];
-ALTER TABLE [dbo].[positionText] DROP COLUMN [positionText];
+ALTER TABLE [dbo].[positionText] DROP COLUMN [positionCode];
 ALTER TABLE [dbo].[constructorResults] DROP COLUMN [status];
