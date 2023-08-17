@@ -10,7 +10,7 @@ Autodromo Enzo e Dino Ferrari,2,2,Imola,Italy,4.909 km (3.050 mi),San Marino G
 Autodromo Enzo e Dino Ferrari,2,2,Imola,Italy,4.909 km (3.050 mi),Emilia Romagna Grand Prix,2020–2022,3
 Autódromo Hermanos Rodríguez,2,1,Mexico City,Mexico,4.304 km (2.674 mi),"Mexican Grand Prix,
 Mexico City Grand Prix","1963–1970, 1986–1992, 2015–2019, 2021–2022",22
-Autódromo Internacional do Rio de Janeiro,2,2,Rio de Janeiro,Brazil,5.031 km (3.126 mi),Brazilian Grand Prix,"1978, 1981–1989",10
+Autódromo Internacional Nelson Piquet,2,2,Rio de Janeiro,Brazil,5.031 km (3.126 mi),Brazilian Grand Prix,"1978, 1981–1989",10
 Autodromo Internazionale del Mugello,2,1,Scarperia e San Piero,Italy,5.245 km (3.259 mi),Tuscan Grand Prix,2020,1
 Autódromo José Carlos Pace,2,2,São Paulo,Brazil,4.309 km (2.677 mi),"Brazilian Grand Prix,
 São Paulo Grand Prix","1973–1977, 1979–1980, 1990–2019, 2021–2022",39
@@ -56,7 +56,7 @@ Hockenheimring,2,1,Hockenheim,Germany,4.574 km (2.842 mi),German Grand Prix,"1
 Hungaroring,2,1,Mogyoród,Hungary,4.381 km (2.722 mi),Hungarian Grand Prix,1986–2023,38
 Indianapolis Motor Speedway,2,2,Speedway,United States,4.023 km (2.500 mi),Indianapolis 500,1950–1960,11
 Indianapolis Motor Speedway,2,1,Speedway,United States,4.192 km (2.605 mi),United States Grand Prix,2000–2007,8
-Intercity Istanbul Park,2,2,Istanbul,Turkey,5.338 km (3.317 mi),Turkish Grand Prix,"2005–2011, 2020–2021",9
+Istanbul Park,2,2,Istanbul,Turkey,5.338 km (3.317 mi),Turkish Grand Prix,"2005–2011, 2020–2021",9
 Jeddah Corniche Circuit,1,2,Jeddah,Saudi Arabia,6.174 km (3.836 mi),Saudi Arabian Grand Prix,2021–2023,3
 Korean International Circuit,2,2,Yeongam,South Korea,5.615 km (3.489 mi),Korean Grand Prix,2010–2013,4
 Kyalami,2,2,Midrand,South Africa,4.261 km (2.648 mi),South African Grand Prix,"1967–1980, 1982–1985, 1992–1993",20
@@ -66,7 +66,7 @@ Long Beach,1,1,Long Beach,United States,3.275 km (2.035 mi),United States Gran
 Losail International Circuit,2,1,Lusail,Qatar,5.418 km (3.367 mi),Qatar Grand Prix,2021,1
 Marina Bay Street Circuit,1,2,Marina Bay,Singapore,5.063 km (3.146 mi),Singapore Grand Prix,"2008–2019, 2022",13
 Miami International Autodrome,1,2,Miami Gardens,United States,5.412 km (3.363 mi),Miami Grand Prix,2022–2023,2
-Montjuïc circuit,1,2,Barcelona,Spain,3.791 km (2.356 mi),Spanish Grand Prix,"1969, 1971, 1973, 1975",4
+Montjuïc,1,2,Barcelona,Spain,3.791 km (2.356 mi),Spanish Grand Prix,"1969, 1971, 1973, 1975",4
 Mosport International Raceway,2,1,Bowmanville,Canada,3.957 km (2.459 mi),Canadian Grand Prix,"1967, 1969, 1971–1974, 1976–1977",8
 Nürburgring,2,1,Nürburg,Germany,5.148 km (3.199 mi),German Grand Prix,"1951–1954, 1956–1958, 1961–1969, 1971–1976, 1985, 2009, 2011, 2013",28
 Nürburgring,2,1,Nürburg,Germany,5.148 km (3.199 mi),European Grand Prix,"1984, 1995–1996, 1999–2007",11
@@ -89,7 +89,7 @@ Silverstone Circuit,2,1,Silverstone,United Kingdom,5.891 km (3.660 mi),"Britis
 Silverstone Circuit,2,1,Silverstone,United Kingdom,5.891 km (3.660 mi),70th Anniversary Grand Prix,2020,1
 Sochi Autodrom,2,1,Sochi,Russia,5.848 km (3.634 mi),Russian Grand Prix,2014–2021,8
 Suzuka Circuit,2,3,Suzuka,Japan,5.807 km (3.608 mi),Japanese Grand Prix,"1987–2006, 2009–2019, 2022",32
-TI Circuit Aida,2,1,Mimasaka,Japan,3.703 km (2.301 mi),Pacific Grand Prix,1994–1995,2
+Okayama International Circuit,2,1,Mimasaka,Japan,3.703 km (2.301 mi),Pacific Grand Prix,1994–1995,2
 Valencia Street Circuit,1,1,Valencia,Spain,5.419 km (3.367 mi),European Grand Prix,2008–2012,5
 Watkins Glen,2,1,Watkins Glen,United States,5.430 km (3.374 mi),United States Grand Prix,1961–1980,20
 Yas Marina Circuit,2,2,Abu Dhabi,United Arab Emirates,5.281 km (3.281 mi),Abu Dhabi Grand Prix,2009–2022,14

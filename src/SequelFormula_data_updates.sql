@@ -87,6 +87,19 @@ INNER JOIN [dbo].[positionText] pt
 
 GO
 
+UPDATE cs
+
+SET 
+	cs.positionTextID = pt.positionTextID
+
+FROM 
+	[dbo].[constructorStandings] cs
+
+INNER JOIN [dbo].[positionText] pt 
+	ON cs.positionText = pt.positionCode
+
+GO
+
 ALTER TABLE [dbo].[constructors] DROP COLUMN [nationality]; 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [location]; 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [country]; 
@@ -95,3 +108,4 @@ ALTER TABLE [dbo].[drivers] DROP COLUMN [nationality];
 ALTER TABLE [dbo].[sprintResults] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[positionText] DROP COLUMN [positionCode];
 ALTER TABLE [dbo].[constructorResults] DROP COLUMN [status];
+ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
