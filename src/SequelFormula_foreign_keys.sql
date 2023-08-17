@@ -32,10 +32,13 @@ ALTER TABLE [dbo].[LapTimes] ADD CONSTRAINT FK_LapTimes_RaceID FOREIGN KEY (Race
 /*Driver Standings*/
 ALTER TABLE [dbo].[driverStandings] ADD CONSTRAINT FK_DriverStandings_DriverID FOREIGN KEY (driverID) REFERENCES dbo.drivers (driverID)
 ALTER TABLE [dbo].[driverStandings] ADD CONSTRAINT FK_DriverStandings_RaceID FOREIGN KEY (RaceID) REFERENCES dbo.races (RaceID)
+ALTER TABLE [dbo].[driverStandings] ADD CONSTRAINT FK_DriverStandings_PositionTextID FOREIGN KEY (positionTextID) REFERENCES [dbo].[positionText] (positionTextID)
+
 
 /*Constructor Standings*/
 ALTER TABLE [dbo].[constructorStandings] ADD CONSTRAINT FK_ConstructorStandings_ConstructorID FOREIGN KEY (constructorID) REFERENCES dbo.constructors (constructorID)
 ALTER TABLE [dbo].[constructorStandings] ADD CONSTRAINT FK_ConstructorStandings_RaceID FOREIGN KEY (RaceID) REFERENCES dbo.races (RaceID)
+ALTER TABLE [dbo].[constructorStandings] ADD CONSTRAINT FK_ConstructorStandings_PositionTextID FOREIGN KEY (positionTextID) REFERENCES [dbo].[positionText] (positionTextID)
 
 /*Constructor Results*/
 ALTER TABLE [dbo].[constructorResults] ADD CONSTRAINT FK_ConstructorResults_ConstructorID FOREIGN KEY (constructorID) REFERENCES dbo.constructors (constructorID)
@@ -44,3 +47,12 @@ ALTER TABLE [dbo].[constructorResults] ADD CONSTRAINT FK_ConstructorResults_posi
 
 /*Circuits */
 ALTER TABLE [dbo].[circuits] ADD CONSTRAINT FK_Circuits_CountryID  FOREIGN KEY (CountryID) REFERENCES [dbo].[countries] (CountryID)
+ALTER TABLE [dbo].[circuits] ADD CONSTRAINT FK_Circuits_CircuitDirectionID  FOREIGN KEY (circuitDirectionID) REFERENCES [dbo].[circuitDirection] (circuitDirectionID)
+ALTER TABLE [dbo].[circuits] ADD CONSTRAINT FK_Circuits_CircuitTypeID  FOREIGN KEY (circuitTypeID) REFERENCES [dbo].[circuitTypes] (circuitTypeID)
+ALTER TABLE [dbo].[circuits] ADD CONSTRAINT FK_Circuits_LocationID  FOREIGN KEY (locationID) REFERENCES [dbo].[locations] (locationID)
+
+/*Constructors*/
+ALTER TABLE [dbo].[constructors] ADD CONSTRAINT FK_constructors_NationalityID FOREIGN KEY (NationalityID) REFERENCES [dbo].[nationalities] (NationalityID);
+
+/*Drivers*/
+ALTER TABLE [dbo].[drivers] ADD CONSTRAINT FK_Drivers_NationalityID FOREIGN KEY (NationalityID) REFERENCES [dbo].[nationalities] (NationalityID);

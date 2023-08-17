@@ -310,3 +310,5 @@ ALTER TABLE [dbo].[constructors] ADD nationalityID INT;
 ALTER TABLE [dbo].[drivers] ADD nationalityID INT;
 ALTER TABLE [dbo].[constructorResults] ADD positionTextID INT;
 ALTER TABLE [dbo].[constructorStandings] ADD positionTextID INT;
+ALTER TABLE [dbo].[constructorStandings] ADD positionTextID INT;
+ALTER TABLE [dbo].[driverStandings] ADD positionTextID INT;
