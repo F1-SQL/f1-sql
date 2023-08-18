@@ -59,6 +59,6 @@ ALTER TABLE [dbo].[drivers] ADD CONSTRAINT FK_Drivers_NationalityID FOREIGN KEY 
 
 
 /*Driver Numbers*/
-ALTER TABLE dbo.driverNumbers ADD CONSTRAINT PK_driverNumbers_driverID FOREIGN KEY REFERENCES [dbo].[drivers] (driverID);
-ALTER TABLE dbo.driverNumbers ADD CONSTRAINT PK_driverNumbers_constructorID FOREIGN KEY REFERENCES [dbo].[constructors] (constructorId);
-ALTER TABLE dbo.driverNumbers ADD CONSTRAINT PK_driverNumbers_season FOREIGN KEY REFERENCES [dbo].[seasons]([year]);
+ALTER TABLE dbo.driverNumbers ADD CONSTRAINT PK_driverNumbers_driverID FOREIGN KEY (driverID) REFERENCES [dbo].[drivers] (driverID);
+ALTER TABLE dbo.driverNumbers ADD CONSTRAINT PK_driverNumbers_constructorID FOREIGN KEY (constructorID) REFERENCES [dbo].[constructors] (constructorId);
+ALTER TABLE dbo.driverNumbers ADD CONSTRAINT PK_driverNumbers_season FOREIGN KEY (season) REFERENCES [dbo].[seasons](year);
