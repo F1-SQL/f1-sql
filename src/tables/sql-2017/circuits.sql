@@ -1,5 +1,5 @@
 /*
-	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS17 at 08/15/2023 09:41:04
+	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS17 at 08/15/2023 13:21:27
 	See https://dbatools.io/Export-DbaScript for more information
 */
 SET ANSI_NULLS ON
@@ -10,8 +10,6 @@ CREATE TABLE [dbo].[circuits](
 	[circuitId] [int] NOT NULL,
 	[circuitRef] [varchar](255) COLLATE Latin1_General_CI_AS NOT NULL,
 	[name] [varchar](255) COLLATE Latin1_General_CI_AS NOT NULL,
-	[location] [varchar](255) COLLATE Latin1_General_CI_AS NULL,
-	[country] [varchar](255) COLLATE Latin1_General_CI_AS NULL,
 	[lat] [float] NULL,
 	[lng] [float] NULL,
 	[alt] [int] NULL,

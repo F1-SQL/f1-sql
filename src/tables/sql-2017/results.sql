@@ -1,5 +1,5 @@
 /*
-	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS17 at 08/15/2023 09:41:05
+	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS17 at 08/15/2023 13:21:28
 	See https://dbatools.io/Export-DbaScript for more information
 */
 SET ANSI_NULLS ON
@@ -14,7 +14,6 @@ CREATE TABLE [dbo].[results](
 	[number] [int] NULL,
 	[grid] [int] NOT NULL,
 	[position] [int] NULL,
-	[positionText] [varchar](255) COLLATE Latin1_General_CI_AS NOT NULL,
 	[positionOrder] [int] NOT NULL,
 	[points] [float] NOT NULL,
 	[laps] [int] NOT NULL,

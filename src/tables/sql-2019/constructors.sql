@@ -1,5 +1,5 @@
 /*
-	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS19 at 08/15/2023 09:41:36
+	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS19 at 08/15/2023 13:21:56
 	See https://dbatools.io/Export-DbaScript for more information
 */
 SET ANSI_NULLS ON
@@ -10,7 +10,6 @@ CREATE TABLE [dbo].[constructors](
 	[constructorId] [int] NOT NULL,
 	[constructorRef] [varchar](255) COLLATE Latin1_General_CI_AS NOT NULL,
 	[name] [varchar](255) COLLATE Latin1_General_CI_AS NOT NULL,
-	[nationality] [varchar](255) COLLATE Latin1_General_CI_AS NULL,
 	[url] [varchar](2048) COLLATE Latin1_General_CI_AS NOT NULL,
 	[nationalityID] [int] NULL,
  CONSTRAINT [PK_constructors_constructorId] PRIMARY KEY CLUSTERED 
