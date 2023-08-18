@@ -300,6 +300,19 @@ CREATE TABLE [dbo].[tempCircuits](
 	[GrandsPrixHeld] [tinyint] NOT NULL
 );
 
+CREATE TABLE [dbo].[driverNumbers]
+(
+	driverNumberID INT NOT NULL IDENTITY(1,1),
+	number INT NOT NULL,
+	driverID INT NOT NULL,
+	constructorID INT,
+	season INT,
+	sub BIT DEFAULT 0,
+	retired BIT DEFAULT 0
+);
+
+ALTER TABLE [dbo].[driverNumbers] ADD CONSTRAINT PK_driverNumbers_driverNumberID PRIMARY KEY (driverNumberID);
+
 ALTER TABLE [dbo].[Results] ADD positionTextID INT;
 ALTER TABLE [dbo].[circuits] ADD locationID INT;
 ALTER TABLE [dbo].[circuits] ADD countryID INT;
