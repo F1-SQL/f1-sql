@@ -102,6 +102,14 @@ GO
 
 
 UPDATE [dbo].[results]
+	SET
+		fastestLapTime_converted = TRY_CONVERT(time, STUFF(STUFF(RIGHT(CONCAT('000000', REPLACE(fastestLapTime, ':', '')), 10), 5, 0, ':'), 3, 0, ':')) 
+FROM 
+	[dbo].[results]
+
+
+
+UPDATE [dbo].[results]
 SET 
 	fastestLapSpeed_Decimal = TRY_CONVERT(decimal(18,3),fastestLapSpeed) 
 FROM 
@@ -119,6 +127,7 @@ SET
 	q3_converted = TRY_CONVERT(time, STUFF(STUFF(RIGHT(CONCAT('000000', REPLACE(q3, ':', '')), 10), 5, 0, ':'), 3, 0, ':'))
 
 
+
 GO
 
 ALTER TABLE [dbo].[constructors] DROP COLUMN [nationality]; 
@@ -132,6 +141,11 @@ ALTER TABLE [dbo].[constructorResults] DROP COLUMN [status];
 ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[driverStandings] DROP COLUMN [positionText];
+
+ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapTime];
+
+EXEC sp_rename 'dbo.results.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
+
 
 ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapSpeed];
 
@@ -149,4 +163,5 @@ ALTER TABLE [dbo].[results] DROP COLUMN q3;
 EXEC sp_rename 'dbo.qualifying.q1_converted', 'q1', 'COLUMN';
 EXEC sp_rename 'dbo.qualifying.q2_converted', 'q2', 'COLUMN';
 EXEC sp_rename 'dbo.qualifying.q3_converted', 'q3', 'COLUMN';
+
 
