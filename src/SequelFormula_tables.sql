@@ -325,3 +325,4 @@ ALTER TABLE [dbo].[constructorResults] ADD positionTextID INT;
 ALTER TABLE [dbo].[constructorStandings] ADD positionTextID INT;
 ALTER TABLE [dbo].[constructorStandings] ADD positionTextID INT;
 ALTER TABLE [dbo].[driverStandings] ADD positionTextID INT;
+ALTER TABLE [dbo].[results] ADD [fastestLapSpeed_Decimal] DECIMAL(18,3) NULL; 

@@ -100,6 +100,14 @@ INNER JOIN [dbo].[positionText] pt
 
 GO
 
+UPDATE [dbo].[results]
+SET 
+	fastestLapSpeed_Decimal = TRY_CONVERT(decimal(18,3),fastestLapSpeed) 
+FROM 
+	[dbo].[results]
+
+GO
+
 ALTER TABLE [dbo].[constructors] DROP COLUMN [nationality]; 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [location]; 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [country]; 
@@ -111,3 +119,5 @@ ALTER TABLE [dbo].[constructorResults] DROP COLUMN [status];
 ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[driverStandings] DROP COLUMN [positionText];
+
+EXEC sp_rename 'dbo.results.fastestLapSpeed_Decimal', 'fastestLapSpeed', 'COLUMN';
