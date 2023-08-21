@@ -100,6 +100,36 @@ INNER JOIN [dbo].[positionText] pt
 
 GO
 
+
+UPDATE [dbo].[results]
+	SET
+		fastestLapTime_converted = TRY_CONVERT(time, STUFF(STUFF(RIGHT(CONCAT('000000', REPLACE(fastestLapTime, ':', '')), 10), 5, 0, ':'), 3, 0, ':')) 
+FROM 
+	[dbo].[results]
+
+
+
+UPDATE [dbo].[results]
+SET 
+	fastestLapSpeed_Decimal = TRY_CONVERT(decimal(18,3),fastestLapSpeed) 
+FROM 
+	[dbo].[results]
+
+
+UPDATE [dbo].[pitStops] 
+	SET
+		duration_converted = TRY_CONVERT(decimal(18,3),duration)
+
+UPDATE [dbo].[qualifying]
+SET
+	q1_converted = TRY_CONVERT(time, STUFF(STUFF(RIGHT(CONCAT('000000', REPLACE(q1, ':', '')), 10), 5, 0, ':'), 3, 0, ':')),
+	q2_converted = TRY_CONVERT(time, STUFF(STUFF(RIGHT(CONCAT('000000', REPLACE(q2, ':', '')), 10), 5, 0, ':'), 3, 0, ':')),
+	q3_converted = TRY_CONVERT(time, STUFF(STUFF(RIGHT(CONCAT('000000', REPLACE(q3, ':', '')), 10), 5, 0, ':'), 3, 0, ':'))
+
+
+
+GO
+
 ALTER TABLE [dbo].[constructors] DROP COLUMN [nationality]; 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [location]; 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [country]; 
@@ -111,6 +141,29 @@ ALTER TABLE [dbo].[constructorResults] DROP COLUMN [status];
 ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[driverStandings] DROP COLUMN [positionText];
+
 ALTER TABLE [dbo].[sprintResults] DROP COLUMN [fastestLapTime];
 
 EXEC sp_rename 'dbo.sprintResults.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
+
+ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapTime];
+
+EXEC sp_rename 'dbo.results.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
+
+
+ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapSpeed];
+
+EXEC sp_rename 'dbo.results.fastestLapSpeed_Decimal', 'fastestLapSpeed', 'COLUMN';
+
+
+ALTER TABLE [dbo].[pitStops] DROP COLUMN [duration];
+
+EXEC sp_rename 'dbo.pitStops.duration_converted', 'duration', 'COLUMN';
+
+ALTER TABLE [dbo].[results] DROP COLUMN q1;
+ALTER TABLE [dbo].[results] DROP COLUMN q2;
+ALTER TABLE [dbo].[results] DROP COLUMN q3;
+
+EXEC sp_rename 'dbo.qualifying.q1_converted', 'q1', 'COLUMN';
+EXEC sp_rename 'dbo.qualifying.q2_converted', 'q2', 'COLUMN';
+EXEC sp_rename 'dbo.qualifying.q3_converted', 'q3', 'COLUMN';
