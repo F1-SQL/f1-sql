@@ -326,7 +326,9 @@ ALTER TABLE [dbo].[constructorStandings] ADD positionTextID INT;
 ALTER TABLE [dbo].[constructorStandings] ADD positionTextID INT;
 ALTER TABLE [dbo].[driverStandings] ADD positionTextID INT;
 
+ALTER TABLE [dbo].[results] ADD [fastestLapSpeed_Decimal] DECIMAL(18,3) NULL; 
+
+
 ALTER TABLE [dbo].[pitStops] ADD [duration_converted] DECIMAL(18,3);
 
 ALTER TABLE [dbo].[qualifying] ADD [q1_converted] TIME(3), [q2_converted] TIME(3), [q3_converted] TIME(3)
-
