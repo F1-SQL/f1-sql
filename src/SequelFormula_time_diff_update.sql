@@ -99,4 +99,3 @@ UPDATE [dbo].[sprintResults]
 		
 FROM 
 	[dbo].[sprintResults]
-
