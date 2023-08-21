@@ -325,4 +325,4 @@ ALTER TABLE [dbo].[constructorResults] ADD positionTextID INT;
 ALTER TABLE [dbo].[constructorStandings] ADD positionTextID INT;
 ALTER TABLE [dbo].[constructorStandings] ADD positionTextID INT;
 ALTER TABLE [dbo].[driverStandings] ADD positionTextID INT;
-ALTER TABLE [dbo].[results] ADD [fastestLapTime_Converted] TIME NULL; 
+ALTER TABLE [dbo].[results] ADD [fastestLapTime_Converted] TIME(3) NULL; 
