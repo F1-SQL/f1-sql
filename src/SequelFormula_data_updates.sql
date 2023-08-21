@@ -142,6 +142,10 @@ ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[driverStandings] DROP COLUMN [positionText];
 
+ALTER TABLE [dbo].[sprintResults] DROP COLUMN [fastestLapTime];
+
+EXEC sp_rename 'dbo.sprintResults.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
+
 ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapTime];
 
 EXEC sp_rename 'dbo.results.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
@@ -163,5 +167,3 @@ ALTER TABLE [dbo].[results] DROP COLUMN q3;
 EXEC sp_rename 'dbo.qualifying.q1_converted', 'q1', 'COLUMN';
 EXEC sp_rename 'dbo.qualifying.q2_converted', 'q2', 'COLUMN';
 EXEC sp_rename 'dbo.qualifying.q3_converted', 'q3', 'COLUMN';
-
-
