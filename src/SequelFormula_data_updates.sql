@@ -134,6 +134,14 @@ UPDATE [dbo].[lapTimes]
 
 GO
 
+UPDATE [dbo].[results] SET time_converted = TRY_CONVERT(time(3),[time]) WHERE position = 1
+
+GO
+
+UPDATE [dbo].[results] SET time_converted = TRY_CONVERT(time(3),[TimeDifference]) WHERE position != 1
+
+GO
+
 ALTER TABLE [dbo].[constructors] DROP COLUMN [nationality]; 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [location]; 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [country]; 
@@ -153,6 +161,8 @@ ALTER TABLE [dbo].[results] DROP COLUMN q1;
 ALTER TABLE [dbo].[results] DROP COLUMN q2;
 ALTER TABLE [dbo].[results] DROP COLUMN q3;
 ALTER TABLE [dbo].[lapTimes] DROP COLUMN [time];
+ALTER TABLE [dbo].[results] DROP COLUMN [time];
+ALTER TABLE [dbo].[results] DROP COLUMN [timeDifference];
 
 EXEC sp_rename 'dbo.sprintResults.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
 EXEC sp_rename 'dbo.results.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
@@ -162,3 +172,4 @@ EXEC sp_rename 'dbo.qualifying.q1_converted', 'q1', 'COLUMN';
 EXEC sp_rename 'dbo.qualifying.q2_converted', 'q2', 'COLUMN';
 EXEC sp_rename 'dbo.qualifying.q3_converted', 'q3', 'COLUMN';
 EXEC sp_rename 'dbo.lapTimes.time_converted', 'time', 'COLUMN';
+EXEC sp_rename 'dbo.results.time_converted', 'time', 'COLUMN';
