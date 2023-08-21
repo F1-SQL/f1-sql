@@ -325,3 +325,4 @@ ALTER TABLE [dbo].[constructorResults] ADD positionTextID INT;
 ALTER TABLE [dbo].[constructorStandings] ADD positionTextID INT;
 ALTER TABLE [dbo].[constructorStandings] ADD positionTextID INT;
 ALTER TABLE [dbo].[driverStandings] ADD positionTextID INT;
+ALTER TABLE [dbo].[pitStops] ADD [duration_converted] DECIMAL(18,3);

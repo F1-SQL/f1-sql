@@ -100,6 +100,12 @@ INNER JOIN [dbo].[positionText] pt
 
 GO
 
+UPDATE [dbo].[pitStops] 
+	SET
+		duration_converted = TRY_CONVERT(decimal(18,3),duration)
+
+GO
+
 ALTER TABLE [dbo].[constructors] DROP COLUMN [nationality]; 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [location]; 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [country]; 
@@ -111,3 +117,6 @@ ALTER TABLE [dbo].[constructorResults] DROP COLUMN [status];
 ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[driverStandings] DROP COLUMN [positionText];
+ALTER TABLE [dbo].[pitStops] DROP COLUMN [duration];
+
+EXEC sp_rename 'dbo.pitStops.duration_converted', 'duration', 'COLUMN';
