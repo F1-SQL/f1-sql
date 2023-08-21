@@ -128,6 +128,12 @@ SET
 
 GO
 
+UPDATE [dbo].[lapTimes]
+	SET
+		time_converted = TRY_CONVERT(time, STUFF(STUFF(RIGHT(CONCAT('000000', REPLACE(time, ':', '')), 10), 5, 0, ':'), 3, 0, ':')) 
+
+GO
+
 ALTER TABLE [dbo].[constructors] DROP COLUMN [nationality]; 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [location]; 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [country]; 
@@ -146,6 +152,7 @@ ALTER TABLE [dbo].[pitStops] DROP COLUMN [duration];
 ALTER TABLE [dbo].[results] DROP COLUMN q1;
 ALTER TABLE [dbo].[results] DROP COLUMN q2;
 ALTER TABLE [dbo].[results] DROP COLUMN q3;
+ALTER TABLE [dbo].[lapTimes] DROP COLUMN [time];
 
 EXEC sp_rename 'dbo.sprintResults.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
 EXEC sp_rename 'dbo.results.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
@@ -154,3 +161,4 @@ EXEC sp_rename 'dbo.pitStops.duration_converted', 'duration', 'COLUMN';
 EXEC sp_rename 'dbo.qualifying.q1_converted', 'q1', 'COLUMN';
 EXEC sp_rename 'dbo.qualifying.q2_converted', 'q2', 'COLUMN';
 EXEC sp_rename 'dbo.qualifying.q3_converted', 'q3', 'COLUMN';
+EXEC sp_rename 'dbo.lapTimes.time_converted', 'time', 'COLUMN';
