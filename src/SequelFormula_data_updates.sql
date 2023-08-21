@@ -119,5 +119,6 @@ ALTER TABLE [dbo].[constructorResults] DROP COLUMN [status];
 ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[driverStandings] DROP COLUMN [positionText];
+ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapSpeed];
 
 EXEC sp_rename 'dbo.results.fastestLapSpeed_Decimal', 'fastestLapSpeed', 'COLUMN';
