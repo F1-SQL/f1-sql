@@ -100,9 +100,17 @@ INNER JOIN [dbo].[positionText] pt
 
 GO
 
+
 UPDATE [dbo].[pitStops] 
 	SET
 		duration_converted = TRY_CONVERT(decimal(18,3),duration)
+
+UPDATE [dbo].[qualifying]
+SET
+	q1_converted = TRY_CONVERT(time, STUFF(STUFF(RIGHT(CONCAT('000000', REPLACE(q1, ':', '')), 10), 5, 0, ':'), 3, 0, ':')),
+	q2_converted = TRY_CONVERT(time, STUFF(STUFF(RIGHT(CONCAT('000000', REPLACE(q2, ':', '')), 10), 5, 0, ':'), 3, 0, ':')),
+	q3_converted = TRY_CONVERT(time, STUFF(STUFF(RIGHT(CONCAT('000000', REPLACE(q3, ':', '')), 10), 5, 0, ':'), 3, 0, ':'))
+
 
 GO
 
@@ -117,6 +125,15 @@ ALTER TABLE [dbo].[constructorResults] DROP COLUMN [status];
 ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[driverStandings] DROP COLUMN [positionText];
+
 ALTER TABLE [dbo].[pitStops] DROP COLUMN [duration];
 
 EXEC sp_rename 'dbo.pitStops.duration_converted', 'duration', 'COLUMN';
+
+ALTER TABLE [dbo].[results] DROP COLUMN q1;
+ALTER TABLE [dbo].[results] DROP COLUMN q2;
+ALTER TABLE [dbo].[results] DROP COLUMN q3;
+
+EXEC sp_rename 'dbo.qualifying.q1_converted', 'q1', 'COLUMN';
+EXEC sp_rename 'dbo.qualifying.q2_converted', 'q2', 'COLUMN';
+EXEC sp_rename 'dbo.qualifying.q3_converted', 'q3', 'COLUMN';
