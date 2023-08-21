@@ -325,3 +325,4 @@ ALTER TABLE [dbo].[constructorResults] ADD positionTextID INT;
 ALTER TABLE [dbo].[constructorStandings] ADD positionTextID INT;
 ALTER TABLE [dbo].[constructorStandings] ADD positionTextID INT;
 ALTER TABLE [dbo].[driverStandings] ADD positionTextID INT;
+ALTER TABLE [dbo].[qualifying] ADD [q1_converted] TIME(3), [q2_converted] TIME(3), [q3_converted] TIME(3)
