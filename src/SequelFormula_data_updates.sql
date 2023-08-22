@@ -189,7 +189,7 @@ UPDATE r
 		[dbo].[sprintResults] r
 
 		INNER JOIN DataOutput DO ON r.resultId = do.resultId
-
+GO
 
 UPDATE [dbo].[sprintResults]
 	SET
@@ -239,11 +239,11 @@ UPDATE [dbo].[results]
 
 GO
 
-UPDATE [dbo].[results] SET time_converted = TRY_CONVERT(time(3),[time]) WHERE position = 1
+UPDATE [dbo].[sprintResults] SET time_converted = TRY_CONVERT(time, STUFF(STUFF(RIGHT(CONCAT('000000', REPLACE(time, ':', '')), 10), 5, 0, ':'), 3, 0, ':'))  WHERE position = 1;
 
 GO
 
-UPDATE [dbo].[results] SET time_converted = TRY_CONVERT(time(3),[TimeDifference]) WHERE position != 1
+UPDATE [dbo].[sprintResults] SET time_converted = TRY_CONVERT(time(3),[TimeDifference]) WHERE position != 1
 
 GO
 
@@ -268,6 +268,7 @@ ALTER TABLE [dbo].[results] DROP COLUMN q3;
 ALTER TABLE [dbo].[lapTimes] DROP COLUMN [time];
 ALTER TABLE [dbo].[results] DROP COLUMN [time];
 ALTER TABLE [dbo].[results] DROP COLUMN [timeDifference];
+ALTER TABLE [dbo].[sprintResults] DROP COLUMN [time];
 
 EXEC sp_rename 'dbo.sprintResults.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
 EXEC sp_rename 'dbo.results.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
@@ -278,3 +279,4 @@ EXEC sp_rename 'dbo.qualifying.q2_converted', 'q2', 'COLUMN';
 EXEC sp_rename 'dbo.qualifying.q3_converted', 'q3', 'COLUMN';
 EXEC sp_rename 'dbo.lapTimes.time_converted', 'time', 'COLUMN';
 EXEC sp_rename 'dbo.results.time_converted', 'time', 'COLUMN';
+EXEC sp_rename 'dbo.sprintResults.time_converted', 'time', 'COLUMN';
