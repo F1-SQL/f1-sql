@@ -302,7 +302,7 @@ CREATE TABLE [dbo].[tempCircuits](
 
 CREATE TABLE [dbo].[driverNumbers]
 (
-	driverNumberID INT NOT NULL IDENTITY(1,1),
+	driverNumberID INT NOT NULL,
 	number INT NOT NULL,
 	driverID INT NOT NULL,
 	constructorID INT,
@@ -312,25 +312,36 @@ CREATE TABLE [dbo].[driverNumbers]
 );
 
 ALTER TABLE [dbo].[driverNumbers] ADD CONSTRAINT PK_driverNumbers_driverNumberID PRIMARY KEY (driverNumberID);
+
 ALTER TABLE [dbo].[Results] ADD positionTextID INT;
+ALTER TABLE [dbo].[results] ADD [timeDifference] DATETIME NULL; 
+ALTER TABLE [dbo].[results] ADD [fastestLapTime_Converted] TIME(3) NULL; 
+ALTER TABLE [dbo].[results] ADD [fastestLapSpeed_Decimal] DECIMAL(18,3) NULL; 
+ALTER TABLE [dbo].[results] ADD time_converted time(3);
+
+
 ALTER TABLE [dbo].[circuits] ADD locationID INT;
 ALTER TABLE [dbo].[circuits] ADD countryID INT;
 ALTER TABLE [dbo].[circuits] ADD circuitDirectionID INT;
 ALTER TABLE [dbo].[circuits] ADD circuitTypeID INT;
+
 ALTER TABLE [dbo].[sprintResults] ADD positionTextID INT;
-ALTER TABLE [dbo].[constructors] ADD nationalityID INT; 
-ALTER TABLE [dbo].[drivers] ADD nationalityID INT;
-ALTER TABLE [dbo].[constructorResults] ADD positionTextID INT;
-ALTER TABLE [dbo].[constructorStandings] ADD positionTextID INT;
-ALTER TABLE [dbo].[constructorStandings] ADD positionTextID INT;
-ALTER TABLE [dbo].[driverStandings] ADD positionTextID INT;
-ALTER TABLE [dbo].[results] ADD [timeDifference] DATETIME NULL; 
+ALTER TABLE [dbo].[sprintResults] ADD time_converted time(3);
 ALTER TABLE [dbo].[sprintResults] ADD [timeDifference] DATETIME NULL; 
 ALTER TABLE [dbo].[sprintResults] ADD [fastestLapTime_converted] TIME(3) NULL; 
-ALTER TABLE [dbo].[results] ADD [fastestLapTime_Converted] TIME(3) NULL; 
-ALTER TABLE [dbo].[results] ADD [fastestLapSpeed_Decimal] DECIMAL(18,3) NULL; 
+
+ALTER TABLE [dbo].[constructors] ADD nationalityID INT; 
+
+ALTER TABLE [dbo].[drivers] ADD nationalityID INT;
+
+ALTER TABLE [dbo].[constructorResults] ADD positionTextID INT;
+
+ALTER TABLE [dbo].[constructorStandings] ADD positionTextID INT;
+
+ALTER TABLE [dbo].[driverStandings] ADD positionTextID INT;
+
 ALTER TABLE [dbo].[pitStops] ADD [duration_converted] DECIMAL(18,3);
-ALTER TABLE [dbo].[qualifying] ADD [q1_converted] TIME(3), [q2_converted] TIME(3), [q3_converted] TIME(3)
+
+ALTER TABLE [dbo].[qualifying] ADD [q1_converted] TIME(3), [q2_converted] TIME(3), [q3_converted] TIME(3);
+
 ALTER TABLE [dbo].[lapTimes] ADD time_converted TIME(3);
-ALTER TABLE [dbo].[results] ADD time_converted time(3);
-ALTER TABLE [dbo].[sprintResults] ADD time_converted time(3);

@@ -248,26 +248,33 @@ UPDATE [dbo].[sprintResults] SET time_converted = TRY_CONVERT(time(3),[TimeDiffe
 GO
 
 ALTER TABLE [dbo].[constructors] DROP COLUMN [nationality]; 
+
 ALTER TABLE [dbo].[circuits] DROP COLUMN [location]; 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [country]; 
+
 ALTER TABLE [dbo].[results] DROP COLUMN [positionText];
+ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapTime];
+ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapSpeed];
+
+ALTER TABLE [dbo].[qualifying] DROP COLUMN q1;
+ALTER TABLE [dbo].[qualifying] DROP COLUMN q2;
+ALTER TABLE [dbo].[qualifying] DROP COLUMN q3;
+
+ALTER TABLE [dbo].[results] DROP COLUMN [time];
+ALTER TABLE [dbo].[results] DROP COLUMN [timeDifference];
+
 ALTER TABLE [dbo].[drivers] DROP COLUMN [nationality]; 
-ALTER TABLE [dbo].[sprintResults] DROP COLUMN [positionText];
+
 ALTER TABLE [dbo].[positionText] DROP COLUMN [positionCode];
 ALTER TABLE [dbo].[constructorResults] DROP COLUMN [status];
 ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
-ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[driverStandings] DROP COLUMN [positionText];
-ALTER TABLE [dbo].[sprintResults] DROP COLUMN [fastestLapTime];
-ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapTime];
-ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapSpeed];
 ALTER TABLE [dbo].[pitStops] DROP COLUMN [duration];
-ALTER TABLE [dbo].[results] DROP COLUMN q1;
-ALTER TABLE [dbo].[results] DROP COLUMN q2;
-ALTER TABLE [dbo].[results] DROP COLUMN q3;
 ALTER TABLE [dbo].[lapTimes] DROP COLUMN [time];
-ALTER TABLE [dbo].[results] DROP COLUMN [time];
-ALTER TABLE [dbo].[results] DROP COLUMN [timeDifference];
+
+ALTER TABLE [dbo].[sprintResults] DROP COLUMN [fastestLapTime];
+ALTER TABLE [dbo].[sprintResults] DROP COLUMN [positionText];
+ALTER TABLE [dbo].[sprintResults] DROP COLUMN [timeDifference];
 ALTER TABLE [dbo].[sprintResults] DROP COLUMN [time];
 
 EXEC sp_rename 'dbo.sprintResults.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';

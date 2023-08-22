@@ -329,20 +329,21 @@
         catch {
             Write-Error -Message "Unable to export tables to '$tablePath'. Error was: $error" -ErrorAction Stop
             Add-Content -Path $logFullPath -Value "$(Get-Date -f yyyy-MM-dd-HH-mm) - Unable to export tables to '$tablePath'. Error was: $error"
-        }
-
+        }       
         
-        if(Test-Path -Path $backupFullPath)
-        {
-            Write-Host "WARN: Database backup already exists, removing" -ForegroundColor Red
-            Remove-Item -Path $backupFullPath
-        }        
-
         if($backupDatabase -eq $True)
         {
             Write-Host "INFO: Attempting to create a database backup." -ForegroundColor Yellow
+            
+            if(Test-Path -Path $backupFullPath)
+            {
+                Write-Host "WARN: Database backup already exists, removing" -ForegroundColor Red
+                Remove-Item -Path $backupFullPath
+            } 
+                   
             Backup-DbaDatabase -SqlInstance $svr -Database $databaseName -Path $backupLocation -FilePath $backupName -Type Full 
             Write-Host "SUCCESS: Database backup has been completed." -ForegroundColor Green
+
         } else {
             Write-Host "WARN: No backup has been taken as backupDatabase is set to False." -ForegroundColor Red
         }        
