@@ -311,6 +311,29 @@ CREATE TABLE [dbo].[driverNumbers]
 	retired BIT DEFAULT 0
 );
 
+CREATE TABLE [dbo].[constructorEngineSeason]
+(
+	[constructorEngineSeasonID] INT,
+	[constructorId] INT,
+	[engineManufacturer] INT,
+	[season] INT
+);
+
+ALTER TABLE [dbo].[constructorEngineSeason] ADD CONSTRAINT PK_constructorEngineSeason_constructorEngineSeasonID PRIMARY KEY (constructorEngineSeasonID);
+
+CREATE TABLE [dbo].[constructorEngine]
+(
+	[constructorEngineID] INT,
+	[constructorId] INT,
+	[engineManufacturer] INT,
+	[racesEntered] INT,
+	[racesStarted] INT,
+	[wins] INT,
+	[poles] INT
+);
+
+ALTER TABLE [dbo].[constructorEngine] ADD CONSTRAINT PK_constructorEngine_constructorEngine PRIMARY KEY (constructorEngine);
+
 ALTER TABLE [dbo].[driverNumbers] ADD CONSTRAINT PK_driverNumbers_driverNumberID PRIMARY KEY (driverNumberID);
 
 ALTER TABLE [dbo].[Results] ADD positionTextID INT;
@@ -331,6 +354,7 @@ ALTER TABLE [dbo].[sprintResults] ADD [timeDifference] DATETIME NULL;
 ALTER TABLE [dbo].[sprintResults] ADD [fastestLapTime_converted] TIME(3) NULL; 
 
 ALTER TABLE [dbo].[constructors] ADD nationalityID INT; 
+ALTER TABLE [dbo].[constructors] ADD manufacturer BIT DEFAULT 0;
 
 ALTER TABLE [dbo].[drivers] ADD nationalityID INT;
 
