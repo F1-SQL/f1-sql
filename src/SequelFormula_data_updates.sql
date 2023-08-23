@@ -247,6 +247,24 @@ UPDATE [dbo].[sprintResults] SET time_converted = TRY_CONVERT(time(3),[TimeDiffe
 
 GO
 
+INSERT INTO [dbo].[constructors] (constructorId,constructorRef,name,url,nationalityID,manufacturer)
+VALUES
+(215,'hondarbpt','Honda RBPT','https://en.wikipedia.org/wiki/Honda_in_Formula_One#Honda_RBPT',28,1)
+
+UPDATE [dbo].[constructors]
+SET 
+	manufacturer = 1
+WHERE 
+	constructorID IN (6,131,4)
+
+UPDATE [dbo].[constructors]
+SET 
+	manufacturer = 0
+WHERE 
+	manufacturer IS NULL
+
+GO
+
 ALTER TABLE [dbo].[constructors] DROP COLUMN [nationality]; 
 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [location]; 
