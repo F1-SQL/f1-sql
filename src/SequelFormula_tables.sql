@@ -313,7 +313,7 @@ CREATE TABLE [dbo].[driverNumbers]
 
 CREATE TABLE [dbo].[constructorEngineSeason]
 (
-	[constructorEngineSeasonID] INT,
+	[constructorEngineSeasonID] INT NOT NULL,
 	[constructorId] INT,
 	[engineManufacturer] INT,
 	[season] INT
@@ -323,7 +323,7 @@ ALTER TABLE [dbo].[constructorEngineSeason] ADD CONSTRAINT PK_constructorEngineS
 
 CREATE TABLE [dbo].[constructorEngine]
 (
-	[constructorEngineID] INT,
+	[constructorEngineID] INT NOT NULL,
 	[constructorId] INT,
 	[engineManufacturer] INT,
 	[racesEntered] INT,
@@ -332,7 +332,7 @@ CREATE TABLE [dbo].[constructorEngine]
 	[poles] INT
 );
 
-ALTER TABLE [dbo].[constructorEngine] ADD CONSTRAINT PK_constructorEngine_constructorEngine PRIMARY KEY (constructorEngine);
+ALTER TABLE [dbo].[constructorEngine] ADD CONSTRAINT PK_constructorEngine_constructorEngineID PRIMARY KEY (constructorEngineID);
 
 ALTER TABLE [dbo].[driverNumbers] ADD CONSTRAINT PK_driverNumbers_driverNumberID PRIMARY KEY (driverNumberID);
 
