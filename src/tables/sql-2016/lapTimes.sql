@@ -1,5 +1,5 @@
 /*
-	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS16 at 08/15/2023 13:20:57
+	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS16 at 08/28/2023 19:27:02
 	See https://dbatools.io/Export-DbaScript for more information
 */
 SET ANSI_NULLS ON
@@ -11,8 +11,8 @@ CREATE TABLE [dbo].[lapTimes](
 	[driverId] [int] NOT NULL,
 	[lap] [int] NOT NULL,
 	[position] [int] NULL,
-	[time] [varchar](255) COLLATE Latin1_General_CI_AS NULL,
 	[milliseconds] [int] NULL,
+	[time] [time](3) NULL,
  CONSTRAINT [PK_lapTimes_raceId_driverId_lap] PRIMARY KEY CLUSTERED 
 (
 	[raceId] ASC,

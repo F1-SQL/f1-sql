@@ -1,5 +1,5 @@
 /*
-	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS16 at 08/15/2023 13:20:55
+	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS16 at 08/28/2023 19:27:00
 	See https://dbatools.io/Export-DbaScript for more information
 */
 SET ANSI_NULLS ON
