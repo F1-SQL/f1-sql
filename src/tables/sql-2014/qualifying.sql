@@ -1,5 +1,5 @@
 /*
-	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS14 at 08/15/2023 13:20:22
+	Created by RIS-001\Rich using dbatools Export-DbaScript for objects on RIS-001$SQLEXPRESS14 at 08/28/2023 19:26:21
 	See https://dbatools.io/Export-DbaScript for more information
 */
 SET ANSI_NULLS ON
@@ -13,9 +13,9 @@ CREATE TABLE [dbo].[qualifying](
 	[constructorId] [int] NOT NULL,
 	[number] [int] NOT NULL,
 	[position] [int] NULL,
-	[q1] [varchar](255) COLLATE Latin1_General_CI_AS NULL,
-	[q2] [varchar](255) COLLATE Latin1_General_CI_AS NULL,
-	[q3] [varchar](255) COLLATE Latin1_General_CI_AS NULL,
+	[q1] [time](3) NULL,
+	[q2] [time](3) NULL,
+	[q3] [time](3) NULL,
  CONSTRAINT [PK_qualifying_qualifyId] PRIMARY KEY CLUSTERED 
 (
 	[qualifyId] ASC
