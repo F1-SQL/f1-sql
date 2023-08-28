@@ -73,7 +73,7 @@
     $currentYear = (Get-Date).Year.ToString()
     $rootpath = $PSScriptRoot
     
-    $races=@("Bahrain","Saudi Arabia","Australia","Azerbaijan","United States","Monaco","Spain","Canada","Austria","Great Britain","Hungary","Belgium","Italy","Belgium","Japan","Qatar","Austin","Mexico","Brazil","Las Vegas","Abu Dhabi")
+    $races=@("Bahrain","Saudi Arabia","Australia","Azerbaijan","United States","Monaco","Spain","Canada","Austria","Great Britain","Hungary","Belgium","Italy","Netherlands","Japan","Qatar","Austin","Mexico","Brazil","Las Vegas","Abu Dhabi")
     $raceName = $races | Out-GridView -PassThru
     
     $raceName = $raceName.Replace(' ','_')
@@ -94,7 +94,7 @@
     $zipLocation = $rootpath + $sourceFiles 
     $zipLocationFull = $zipLocation + $zipName
 
-    if(-Not(Test-Path $zipLocationFull) -and $downloadZip -eq $false)
+    if(-Not(Test-Path $zipLocationFull) -and $downloadZip -eq $true)
     {
         Write-Host "INFO: Zip file $zipName does not exist" -ForegroundColor Yellow
         Write-Host "INFO: Attempting to download zip file from $sourceLocaiton to $ziplocation" -ForegroundColor Yellow
