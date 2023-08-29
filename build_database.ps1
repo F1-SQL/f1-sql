@@ -196,6 +196,7 @@
         $tableFilesFullPath = $rootpath + $tableFolder
         
         $backupName = $version + "_" + $databaseName + "_" + $raceName + ".bak"
+        $backupCompressName = $version + "_" + $databaseName + "_" + $raceName + '.7zip'
         $backupFolder = "\backups\"
         $backupLocation = $rootpath + $backupFolder
         $backupFullPath = $backupLocation + "\" + $backupName  
@@ -342,6 +343,16 @@
             } 
                    
             Backup-DbaDatabase -SqlInstance $svr -Database $databaseName -Path $backupLocation -FilePath $backupName -Type Full 
+
+            Write-Host "INFO: Attempting to 7zip the backup" -ForegroundColor Yellow
+            try
+            {
+                Compress-7Zip -Path $backupFullPath -Filter *.bak -ArchiveFileName $backupCompressName -CompressionLevel Ultra
+            }
+            catch {
+                Write-Host "ERROR: Compressing backup failed" -ForegroundColor Red
+            }
+
             Write-Host "SUCCESS: Database backup has been completed." -ForegroundColor Green
 
         } else {
