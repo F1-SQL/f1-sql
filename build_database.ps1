@@ -196,8 +196,8 @@
         $tableFilesFullPath = $rootpath + $tableFolder
         
         $backupName = $version + "_" + $databaseName + "_" + $raceName + ".bak"
-        $backupCompressName = $version + "_" + $databaseName + "_" + $raceName + '.7zip'
         $backupFolder = "\backups\"
+        $backupCompressName = $rootpath + $backupFolder + $version + "_" + $databaseName + "_" + $raceName + '.7zip'
         $backupLocation = $rootpath + $backupFolder
         $backupFullPath = $backupLocation + "\" + $backupName  
 
@@ -348,6 +348,9 @@
             try
             {
                 Compress-7Zip -Path $backupFullPath -Filter *.bak -ArchiveFileName $backupCompressName -CompressionLevel Ultra
+                Write-Host "INFO: Compressed backup sucessfully"
+                $backupFullPath = $backupLocation + "\" + $backupName 
+                Remove-Item -Path $backupFullPath -Force
             }
             catch {
                 Write-Host "ERROR: Compressing backup failed" -ForegroundColor Red
