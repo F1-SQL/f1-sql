@@ -325,7 +325,7 @@
         $Options.AnsiFile = $true
 
         try {        
-            Get-DbaDbTable -SqlInstance $svr -Database $databaseName | ForEach-Object { Export-DbaScript -InputObject $_ -FilePath (Join-Path $tableFilesFullPath -ChildPath "$($_.Name).sql") -ScriptingOptionsObject $options }
+            Get-DbaDbTable -SqlInstance $svr -Database $databaseName | ForEach-Object { Export-DbaScript -InputObject $_ -FilePath (Join-Path $tableFilesFullPath -ChildPath "$($_.Name).sql") -ScriptingOptionsObject $options -NoPrefix $false }
         }
         catch {
             Write-Error -Message "Unable to export tables to '$tablePath'. Error was: $error" -ErrorAction Stop
@@ -347,6 +347,7 @@
             Write-Host "INFO: Attempting to 7zip the backup" -ForegroundColor Yellow
             try
             {
+                #https://github.com/thoemmi/7Zip4Powershell
                 Compress-7Zip -Path $backupFullPath -Filter *.bak -ArchiveFileName $backupCompressName -CompressionLevel Ultra
                 Write-Host "INFO: Compressed backup sucessfully"
                 $backupFullPath = $backupLocation + "\" + $backupName 
