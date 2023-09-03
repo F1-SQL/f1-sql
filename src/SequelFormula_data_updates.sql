@@ -74,6 +74,16 @@ DROP TABLE [dbo].[tempCircuits]
 
 GO
 
+UPDATE
+	[dbo].[constructorResults]
+
+	SET positionTextID = 600
+
+WHERE 
+	status = 'D'
+
+GO
+
 UPDATE cr
 
 SET 
@@ -83,7 +93,20 @@ FROM
 	[dbo].[constructorResults] cr
 
 INNER JOIN [dbo].[positionText] pt 
-	ON cr.status = pt.positionCode
+	ON cr.[status] = pt.[positionText]
+
+GO
+
+UPDATE ds
+
+SET 
+	ds.positionTextID = pt.positionTextID
+
+FROM 
+	[dbo].[driverStandings] ds
+
+INNER JOIN [dbo].[positionText] pt 
+	ON ds.[positionText] = pt.[positionText]
 
 GO
 
@@ -96,7 +119,7 @@ FROM
 	[dbo].[constructorStandings] cs
 
 INNER JOIN [dbo].[positionText] pt 
-	ON cs.positionText = pt.positionCode
+	ON cs.[positionText] = pt.[positionText]
 
 GO
 
