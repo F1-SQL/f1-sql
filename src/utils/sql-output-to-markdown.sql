@@ -63,7 +63,7 @@ BEGIN
         WHILE @i <= @nof_columns
         BEGIN
             DECLARE @w VARCHAR(1000) =  (SELECT column_name FROM #temp WHERE Ordinal_position = @i)
-                SET @body = @body + @w + ' AS VARCHAR(MAX))+ ''|'' + CAST( '
+                SET @body = @body + 'ISNULL (' + @w + ','''')' + ' AS VARCHAR(MAX))+ ''|'' + CAST('
             SET @i = @i + 1
         END
         SET @body  = (SELECT SUBSTRING(@body,1, LEN(@body)-8))
@@ -74,7 +74,7 @@ BEGIN
         EXEC sp_executesql @body
 
         DECLARE @body2 NVARCHAR(MAX)
-        SELECT @body2 = ISNULL(@body2,'') + MD + CHAR(10)
+        SELECT @body2 = COALESCE(@body2 + ' ', ' ') + ISNULL(MD,' ') + CHAR(10)
         FROM @bodyTable
 
         SET @MD = @MD + @body2
