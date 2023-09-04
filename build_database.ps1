@@ -198,7 +198,7 @@
         $backupName = $version + "_" + $databaseName + "_" + $raceName + ".bak"
         $backupFolder = "\backups\"
         $backupCompressName = $rootpath + $backupFolder + $version + "_" + $databaseName + "_" + $raceName + '.7zip'
-        $backupLocation = $rootpath + $backupFolder
+        $backupLocation = $rootpath + $backupFolder + $raceName + "\"
         $backupFullPath = $backupLocation + "\" + $backupName  
 
         if(-Not(Test-Path -Path $tableFilesFullPath))
