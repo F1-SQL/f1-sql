@@ -18,7 +18,7 @@ ALTER TABLE circuits ADD CONSTRAINT UK_circuits_url UNIQUE(url);
 CREATE TABLE constructorResults (
   constructorResultsId int  NOT NULL,
   raceId int NOT NULL DEFAULT 0,
-  constructorId int NOT NULL DEFAULT 0,
+  constructorId int NOT NULL,
   points float,
   status varchar(255)
 ) 
@@ -171,7 +171,7 @@ CREATE TABLE sprintResults (
   resultId INT  NOT NULL,
   raceId INT NOT NULL DEFAULT 0,
   driverId INT NOT NULL DEFAULT 0,
-  constructorId INT NOT NULL DEFAULT 0,
+  constructorId INT NOT NULL,
   number INT NOT NULL DEFAULT 0,
   grid INT NOT NULL DEFAULT 0,
   position INT,
