@@ -313,12 +313,20 @@ CREATE TABLE [dbo].[driverNumbers]
 
 ALTER TABLE [dbo].[driverNumbers] ADD CONSTRAINT PK_driverNumbers_driverNumberID PRIMARY KEY (driverNumberID);
 
+CREATE TABLE [dbo].[driverConstructor] (
+	[driverConstructorID] INT IDENTITY(1,1) NOT NULL,
+	[driverID] INT,
+	[constructorId] INT,
+	[season] INT
+);
+
+ALTER TABLE [dbo].[driverConstructor] ADD CONSTRAINT PK_driverConstructor_driverConstructorID PRIMARY KEY (driverConstructorID)
+
 ALTER TABLE [dbo].[Results] ADD positionTextID INT;
 ALTER TABLE [dbo].[results] ADD [timeDifference] DATETIME NULL; 
 ALTER TABLE [dbo].[results] ADD [fastestLapTime_Converted] TIME(3) NULL; 
 ALTER TABLE [dbo].[results] ADD [fastestLapSpeed_Decimal] DECIMAL(18,3) NULL; 
 ALTER TABLE [dbo].[results] ADD time_converted time(3);
-
 
 ALTER TABLE [dbo].[circuits] ADD locationID INT;
 ALTER TABLE [dbo].[circuits] ADD countryID INT;

@@ -270,6 +270,28 @@ UPDATE [dbo].[sprintResults] SET time_converted = TRY_CONVERT(time(3),[TimeDiffe
 
 GO
 
+INSERT INTO [dbo].[driverConstructor] (year,driverID,constructorID)
+SELECT DISTINCT
+      [year]
+      ,re.driverId
+	  ,re.constructorId
+FROM 
+	[dbo].[races]  r
+	INNER JOIN [dbo].[results] re 
+		ON r.raceId = re.raceId
+UNION
+SELECT DISTINCT
+      [year]
+      ,re.driverId
+	  ,re.constructorId
+FROM 
+	[dbo].[races]  r
+
+	INNER JOIN [dbo].[sprintResults] re 
+		ON r.raceId = re.raceId
+
+GO
+
 ALTER TABLE [dbo].[constructors] DROP COLUMN [nationality]; 
 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [location]; 
@@ -285,6 +307,7 @@ ALTER TABLE [dbo].[qualifying] DROP COLUMN q3;
 
 ALTER TABLE [dbo].[results] DROP COLUMN [time];
 ALTER TABLE [dbo].[results] DROP COLUMN [timeDifference];
+ALTER TABLE [dbo].[results] DROP COLUMN [constructorId];
 
 ALTER TABLE [dbo].[drivers] DROP COLUMN [nationality]; 
 
@@ -299,6 +322,7 @@ ALTER TABLE [dbo].[sprintResults] DROP COLUMN [fastestLapTime];
 ALTER TABLE [dbo].[sprintResults] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[sprintResults] DROP COLUMN [timeDifference];
 ALTER TABLE [dbo].[sprintResults] DROP COLUMN [time];
+ALTER TABLE [dbo].[sprintResults] DROP COLUMN [constructorId];
 
 EXEC sp_rename 'dbo.sprintResults.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
 EXEC sp_rename 'dbo.results.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
