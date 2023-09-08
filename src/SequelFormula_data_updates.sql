@@ -270,25 +270,96 @@ UPDATE [dbo].[sprintResults] SET time_converted = TRY_CONVERT(time(3),[TimeDiffe
 
 GO
 
-INSERT INTO [dbo].[driverConstructor] (year,driverID,constructorID)
-SELECT DISTINCT
-      [year]
-      ,re.driverId
-	  ,re.constructorId
-FROM 
-	[dbo].[races]  r
-	INNER JOIN [dbo].[results] re 
-		ON r.raceId = re.raceId
-UNION
-SELECT DISTINCT
-      [year]
-      ,re.driverId
-	  ,re.constructorId
-FROM 
-	[dbo].[races]  r
+WITH driverConstructorInput AS (
+    SELECT
+        r.[year],
+        r.[raceId],
+        re.[driverId],
+        re.[constructorId],
+        r.[date]
+    FROM 
+        [dbo].[races] r
+    INNER JOIN [dbo].[results] re 
+        ON r.raceId = re.raceId
+    UNION
+    SELECT
+        r.[year],
+        r.[raceId],
+        re.[driverId],
+        re.[constructorId],
+        r.[date]
+    FROM 
+        [dbo].[races] r
+    INNER JOIN [dbo].[sprintResults] re 
+        ON r.raceId = re.raceId
+)
 
-	INNER JOIN [dbo].[sprintResults] re 
-		ON r.raceId = re.raceId
+, DriverConstructorChanges AS (
+    SELECT
+        [year],
+        [raceId],
+        [driverId],
+        [constructorId],
+        [date],
+        LAG(constructorId) OVER (PARTITION BY driverId, [year] ORDER BY raceId) AS previousConstructorId
+    FROM
+        driverConstructorInput
+)
+
+, DriverSpans AS (
+    SELECT
+        [year],
+        [raceId],
+        [driverId],
+        [constructorId],
+        date,
+        CASE
+            WHEN constructorId <> previousConstructorId OR previousConstructorId IS NULL THEN 1
+            ELSE 0
+        END AS isNewSpan
+    FROM
+        DriverConstructorChanges
+)
+
+, DriverSpanRanges AS (
+    SELECT
+        [year],
+        [raceId],
+        [driverId],
+        [constructorId],
+        [date],
+        SUM(isNewSpan) OVER (PARTITION BY driverId, [year] ORDER BY raceId) AS SpanIdentifier
+    FROM
+        DriverSpans
+)
+
+,DriverSpanRangesResult AS (
+SELECT
+    [year],
+    MIN(raceId) AS RangeFrom,
+    MAX(raceId) AS RangeTo,
+    [driverId],
+    [constructorId],
+    MIN(date) AS RangeStartDate,
+    MAX(date) AS RangeEndDate
+FROM
+    DriverSpanRanges
+GROUP BY
+    [year],
+    [driverId],
+    [constructorId],
+    [SpanIdentifier]
+)
+
+INSERT INTO [dbo].[driverConstructor] ([driverID],[constructorId],[season],[StartDate],[EndDate])
+SELECT 
+	driverid,
+	constructorId,
+	year,
+	RangeStartDate,
+	RangeEndDate
+FROM 	
+	DriverSpanRangesResult 
 
 GO
 

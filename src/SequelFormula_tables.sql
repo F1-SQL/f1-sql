@@ -317,7 +317,9 @@ CREATE TABLE [dbo].[driverConstructor] (
 	[driverConstructorID] INT IDENTITY(1,1) NOT NULL,
 	[driverID] INT,
 	[constructorId] INT,
-	[season] INT
+	[season] INT,
+  [StartDate] DATE NOT NULL,
+  [EndDate] DATE NOT NULL
 );
 
 ALTER TABLE [dbo].[driverConstructor] ADD CONSTRAINT PK_driverConstructor_driverConstructorID PRIMARY KEY (driverConstructorID)
