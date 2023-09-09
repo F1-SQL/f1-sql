@@ -270,6 +270,18 @@ UPDATE [dbo].[sprintResults] SET time_converted = TRY_CONVERT(time(3),[TimeDiffe
 
 GO
 
+INSERT INTO [dbo].[resultsNew](raceId,resultType, driverId, constructorId, number, grid, position, positionOrder, points, laps, milliseconds, fastestLap, rank, statusId, positionTextID, fastestLapTime, fastestLapSpeed, time)
+SELECT 
+raceid,1,driverId, constructorId, number, grid, position, positionOrder, points, laps, milliseconds, fastestLap, rank, statusId, positionTextID, fastestLapTime, fastestLapSpeed, time
+FROM 
+[dbo].[results]
+
+INSERT INTO [dbo].[resultsNew](raceId,resultType, driverId, constructorId, number, grid, position, positionOrder, points, laps, milliseconds, fastestLap,  statusId, positionTextID, fastestLapTime,  time)
+SELECT 
+raceid,2,driverId, constructorId, number, grid, position, positionOrder, points, laps, milliseconds, fastestLap,  statusId, positionTextID, fastestLapTime,  time
+FROM 
+[dbo].[sprintResults]
+
 ALTER TABLE [dbo].[constructors] DROP COLUMN [nationality]; 
 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [location]; 
@@ -300,6 +312,10 @@ ALTER TABLE [dbo].[sprintResults] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[sprintResults] DROP COLUMN [timeDifference];
 ALTER TABLE [dbo].[sprintResults] DROP COLUMN [time];
 
+DROP TABLE [dbo].[results];
+DROP TABLE [dbo].[Sprintresults];
+
+EXEC sp_rename 'resultsnew', 'results';
 EXEC sp_rename 'dbo.sprintResults.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
 EXEC sp_rename 'dbo.results.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
 EXEC sp_rename 'dbo.results.fastestLapSpeed_Decimal', 'fastestLapSpeed', 'COLUMN';
