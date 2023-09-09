@@ -353,11 +353,11 @@ GROUP BY
 
 INSERT INTO [dbo].[driverConstructor] ([driverID],[constructorId],[season],[StartDate],[EndDate])
 SELECT 
-	driverid,
-	constructorId,
-	year,
-	RangeStartDate,
-	RangeEndDate
+	[driverid],
+	[constructorId],
+	[year],
+	[RangeStartDate],
+	[RangeEndDate]
 FROM 	
 	DriverSpanRangesResult 
 
