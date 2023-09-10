@@ -58,8 +58,12 @@ ALTER TABLE [dbo].[constructors] ADD CONSTRAINT FK_constructors_NationalityID FO
 /*Drivers*/
 ALTER TABLE [dbo].[drivers] ADD CONSTRAINT FK_Drivers_NationalityID FOREIGN KEY (NationalityID) REFERENCES [dbo].[nationalities] (NationalityID);
 
-
 /*Driver Numbers*/
-ALTER TABLE dbo.driverNumbers ADD CONSTRAINT PK_driverNumbers_driverID FOREIGN KEY (driverID) REFERENCES [dbo].[drivers] (driverID);
-ALTER TABLE dbo.driverNumbers ADD CONSTRAINT PK_driverNumbers_constructorID FOREIGN KEY (constructorID) REFERENCES [dbo].[constructors] (constructorId);
-ALTER TABLE dbo.driverNumbers ADD CONSTRAINT PK_driverNumbers_season FOREIGN KEY (season) REFERENCES [dbo].[seasons](year);
+ALTER TABLE [dbo].[driverNumbers] ADD CONSTRAINT PK_driverNumbers_driverID FOREIGN KEY (driverID) REFERENCES [dbo].[drivers] (driverID);
+ALTER TABLE [dbo].[driverNumbers] ADD CONSTRAINT PK_driverNumbers_constructorID FOREIGN KEY (constructorID) REFERENCES [dbo].[constructors] (constructorId);
+ALTER TABLE [dbo].[driverNumbers] ADD CONSTRAINT PK_driverNumbers_season FOREIGN KEY (season) REFERENCES [dbo].[seasons](year);
+
+/*raceDriverConstructor*/
+ALTER TABLE [dbo].[raceDriverConstructor] ADD CONSTRAINT PK_raceDriverConstructor_resultID FOREIGN KEY (resultID) REFERENCES [dbo].[results] (resultID);
+ALTER TABLE [dbo].[raceDriverConstructor] ADD CONSTRAINT PK_raceDriverConstructor_driverID FOREIGN KEY (driverID) REFERENCES [dbo].[drivers] (driverID);
+ALTER TABLE [dbo].[raceDriverConstructor] ADD CONSTRAINT PK_raceDriverConstructor_constructorID FOREIGN KEY (constructorID) REFERENCES [dbo].[constructors] (constructorID);

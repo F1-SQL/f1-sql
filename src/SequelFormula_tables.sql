@@ -346,6 +346,16 @@ CREATE TABLE [dbo].[resultType]
 
 ALTER TABLE [dbo].[resultType] ADD CONSTRAINT [PK_resultType_resultTypeID] PRIMARY KEY (resultTypeID);
 
+CREATE TABLE [dbo].[raceDriverConstructor]
+(
+[raceDriverConstructorID] INT IDENTITY(1,1) NOT NULL,
+[resultID] INT NOT NULL,
+[driverID] INT NOT NULL,
+[constructorID] INT NOT NULL 
+);
+
+ALTER TABLE [dbo].[raceDriverConstructor] ADD CONSTRAINT PK_raceDriverConstructor_raceDriverConstructorID PRIMARY KEY (raceDriverConstructorID);
+
 ALTER TABLE [dbo].[results] ADD positionTextID INT;
 ALTER TABLE [dbo].[results] ADD [timeDifference] DATETIME NULL; 
 ALTER TABLE [dbo].[results] ADD [fastestLapTime_Converted] TIME(3) NULL; 
