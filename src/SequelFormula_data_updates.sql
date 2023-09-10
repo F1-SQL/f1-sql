@@ -292,7 +292,7 @@ GO
 INSERT INTO [dbo].[resultsNew]
 (
 	[raceId],
-	[resultType], 
+	[resultTypeId], 
 	[driverId], 
 	[constructorId], 
 	[number], 
@@ -337,7 +337,7 @@ GO
 INSERT INTO [dbo].[resultsNew]
 (
 	[raceId],
-	[resultType], 
+	[resultTypeId], 
 	[driverId],
 	[constructorId], 
 	[number], 
@@ -375,7 +375,7 @@ FROM
 
 GO
 
-INSERT INTO [dbo].[raceDriverConstructor] (resultID,driverID,constructorID)
+INSERT INTO [dbo].[resultDriverConstructor] (resultID,driverID,constructorID)
 SELECT 
 	[resultID],
 	[driverID],
