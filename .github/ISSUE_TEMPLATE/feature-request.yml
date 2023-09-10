@@ -1,5 +1,6 @@
 name: Improvement Request
 description: File an improvement request for something to be improved or added.
+title: "[IMPROVEMENT]: "
 labels: [improvement, "triage required"]
 body:
   - type: markdown

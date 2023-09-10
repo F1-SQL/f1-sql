@@ -1,5 +1,6 @@
 name: Data Quality
 description: File an issue with our data
+title: "[DATA QUALITY]: "
 labels: ["data quality", "triage required"]
 body:
   - type: markdown
