@@ -313,12 +313,44 @@ CREATE TABLE [dbo].[driverNumbers]
 
 ALTER TABLE [dbo].[driverNumbers] ADD CONSTRAINT PK_driverNumbers_driverNumberID PRIMARY KEY (driverNumberID);
 
-ALTER TABLE [dbo].[Results] ADD positionTextID INT;
+CREATE TABLE [dbo].[resultsNew]
+(
+	[resultId] [int] NOT NULL IDENTITY(1,1),
+	[resultType] [int] NOT NULL,
+	[raceId] [int] NOT NULL,
+	[driverId] [int] NOT NULL,
+	[constructorId] [int] NOT NULL,
+	[number] [int] NULL,
+	[grid] [int] NOT NULL DEFAULT 0,
+	[position] [int] NULL,
+	[positionOrder] [int] NOT NULL DEFAULT 0,
+	[points] [float] NOT NULL DEFAULT 0,
+	[laps] [int] NOT NULL DEFAULT 0,
+	[milliseconds] [int] NULL,
+	[fastestLap] [int] NULL,
+	[rank] [int] NULL DEFAULT 0,
+	[statusId] [int] NOT NULL DEFAULT 0,
+	[positionTextID] [int] NULL,
+	[fastestLapTime] [time](3) NULL,
+	[fastestLapSpeed] [decimal](18, 3) NULL,
+	[time] [time](3) NULL
+)
+
+ALTER TABLE [dbo].[resultsNew] ADD CONSTRAINT [PK_resultsNew_resultId] PRIMARY KEY (resultId);
+
+CREATE TABLE [dbo].[resultType]
+(
+	[resultTypeID] [int] NOT NULL,
+	[resultType] [varchar](255) NULL
+);
+
+ALTER TABLE [dbo].[resultType] ADD CONSTRAINT [PK_resultType_resultTypeID] PRIMARY KEY (resultTypeID);
+
+ALTER TABLE [dbo].[results] ADD positionTextID INT;
 ALTER TABLE [dbo].[results] ADD [timeDifference] DATETIME NULL; 
 ALTER TABLE [dbo].[results] ADD [fastestLapTime_Converted] TIME(3) NULL; 
 ALTER TABLE [dbo].[results] ADD [fastestLapSpeed_Decimal] DECIMAL(18,3) NULL; 
 ALTER TABLE [dbo].[results] ADD time_converted time(3);
-
 
 ALTER TABLE [dbo].[circuits] ADD locationID INT;
 ALTER TABLE [dbo].[circuits] ADD countryID INT;

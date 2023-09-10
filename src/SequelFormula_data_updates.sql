@@ -270,21 +270,119 @@ UPDATE [dbo].[sprintResults] SET time_converted = TRY_CONVERT(time(3),[TimeDiffe
 
 GO
 
+ALTER TABLE [dbo].[results] DROP COLUMN [positionText];
+ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapTime];
+ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapSpeed];
+ALTER TABLE [dbo].[results] DROP COLUMN [time];
+ALTER TABLE [dbo].[results] DROP COLUMN [timeDifference];
+
+ALTER TABLE [dbo].[sprintResults] DROP COLUMN [fastestLapTime];
+ALTER TABLE [dbo].[sprintResults] DROP COLUMN [positionText];
+ALTER TABLE [dbo].[sprintResults] DROP COLUMN [timeDifference];
+ALTER TABLE [dbo].[sprintResults] DROP COLUMN [time];
+
+EXEC sp_rename 'dbo.sprintResults.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
+EXEC sp_rename 'dbo.results.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
+EXEC sp_rename 'dbo.results.fastestLapSpeed_Decimal', 'fastestLapSpeed', 'COLUMN';
+EXEC sp_rename 'dbo.results.time_converted', 'time', 'COLUMN';
+EXEC sp_rename 'dbo.sprintResults.time_converted', 'time', 'COLUMN';
+
+GO
+
+INSERT INTO [dbo].[resultsNew]
+(
+	[raceId],
+	[resultType], 
+	[driverId], 
+	[constructorId], 
+	[number], 
+	[grid], 
+	[position], 
+	[positionOrder], 
+	[points], 
+	[laps], 
+	[milliseconds], 
+	[fastestLap], 
+	[rank], 
+	[statusId], 
+	[positionTextID], 
+	[fastestLapTime], 
+	[fastestLapSpeed], 
+	[time]
+)
+SELECT 
+	[raceid],
+	'1',
+	[driverId], 
+	[constructorId], 
+	[number], 
+	[grid], 
+	[position], 
+	[positionOrder], 
+	[points], 
+	[laps], 
+	[milliseconds], 
+	[fastestLap], 
+	[rank], 
+	[statusId], 
+	[positionTextID], 
+	[fastestLapTime], 
+	[fastestLapSpeed],
+	[time]
+FROM 
+	[dbo].[results]
+
+GO
+
+INSERT INTO [dbo].[resultsNew]
+(
+	[raceId],
+	[resultType], 
+	[driverId],
+	[constructorId], 
+	[number], 
+	[grid], 
+	[position], 
+	[positionOrder], 
+	[points], 
+	[laps], 
+	[milliseconds], 
+	[fastestLap],  
+	[statusId], 
+	[positionTextID], 
+	[fastestLapTime],  
+	[time]
+)
+SELECT 
+	[raceid],
+	'2',
+	[driverId], 
+	[constructorId], 
+	[number], 
+	[grid], 
+	[position],
+	[positionOrder], 
+	[points], 
+	[laps], 
+	[milliseconds], 
+	[fastestLap],  
+	[statusId], 
+	[positionTextID], 
+	[fastestLapTime],  
+	[time]
+FROM 
+	[dbo].[sprintResults]
+
+GO
+
 ALTER TABLE [dbo].[constructors] DROP COLUMN [nationality]; 
 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [location]; 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [country]; 
 
-ALTER TABLE [dbo].[results] DROP COLUMN [positionText];
-ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapTime];
-ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapSpeed];
-
 ALTER TABLE [dbo].[qualifying] DROP COLUMN q1;
 ALTER TABLE [dbo].[qualifying] DROP COLUMN q2;
 ALTER TABLE [dbo].[qualifying] DROP COLUMN q3;
-
-ALTER TABLE [dbo].[results] DROP COLUMN [time];
-ALTER TABLE [dbo].[results] DROP COLUMN [timeDifference];
 
 ALTER TABLE [dbo].[drivers] DROP COLUMN [nationality]; 
 
@@ -295,18 +393,12 @@ ALTER TABLE [dbo].[driverStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[pitStops] DROP COLUMN [duration];
 ALTER TABLE [dbo].[lapTimes] DROP COLUMN [time];
 
-ALTER TABLE [dbo].[sprintResults] DROP COLUMN [fastestLapTime];
-ALTER TABLE [dbo].[sprintResults] DROP COLUMN [positionText];
-ALTER TABLE [dbo].[sprintResults] DROP COLUMN [timeDifference];
-ALTER TABLE [dbo].[sprintResults] DROP COLUMN [time];
+DROP TABLE [dbo].[results];
+DROP TABLE [dbo].[Sprintresults];
 
-EXEC sp_rename 'dbo.sprintResults.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
-EXEC sp_rename 'dbo.results.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
-EXEC sp_rename 'dbo.results.fastestLapSpeed_Decimal', 'fastestLapSpeed', 'COLUMN';
+EXEC sp_rename 'resultsnew', 'results';
 EXEC sp_rename 'dbo.pitStops.duration_converted', 'duration', 'COLUMN';
 EXEC sp_rename 'dbo.qualifying.q1_converted', 'q1', 'COLUMN';
 EXEC sp_rename 'dbo.qualifying.q2_converted', 'q2', 'COLUMN';
 EXEC sp_rename 'dbo.qualifying.q3_converted', 'q3', 'COLUMN';
 EXEC sp_rename 'dbo.lapTimes.time_converted', 'time', 'COLUMN';
-EXEC sp_rename 'dbo.results.time_converted', 'time', 'COLUMN';
-EXEC sp_rename 'dbo.sprintResults.time_converted', 'time', 'COLUMN';
