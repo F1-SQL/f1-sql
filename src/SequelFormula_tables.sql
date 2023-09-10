@@ -316,7 +316,7 @@ ALTER TABLE [dbo].[driverNumbers] ADD CONSTRAINT PK_driverNumbers_driverNumberID
 CREATE TABLE [dbo].[resultsNew]
 (
 	[resultId] [int] NOT NULL IDENTITY(1,1),
-	[resultType] [int] NOT NULL,
+	[resultTypeID] [int] NOT NULL,
 	[raceId] [int] NOT NULL,
 	[driverId] [int] NOT NULL,
 	[constructorId] [int] NOT NULL,
@@ -345,6 +345,16 @@ CREATE TABLE [dbo].[resultType]
 );
 
 ALTER TABLE [dbo].[resultType] ADD CONSTRAINT [PK_resultType_resultTypeID] PRIMARY KEY (resultTypeID);
+
+CREATE TABLE [dbo].[resultDriverConstructor]
+(
+[resultDriverConstructorID] INT IDENTITY(1,1) NOT NULL,
+[resultID] INT NOT NULL,
+[driverID] INT NOT NULL,
+[constructorID] INT NOT NULL 
+);
+
+ALTER TABLE [dbo].[resultDriverConstructor] ADD CONSTRAINT PK_resultDriverConstructor_resultDriverConstructorID PRIMARY KEY (resultDriverConstructorID);
 
 ALTER TABLE [dbo].[results] ADD positionTextID INT;
 ALTER TABLE [dbo].[results] ADD [timeDifference] DATETIME NULL; 
