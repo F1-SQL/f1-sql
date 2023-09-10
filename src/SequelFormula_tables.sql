@@ -313,16 +313,15 @@ CREATE TABLE [dbo].[driverNumbers]
 
 ALTER TABLE [dbo].[driverNumbers] ADD CONSTRAINT PK_driverNumbers_driverNumberID PRIMARY KEY (driverNumberID);
 
-CREATE TABLE [dbo].[driverConstructor] (
-	[driverConstructorID] INT IDENTITY(1,1) NOT NULL,
-	[driverID] INT,
-	[constructorId] INT,
-	[season] INT,
-  [StartDate] DATE NOT NULL,
-  [EndDate] DATE NOT NULL
+CREATE TABLE [dbo].[raceDriverConstructor]
+(
+[raceDriverConstructorID] INT IDENTITY(1,1) NOT NULL,
+[resultID] INT NOT NULL,
+[driverID] INT NOT NULL,
+[constructorID] INT NOT NULL 
 );
 
-ALTER TABLE [dbo].[driverConstructor] ADD CONSTRAINT PK_driverConstructor_driverConstructorID PRIMARY KEY (driverConstructorID)
+ALTER TABLE [dbo].[raceDriverConstructor] ADD CONSTRAINT PK_raceDriverConstructor_raceDriverConstructorID PRIMARY KEY (raceDriverConstructorID);
 
 ALTER TABLE [dbo].[Results] ADD positionTextID INT;
 ALTER TABLE [dbo].[results] ADD [timeDifference] DATETIME NULL; 
