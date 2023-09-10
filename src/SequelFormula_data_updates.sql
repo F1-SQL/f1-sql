@@ -375,6 +375,16 @@ FROM
 
 GO
 
+INSERT INTO [dbo].[raceDriverConstructor] (resultID,driverID,constructorID)
+SELECT 
+	[resultID],
+	[driverID],
+	[constructorID]
+FROM	
+	[dbo].[results]
+
+GO
+
 ALTER TABLE [dbo].[constructors] DROP COLUMN [nationality]; 
 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [location]; 
@@ -392,6 +402,9 @@ ALTER TABLE [dbo].[constructorStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[driverStandings] DROP COLUMN [positionText];
 ALTER TABLE [dbo].[pitStops] DROP COLUMN [duration];
 ALTER TABLE [dbo].[lapTimes] DROP COLUMN [time];
+
+ALTER TABLE [dbo].[results] DROP COLUMN [driverId];
+ALTER TABLE [dbo].[results] DROP COLUMN [constructorId];
 
 DROP TABLE [dbo].[results];
 DROP TABLE [dbo].[Sprintresults];
