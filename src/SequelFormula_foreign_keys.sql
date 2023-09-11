@@ -67,3 +67,6 @@ ALTER TABLE [dbo].[driverNumbers] ADD CONSTRAINT PK_driverNumbers_season FOREIGN
 ALTER TABLE [dbo].[resultDriverConstructor] ADD CONSTRAINT PK_resultDriverConstructor_resultID FOREIGN KEY (resultID) REFERENCES [dbo].[results] (resultID);
 ALTER TABLE [dbo].[resultDriverConstructor] ADD CONSTRAINT PK_resultDriverConstructor_driverID FOREIGN KEY (driverID) REFERENCES [dbo].[drivers] (driverID);
 ALTER TABLE [dbo].[resultDriverConstructor] ADD CONSTRAINT PK_resultDriverConstructor_constructorID FOREIGN KEY (constructorID) REFERENCES [dbo].[constructors] (constructorID);
+
+/*circuitMap*/
+ALTER TABLE circuitMap ADD CONSTRAINT FK_circuitMap_circuitId FOREIGN KEY (circuitId) REFERENCES [dbo].[circuits] (circuitId);
