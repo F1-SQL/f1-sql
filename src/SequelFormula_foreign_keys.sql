@@ -7,20 +7,11 @@ ALTER TABLE [dbo].[qualifying] ADD CONSTRAINT FK_Qualifying_ConstructorID FOREIG
 ALTER TABLE [dbo].[races] ADD CONSTRAINT FK_Races_Year FOREIGN KEY ([Year]) REFERENCES dbo.Seasons ([Year])
 ALTER TABLE [dbo].[races] ADD CONSTRAINT FK_Races_CircuitID FOREIGN KEY (CircuitID) REFERENCES dbo.circuits (CircuitID)
 
-/*Sprint Results*/
-ALTER TABLE [dbo].[sprintResults] ADD CONSTRAINT FK_SprintResults_DriverID FOREIGN KEY (driverID) REFERENCES dbo.drivers (driverID)
-ALTER TABLE [dbo].[sprintResults] ADD CONSTRAINT FK_SprintResults_RaceID FOREIGN KEY (RaceID) REFERENCES dbo.races (RaceID)
-ALTER TABLE [dbo].[sprintResults] ADD CONSTRAINT FK_SprintResults_ConstructorID FOREIGN KEY (ConstructorID) REFERENCES dbo.constructors (ConstructorID)
-ALTER TABLE [dbo].[sprintResults] ADD CONSTRAINT FK_SprintResults_StatusID FOREIGN KEY (StatusID) REFERENCES dbo.[Status] (StatusID)
-ALTER TABLE [dbo].[sprintResults] ADD CONSTRAINT FK_SprintResults_PositionTextID FOREIGN KEY (positionTextID) REFERENCES [dbo].[positionText] (positionTextID) 
-
 /*Results*/
-ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_DriverID FOREIGN KEY (driverID) REFERENCES dbo.drivers (driverID)
 ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_RaceID FOREIGN KEY (RaceID) REFERENCES dbo.races (RaceID)
-ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_ConstructorID FOREIGN KEY (ConstructorID) REFERENCES dbo.constructors (ConstructorID)
 ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_StatusID FOREIGN KEY (StatusID) REFERENCES dbo.[Status] (StatusID)
 ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_PositionTextID FOREIGN KEY (positionTextID) REFERENCES [dbo].[positionText] (positionTextID) 
-ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_ResultTypeID FOREIGN KEY (resultType) REFERENCES [dbo].[resultType] (resultTypeID)
+ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_ResultTypeID FOREIGN KEY (resultTypeID) REFERENCES [dbo].[resultType] (resultTypeID)
 
 /*Pit Stops*/
 ALTER TABLE [dbo].[PitStops] ADD CONSTRAINT FK_PitStops_DriverID FOREIGN KEY (driverID) REFERENCES dbo.drivers (driverID)
