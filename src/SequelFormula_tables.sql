@@ -356,6 +356,15 @@ CREATE TABLE [dbo].[resultDriverConstructor]
 
 ALTER TABLE [dbo].[resultDriverConstructor] ADD CONSTRAINT PK_resultDriverConstructor_resultDriverConstructorID PRIMARY KEY (resultDriverConstructorID);
 
+CREATE TABLE [dbo].[circuitMap]
+(
+	[circuitId] INT NOT NULL,
+	[latitude] DECIMAL(8,6) NOT NULL,
+	[longitudes] DECIMAL(9,6) NOT NULL
+);
+
+ALTER TABLE circuitMap ADD CONSTRAINT PK_circuitMap_circuitId PRIMARY KEY (circuitId);
+
 ALTER TABLE [dbo].[results] ADD positionTextID INT;
 ALTER TABLE [dbo].[results] ADD [timeDifference] DATETIME NULL; 
 ALTER TABLE [dbo].[results] ADD [fastestLapTime_Converted] TIME(3) NULL; 
