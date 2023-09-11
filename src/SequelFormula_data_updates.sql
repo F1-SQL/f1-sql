@@ -385,6 +385,26 @@ FROM
 
 GO
 
+INSERT INTO [dbo].[circuitMap] 
+(
+	[circuitId],
+	[latitude],
+	[longitudes]
+)
+SELECT 
+	[circuitId],
+	[lat],
+	[lng] 
+FROM 
+	[dbo].[circuits]
+
+GO
+
+UPDATE [dbo].[circuitMap] 
+	SET url = 'https://www.openstreetmap.org/#map=15/'+CAST([latitude] AS varchar)+'/'+CAST([longitudes] AS varchar)
+
+GO
+
 ALTER TABLE [dbo].[constructors] DROP COLUMN [nationality]; 
 
 ALTER TABLE [dbo].[circuits] DROP COLUMN [location]; 
@@ -405,6 +425,9 @@ ALTER TABLE [dbo].[lapTimes] DROP COLUMN [time];
 
 ALTER TABLE [dbo].[results] DROP COLUMN [driverId];
 ALTER TABLE [dbo].[results] DROP COLUMN [constructorId];
+
+ALTER TABLE [dbo].[circuits] DROP COLUMN lat;
+ALTER TABLE [dbo].[circuits] DROP COLUMN lng;
 
 DROP TABLE [dbo].[results];
 DROP TABLE [dbo].[Sprintresults];
