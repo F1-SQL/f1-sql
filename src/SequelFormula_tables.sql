@@ -360,7 +360,8 @@ CREATE TABLE [dbo].[circuitMap]
 (
 	[circuitId] INT NOT NULL,
 	[latitude] DECIMAL(8,6) NOT NULL,
-	[longitudes] DECIMAL(9,6) NOT NULL
+	[longitudes] DECIMAL(9,6) NOT NULL,
+  [url] varchar(255)
 );
 
 ALTER TABLE circuitMap ADD CONSTRAINT PK_circuitMap_circuitId PRIMARY KEY (circuitId);
