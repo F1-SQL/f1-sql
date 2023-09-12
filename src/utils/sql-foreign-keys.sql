@@ -62,8 +62,8 @@ WHILE @current_loop_table_index IS NOT NULL
 
 BEGIN
 
-   DECLARE @current_loop_table_schema SYSNAME = (SELECT MIN(schemaName) FROM @temp_foreign_keys WHERE [id] = @current_loop_table_index)
-   DECLARE @current_loop_table_name SYSNAME = (SELECT MIN(tableName) FROM @temp_foreign_keys WHERE [id] = @current_loop_table_index)
+   DECLARE @current_loop_table_schema SYSNAME = (SELECT MIN(TABLE_SCHEMA) FROM @temp_all_tables WHERE [id] = @current_loop_table_index)
+   DECLARE @current_loop_table_name SYSNAME = (SELECT MIN(TABLE_NAME) FROM @temp_all_tables WHERE [id] = @current_loop_table_index)
 
    INSERT INTO @temp_lines ([line])
    SELECT  N'### [' + @current_loop_table_schema + N'.' + @current_loop_table_name + N']'
@@ -83,18 +83,12 @@ BEGIN
 
    --output markdown table header for columns
    INSERT INTO @temp_lines ([line])
-   SELECT  N'| schemaName | tableName | columnName | Parent_Schema | Parent_table | Parent_column | constraint_name |'
+   SELECT  N'|  Schema | table | column | constraint_name |'
    UNION ALL
-   SELECT  N'| ------- | ------- | ------- | ------- | ------- | ------- | ------- |'
+   SELECT  N'|  ------- | ------- | ------- | ------- |'
 
    INSERT INTO @temp_lines ([line])
-   SELECT
-           N'| ' + tfk.schemaName 
-		   +
-           N' | ' +  tfk.tableName
-           +      
-           N' | ' + tfk.columnName 
-		   +
+   SELECT          
 		   N' | ' + tfk.Parent_Schema
            +
            N' | ' + tfk.Parent_table
