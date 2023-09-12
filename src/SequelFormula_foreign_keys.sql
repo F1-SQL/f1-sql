@@ -11,7 +11,7 @@ ALTER TABLE [dbo].[races] ADD CONSTRAINT FK_Races_CircuitID FOREIGN KEY (Circuit
 ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_RaceID FOREIGN KEY (RaceID) REFERENCES dbo.races (RaceID)
 ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_StatusID FOREIGN KEY (StatusID) REFERENCES dbo.[Status] (StatusID)
 ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_PositionTextID FOREIGN KEY (positionTextID) REFERENCES [dbo].[positionText] (positionTextID) 
-ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_ResultTypeID FOREIGN KEY (resultTypeID) REFERENCES [dbo].[resultType] (resultTypeID)
+ALTER TABLE [dbo].[Results] ADD CONSTRAINT FK_Results_ResultTypeID FOREIGN KEY (resultTypeId) REFERENCES [dbo].[resultType] (resultTypeID)
 
 /*Pit Stops*/
 ALTER TABLE [dbo].[PitStops] ADD CONSTRAINT FK_PitStops_DriverID FOREIGN KEY (driverID) REFERENCES dbo.drivers (driverID)
