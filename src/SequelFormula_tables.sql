@@ -139,8 +139,8 @@ ALTER TABLE races ADD CONSTRAINT UK_races_url UNIQUE(url);
 CREATE TABLE results (
   resultId INT  NOT NULL,
   raceId INT NOT NULL DEFAULT 0,
-  driverId INT NOT NULL DEFAULT 0,
-  constructorId INT NOT NULL DEFAULT 0,
+  driverId INT NOT NULL,
+  constructorId INT NOT NULL,
   number INT NULL,
   grid INT NOT NULL DEFAULT 0,
   position INT,
