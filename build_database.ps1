@@ -197,9 +197,9 @@
         
         $backupName = $version + "_" + $databaseName + "_" + $raceName + ".bak"
         $backupFolder = "\backups\"
-        $backupCompressName = $rootpath + $backupFolder + $version + "_" + $databaseName + "_" + $raceName + '.7zip'
+        $backupCompressName = $version + "_" + $databaseName + "_" + $raceName + '.7zip'
         $backupLocation = $rootpath + $backupFolder + $raceName + "\"
-        $backupFullPath = $backupLocation + "\" + $backupName  
+        $backupFullPath = $backupLocation + $backupName  
 
         if(-Not(Test-Path -Path $tableFilesFullPath))
         {
@@ -323,16 +323,16 @@
                 Write-Host "WARN: Database backup already exists, removing" -ForegroundColor Red
                 Remove-Item -Path $backupFullPath
             } 
-                   
+            
             Backup-DbaDatabase -SqlInstance $svr -Database $databaseName -Path $backupLocation -FilePath $backupName -Type Full 
 
             Write-Host "INFO: Attempting to 7zip the backup" -ForegroundColor Yellow
             try
             {
-                #https://github.com/thoemmi/7Zip4Powershell
-                Compress-7Zip -Path $backupFullPath -Filter *.bak -ArchiveFileName $backupCompressName -CompressionLevel Ultra
-                Write-Host "INFO: Compressed backup sucessfully"
-                $backupFullPath = $backupLocation + "\" + $backupName 
+                #https://github.com/thoemmi/7Zip4Powershell 
+                $compressedPath = $backupLocation + $backupCompressName
+                Compress-7Zip -Path $backupLocation -Filter *.bak -ArchiveFileName $compressedPath -CompressionLevel Ultra                
+                Write-Host "INFO: Compressed backup sucessfully"              
                 Remove-Item -Path $backupFullPath -Force
             }
             catch {
