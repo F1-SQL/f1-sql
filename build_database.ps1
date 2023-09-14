@@ -312,25 +312,7 @@
         {
             Write-Host "INFO: Creating keys" -ForegroundColor Yellow
             Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\SequelFormula_foreign_keys.sql' -f $rootpath)
-        }    
-        
-        $options = New-DbaScriptingOption
-        $options.ScriptSchema = $true
-        $options.IncludeDatabaseContext  = $false
-        $options.IncludeHeaders = $false
-        $Options.NoCommandTerminator = $false
-        $options.DriPrimaryKey = $true
-        $Options.ScriptBatchTerminator = $true
-        $options.DriAllConstraints = $false
-        $Options.AnsiFile = $true
-
-        try {        
-            Get-DbaDbTable -SqlInstance $svr -Database $databaseName | ForEach-Object { Export-DbaScript -InputObject $_ -FilePath (Join-Path $tableFilesFullPath -ChildPath "$($_.Name).sql") -ScriptingOptionsObject $options -NoPrefix $false }
-        }
-        catch {
-            Write-Error -Message "Unable to export tables to '$tablePath'. Error was: $error" -ErrorAction Stop
-            Add-Content -Path $logFullPath -Value "$(Get-Date -f yyyy-MM-dd-HH-mm) - Unable to export tables to '$tablePath'. Error was: $error"
-        }       
+        } 
         
         if($backupDatabase -eq $True)
         {
