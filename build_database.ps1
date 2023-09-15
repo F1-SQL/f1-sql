@@ -192,42 +192,11 @@
         
         $version = Get-DbaBuildReference -SqlInstance $svr | Select-Object -ExpandProperty NameLevel        
         
-        $tableFolder = "\src\tables\sql-" + $version
-        $tableFilesFullPath = $rootpath + $tableFolder
-        
         $backupName = $version + "_" + $databaseName + "_" + $raceName + ".bak"
         $backupFolder = "\backups\"
         $backupCompressName = $version + "_" + $databaseName + "_" + $raceName + '.7zip'
         $backupLocation = $rootpath + $backupFolder + $raceName + "\"
-        $backupFullPath = $backupLocation + $backupName  
-
-        if(-Not(Test-Path -Path $tableFilesFullPath))
-        {
-            Write-Host "INFO: Attempting to create the directory $tableFilesFullPath" -ForegroundColor Yellow
-            New-Item -ItemType Directory -Path $tableFilesFullPath -Force -ErrorAction Stop
-        } else {
-            Write-Host "ERROR: The directory $tableFilesFullPath already exists" -ForegroundColor Gray
-        }
-
-        if(Test-Path -Path $tableFilesFullPath)
-        {
-            $tableFiles = Get-ChildItem -Path $tableFilesFullPath -Filter *.sql 
-        }
-    
-        foreach($tablefile in $tableFiles)
-        {
-            try {       
-        
-                Write-Host "INFO: Attempting to delete" $tablefile.Name -ForegroundColor Yellow
-                Remove-Item -Path $tablefile.FullName -Force
-                Write-Host "SUCCESS: Deleted" $tablefile.Name -ForegroundColor Green
-        
-            }
-            catch {
-                Write-Host "ERROR: Unable to delete" $tablefile.FullName "the Error was: $_" -ForegroundColor Red
-                Exit
-            }
-        }
+        $backupFullPath = $backupLocation + $backupName          
         
         if(-Not(Test-Path -Path $backupLocation))
         {
@@ -258,10 +227,20 @@
         
         if($database)
         {
-            Write-Host "INFO: Creating tables" -ForegroundColor Yellow
-            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\SequelFormula_tables.sql' -f $rootpath)
-            #Pause the script for 20 seconds to make sure that the build database/table scripts has completed. 
-            Start-Sleep -Seconds 20
+            $tableFolder = "\src\tables\"
+            $tableLocation = $rootpath + $tableFolder
+            $tableFiles = Get-ChildItem $tableLocation -Filter *.sql
+
+            foreach($tableFile in $tableFiles)
+            {
+                Write-Host "INFO: Attempting to create $tableFile" -ForegroundColor Yellow
+                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $tableFile
+            }
+
+            # Write-Host "INFO: Creating tables" -ForegroundColor Yellow
+            # Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\SequelFormula_tables.sql' -f $rootpath)
+            # #Pause the script for 20 seconds to make sure that the build database/table scripts has completed. 
+            # Start-Sleep -Seconds 20
             
             #Get all of the files again, do this now, as we renamed them earlier
             $files = Get-ChildItem $sourceFilesFullPath -Filter *.csv
