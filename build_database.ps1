@@ -67,7 +67,10 @@
         $backupDatabase,
         [Parameter(Mandatory=$True, Position=4, ValueFromPipeline=$false)]
         [System.Boolean]
-        $downloadZip   
+        $downloadZip,
+        [Parameter(Mandatory=$True, Position=5, ValueFromPipeline=$false)]
+        [System.String]
+        $databaseSource   
     )
     
     $currentYear = (Get-Date).Year.ToString()
@@ -93,6 +96,18 @@
     $zipName = 'SequelFormula_csv_' + $raceName + '.zip'
     $zipLocation = $rootpath + $sourceFiles 
     $zipLocationFull = $zipLocation + $zipName
+
+    $tableFiles = $rootpath + "\src\tables\"
+
+    if($databaseSource)
+    {
+        Write-Host "INFO: Copying database files from $databaseSource to $tableFiles" -ForegroundColor Yellow
+        Get-Item -Path $databaseSource | Copy-Item -Path $databaseSource -Destination $tableFiles -Recurse -Force
+    } else 
+    {
+        Write-Host "ERROR: $databaseSource doesn't exist" -ForegroundColor Yellow
+        exit
+    }
 
     if(-Not(Test-Path $zipLocationFull) -and $downloadZip -eq $true)
     {
