@@ -1,0 +1,20 @@
+SET
+	ANSI_NULLS ON 
+	GO
+SET
+	QUOTED_IDENTIFIER ON 
+	GO
+CREATE TABLE
+	dbo.countries (
+		countryID INT NOT NULL,
+		country varchar(255),
+		CONSTRAINT PK_countries_countryID PRIMARY KEY CLUSTERED (countryID ASC)
+		WITH
+			(
+				PAD_INDEX = OFF,
+				IGNORE_DUP_KEY = OFF,
+				ALLOW_ROW_LOCKS = ON,
+				ALLOW_PAGE_LOCKS = ON
+			) ON [PRIMARY]
+	) ON [PRIMARY] 
+	GO
