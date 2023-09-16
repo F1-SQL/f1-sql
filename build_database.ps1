@@ -79,12 +79,12 @@
     $raceName = $raceName.Replace(' ','_')
     $raceName += "_" + $currentYear
     
-    $sourceFiles = "\src\csv\"
+    $sourceFiles = "\src\sourceFiles\"
     $sourceFilesFullPath = $rootpath + $sourceFiles
 
     $supplementaryData = $rootpath + "\src\supplementarydata"
 
-    $archiveFolder = "\src\archivedfiles\"
+    $archiveFolder = "\src\sourceFiles\archivedfiles\"
     $archiveLocation = $rootpath + $archiveFolder
     $archiveLocationDate = $archiveLocation + $raceName + "\"
 
