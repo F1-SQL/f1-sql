@@ -67,7 +67,7 @@
         $backupDatabase,
         [Parameter(Mandatory=$True, Position=4, ValueFromPipeline=$false)]
         [System.Boolean]
-        $downloadZip   
+        $downloadZip
     )
     
     $currentYear = (Get-Date).Year.ToString()
@@ -192,42 +192,11 @@
         
         $version = Get-DbaBuildReference -SqlInstance $svr | Select-Object -ExpandProperty NameLevel        
         
-        $tableFolder = "\src\tables\sql-" + $version
-        $tableFilesFullPath = $rootpath + $tableFolder
-        
         $backupName = $version + "_" + $databaseName + "_" + $raceName + ".bak"
         $backupFolder = "\backups\"
-        $backupCompressName = $rootpath + $backupFolder + $version + "_" + $databaseName + "_" + $raceName + '.7zip'
+        $backupCompressName = $version + "_" + $databaseName + "_" + $raceName + '.7zip'
         $backupLocation = $rootpath + $backupFolder + $raceName + "\"
-        $backupFullPath = $backupLocation + "\" + $backupName  
-
-        if(-Not(Test-Path -Path $tableFilesFullPath))
-        {
-            Write-Host "INFO: Attempting to create the directory $tableFilesFullPath" -ForegroundColor Yellow
-            New-Item -ItemType Directory -Path $tableFilesFullPath -Force -ErrorAction Stop
-        } else {
-            Write-Host "ERROR: The directory $tableFilesFullPath already exists" -ForegroundColor Gray
-        }
-
-        if(Test-Path -Path $tableFilesFullPath)
-        {
-            $tableFiles = Get-ChildItem -Path $tableFilesFullPath -Filter *.sql 
-        }
-    
-        foreach($tablefile in $tableFiles)
-        {
-            try {       
-        
-                Write-Host "INFO: Attempting to delete" $tablefile.Name -ForegroundColor Yellow
-                Remove-Item -Path $tablefile.FullName -Force
-                Write-Host "SUCCESS: Deleted" $tablefile.Name -ForegroundColor Green
-        
-            }
-            catch {
-                Write-Host "ERROR: Unable to delete" $tablefile.FullName "the Error was: $_" -ForegroundColor Red
-                Exit
-            }
-        }
+        $backupFullPath = $backupLocation + $backupName          
         
         if(-Not(Test-Path -Path $backupLocation))
         {
@@ -258,10 +227,20 @@
         
         if($database)
         {
-            Write-Host "INFO: Creating tables" -ForegroundColor Yellow
-            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\SequelFormula_tables.sql' -f $rootpath)
-            #Pause the script for 20 seconds to make sure that the build database/table scripts has completed. 
-            Start-Sleep -Seconds 20
+            $tableFolder = "\src\tables\"
+            $tableLocation = $rootpath + $tableFolder
+            $tableFiles = Get-ChildItem $tableLocation -Filter *.sql
+
+            foreach($tableFile in $tableFiles)
+            {
+                Write-Host "INFO: Attempting to create $tableFile" -ForegroundColor Yellow
+                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $tableFile
+            }
+
+            # Write-Host "INFO: Creating tables" -ForegroundColor Yellow
+            # Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\SequelFormula_tables.sql' -f $rootpath)
+            # #Pause the script for 20 seconds to make sure that the build database/table scripts has completed. 
+            # Start-Sleep -Seconds 20
             
             #Get all of the files again, do this now, as we renamed them earlier
             $files = Get-ChildItem $sourceFilesFullPath -Filter *.csv
@@ -312,25 +291,7 @@
         {
             Write-Host "INFO: Creating keys" -ForegroundColor Yellow
             Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\SequelFormula_foreign_keys.sql' -f $rootpath)
-        }    
-        
-        $options = New-DbaScriptingOption
-        $options.ScriptSchema = $true
-        $options.IncludeDatabaseContext  = $false
-        $options.IncludeHeaders = $false
-        $Options.NoCommandTerminator = $false
-        $options.DriPrimaryKey = $true
-        $Options.ScriptBatchTerminator = $true
-        $options.DriAllConstraints = $false
-        $Options.AnsiFile = $true
-
-        try {        
-            Get-DbaDbTable -SqlInstance $svr -Database $databaseName | ForEach-Object { Export-DbaScript -InputObject $_ -FilePath (Join-Path $tableFilesFullPath -ChildPath "$($_.Name).sql") -ScriptingOptionsObject $options -NoPrefix $false }
-        }
-        catch {
-            Write-Error -Message "Unable to export tables to '$tablePath'. Error was: $error" -ErrorAction Stop
-            Add-Content -Path $logFullPath -Value "$(Get-Date -f yyyy-MM-dd-HH-mm) - Unable to export tables to '$tablePath'. Error was: $error"
-        }       
+        } 
         
         if($backupDatabase -eq $True)
         {
@@ -341,16 +302,16 @@
                 Write-Host "WARN: Database backup already exists, removing" -ForegroundColor Red
                 Remove-Item -Path $backupFullPath
             } 
-                   
+            
             Backup-DbaDatabase -SqlInstance $svr -Database $databaseName -Path $backupLocation -FilePath $backupName -Type Full 
 
             Write-Host "INFO: Attempting to 7zip the backup" -ForegroundColor Yellow
             try
             {
-                #https://github.com/thoemmi/7Zip4Powershell
-                Compress-7Zip -Path $backupFullPath -Filter *.bak -ArchiveFileName $backupCompressName -CompressionLevel Ultra
-                Write-Host "INFO: Compressed backup sucessfully"
-                $backupFullPath = $backupLocation + "\" + $backupName 
+                #https://github.com/thoemmi/7Zip4Powershell 
+                $compressedPath = $backupLocation + $backupCompressName
+                Compress-7Zip -Path $backupLocation -Filter *.bak -ArchiveFileName $compressedPath -CompressionLevel Ultra                
+                Write-Host "INFO: Compressed backup sucessfully"              
                 Remove-Item -Path $backupFullPath -Force
             }
             catch {
