@@ -314,22 +314,12 @@ UPDATE [dbo].[sprintResults] SET time_converted = TRY_CONVERT(time(3),[TimeDiffe
 
 GO
 
-ALTER TABLE [dbo].[results] DROP COLUMN [positionText];
-ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapTime];
-ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapSpeed];
-ALTER TABLE [dbo].[results] DROP COLUMN [time];
-ALTER TABLE [dbo].[results] DROP COLUMN [timeDifference];
 
-ALTER TABLE [dbo].[sprintResults] DROP COLUMN [fastestLapTime];
-ALTER TABLE [dbo].[sprintResults] DROP COLUMN [positionText];
-ALTER TABLE [dbo].[sprintResults] DROP COLUMN [timeDifference];
-ALTER TABLE [dbo].[sprintResults] DROP COLUMN [time];
 
-EXEC sp_rename 'dbo.sprintResults.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
-EXEC sp_rename 'dbo.results.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
-EXEC sp_rename 'dbo.results.fastestLapSpeed_Decimal', 'fastestLapSpeed', 'COLUMN';
-EXEC sp_rename 'dbo.results.time_converted', 'time', 'COLUMN';
-EXEC sp_rename 'dbo.sprintResults.time_converted', 'time', 'COLUMN';
+
+
+
+
 
 GO
 

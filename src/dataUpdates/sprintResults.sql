@@ -77,3 +77,15 @@ UPDATE [dbo].[sprintResults] SET time_converted = TRY_CONVERT(time, STUFF(STUFF(
 GO
 
 UPDATE [dbo].[sprintResults] SET time_converted = TRY_CONVERT(time(3),[TimeDifference]) WHERE position != 1
+
+GO
+
+ALTER TABLE [dbo].[sprintResults] DROP COLUMN [fastestLapTime];
+ALTER TABLE [dbo].[sprintResults] DROP COLUMN [positionText];
+ALTER TABLE [dbo].[sprintResults] DROP COLUMN [timeDifference];
+ALTER TABLE [dbo].[sprintResults] DROP COLUMN [time];
+
+GO
+
+EXEC sp_rename 'dbo.sprintResults.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
+EXEC sp_rename 'dbo.sprintResults.time_converted', 'time', 'COLUMN';
