@@ -1,0 +1,3 @@
+ALTER TABLE [dbo].[constructorStandings] ADD CONSTRAINT FK_ConstructorStandings_ConstructorID FOREIGN KEY (constructorID) REFERENCES dbo.constructors (constructorID);
+ALTER TABLE [dbo].[constructorStandings] ADD CONSTRAINT FK_ConstructorStandings_RaceID FOREIGN KEY (RaceID) REFERENCES dbo.races (RaceID);
+ALTER TABLE [dbo].[constructorStandings] ADD CONSTRAINT FK_ConstructorStandings_PositionTextID FOREIGN KEY (positionTextID) REFERENCES [dbo].[positionText] (positionTextID);
