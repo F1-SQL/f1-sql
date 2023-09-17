@@ -15,4 +15,5 @@ CREATE TABLE
         [GrandsPrix] [nvarchar](50) NOT NULL,
         [Season] [nvarchar](150) NOT NULL,
         [GrandsPrixHeld] [tinyint] NOT NULL
-    )
+    ) ON [PRIMARY] 
+	GO

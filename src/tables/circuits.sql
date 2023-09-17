@@ -19,13 +19,5 @@ CREATE TABLE
 		countryID INT,
 		circuitDirectionID INT,
 		circuitTypeID INT,
-		CONSTRAINT PK_circuits_circuitId PRIMARY KEY CLUSTERED (circuitId ASC)
-		WITH
-			(
-				PAD_INDEX = OFF,
-				IGNORE_DUP_KEY = OFF,
-				ALLOW_ROW_LOCKS = ON,
-				ALLOW_PAGE_LOCKS = ON
-			) ON [PRIMARY]
 	) ON [PRIMARY] 
 	GO

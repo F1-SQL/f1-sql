@@ -8,13 +8,5 @@ CREATE TABLE
 	dbo.status (
 		statusId INT  NOT NULL,
   		status varchar(255) NOT NULL,
-		CONSTRAINT PK_status_statusId PRIMARY KEY CLUSTERED (statusId ASC)
-		WITH
-			(
-				PAD_INDEX = OFF,
-				IGNORE_DUP_KEY = OFF,
-				ALLOW_ROW_LOCKS = ON,
-				ALLOW_PAGE_LOCKS = ON
-			) ON [PRIMARY]
 	) ON [PRIMARY] 
 	GO

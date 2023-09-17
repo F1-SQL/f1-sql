@@ -13,13 +13,5 @@ CREATE TABLE
 		season INT,
 		sub BIT DEFAULT 0,
 		retired BIT DEFAULT 0,
-		CONSTRAINT PK_driverNumbers_driverNumberID PRIMARY KEY CLUSTERED (driverNumberID ASC)
-		WITH
-			(
-				PAD_INDEX = OFF,
-				IGNORE_DUP_KEY = OFF,
-				ALLOW_ROW_LOCKS = ON,
-				ALLOW_PAGE_LOCKS = ON
-			) ON [PRIMARY]
 	) ON [PRIMARY] 
 	GO

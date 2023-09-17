@@ -24,13 +24,5 @@ CREATE TABLE
 		quali_time time,
 		sprint_date date,
 		sprint_time time,
-		CONSTRAINT PK_races_raceId PRIMARY KEY CLUSTERED (raceId ASC)
-		WITH
-			(
-				PAD_INDEX = OFF,
-				IGNORE_DUP_KEY = OFF,
-				ALLOW_ROW_LOCKS = ON,
-				ALLOW_PAGE_LOCKS = ON
-			) ON [PRIMARY]
 	) ON [PRIMARY] 
 	GO

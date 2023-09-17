@@ -8,13 +8,5 @@ CREATE TABLE
 	dbo.seasons (
 		year INT NOT NULL,
 		url VARCHAR(2048) NOT NULL,
-		CONSTRAINT PK_seasons_year PRIMARY KEY CLUSTERED (year ASC)
-		WITH
-			(
-				PAD_INDEX = OFF,
-				IGNORE_DUP_KEY = OFF,
-				ALLOW_ROW_LOCKS = ON,
-				ALLOW_PAGE_LOCKS = ON
-			) ON [PRIMARY]
 	) ON [PRIMARY] 
 	GO

@@ -16,13 +16,5 @@ CREATE TABLE
 		nationality varchar(255),
 		url varchar(2048) NOT NULL,
 		nationalityID INT,
-		CONSTRAINT PK_driverss_driverId PRIMARY KEY CLUSTERED (driverId ASC)
-		WITH
-			(
-				PAD_INDEX = OFF,
-				IGNORE_DUP_KEY = OFF,
-				ALLOW_ROW_LOCKS = ON,
-				ALLOW_PAGE_LOCKS = ON
-			) ON [PRIMARY]
 	) ON [PRIMARY] 
 	GO

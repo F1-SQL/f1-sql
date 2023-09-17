@@ -12,13 +12,5 @@ CREATE TABLE
 		points float,
 		status varchar(255),
 		positionTextID INT,
-		CONSTRAINT PK_constructorResults_constructorResultsId PRIMARY KEY CLUSTERED (constructorResultsId ASC)
-		WITH
-			(
-				PAD_INDEX = OFF,
-				IGNORE_DUP_KEY = OFF,
-				ALLOW_ROW_LOCKS = ON,
-				ALLOW_PAGE_LOCKS = ON
-			) ON [PRIMARY]
 	) ON [PRIMARY] 
 	GO

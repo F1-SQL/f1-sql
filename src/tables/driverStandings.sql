@@ -14,13 +14,5 @@ CREATE TABLE
 		positionText varchar(255),
 		wins INT NOT NULL DEFAULT 0,
 		positionTextID INT,
-		CONSTRAINT PK_driverStandings_driverStandingsId PRIMARY KEY CLUSTERED (driverStandingsId ASC)
-		WITH
-			(
-				PAD_INDEX = OFF,
-				IGNORE_DUP_KEY = OFF,
-				ALLOW_ROW_LOCKS = ON,
-				ALLOW_PAGE_LOCKS = ON
-			) ON [PRIMARY]
 	) ON [PRIMARY] 
 	GO

@@ -25,13 +25,5 @@ CREATE TABLE
         [fastestLapTime] [time](3) NULL,
         [fastestLapSpeed] [decimal](18, 3) NULL,
         [time] [time](3) NULL,
-        CONSTRAINT PK_resultsNew_resultId PRIMARY KEY CLUSTERED (resultId)
-        WITH
-            (
-                PAD_INDEX = OFF,
-                IGNORE_DUP_KEY = OFF,
-                ALLOW_ROW_LOCKS = ON,
-                ALLOW_PAGE_LOCKS = ON
-            ) ON [PRIMARY]
     ) ON [PRIMARY] 
     GO
