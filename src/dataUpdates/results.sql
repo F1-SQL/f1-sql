@@ -1,3 +1,12 @@
+ALTER TABLE dbo.results ADD [resultTypeId] [int];
+ALTER TABLE [dbo].[results] ADD positionTextID INT;
+ALTER TABLE [dbo].[results] ADD [timeDifference] DATETIME NULL; 
+ALTER TABLE [dbo].[results] ADD [fastestLapTime_Converted] TIME(3) NULL; 
+ALTER TABLE [dbo].[results] ADD [fastestLapSpeed_Decimal] DECIMAL(18,3) NULL; 
+ALTER TABLE [dbo].[results] ADD time_converted time(3);
+
+GO
+
 UPDATE r
 SET
     r.positionTextID = pt.positionTextID
@@ -5,7 +14,7 @@ FROM
     dbo.results r
     INNER JOIN dbo.positionText pt ON r.positionText = pt.positioncode 
     
-GO;
+GO
 
 WITH
     LeadingResults AS (
@@ -64,7 +73,9 @@ SET
             0,
             ':'
         )
-    );
+    ) 
+    
+GO
 
 
 UPDATE dbo.results
@@ -92,6 +103,8 @@ ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapTime];
 ALTER TABLE [dbo].[results] DROP COLUMN [fastestLapSpeed];
 ALTER TABLE [dbo].[results] DROP COLUMN [time];
 ALTER TABLE [dbo].[results] DROP COLUMN [timeDifference];
+
+GO
 
 EXEC sp_rename 'dbo.results.fastestLapTime_converted', 'fastestLapTime', 'COLUMN';
 EXEC sp_rename 'dbo.results.fastestLapSpeed_Decimal', 'fastestLapSpeed', 'COLUMN';

@@ -49,27 +49,8 @@ SET
     r.TimeDifference = do.Diff
 FROM
     dbo.sprintResults r
-    INNER JOIN DataOutput DO ON r.resultId = do.resultId GO
-UPDATE dbo.results
-SET
-    fastestLapTime_converted = TRY_CONVERT (
-        TIME,
-        STUFF (
-            STUFF (
-                RIGHT (
-                    CONCAT ('000000', REPLACE (fastestLapTime, ':', '')),
-                    10
-                ),
-                5,
-                0,
-                ':'
-            ),
-            3,
-            0,
-            ':'
-        )
-    ) 
-    
+    INNER JOIN DataOutput DO ON r.resultId = do.resultId 
+
 GO
 
 UPDATE [dbo].[sprintResults] SET time_converted = TRY_CONVERT(time, STUFF(STUFF(RIGHT(CONCAT('000000', REPLACE(time, ':', '')), 10), 5, 0, ':'), 3, 0, ':'))  WHERE position = 1;
