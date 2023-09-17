@@ -7,6 +7,3 @@ FROM
 	[dbo].[tempCircuits] tc
 
 INNER JOIN [dbo].[circuits] c ON c.name = tc.circuit
-
-
-DROP TABLE [dbo].[tempCircuits]
