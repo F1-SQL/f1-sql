@@ -7,7 +7,7 @@ SET
 CREATE TABLE
 	dbo.status (
 		statusId INT  NOT NULL,
-  		status varchar(255) NOT NULL DEFAULT '',
+  		status varchar(255) NOT NULL,
 		CONSTRAINT PK_status_statusId PRIMARY KEY CLUSTERED (statusId ASC)
 		WITH
 			(

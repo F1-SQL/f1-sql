@@ -6,7 +6,7 @@ SET
 	GO
 CREATE TABLE
 	dbo.constructorResults (
-		constructorResultsId int  NOT NULL,
+		constructorResultsId int NOT NULL,
 		raceId int NOT NULL DEFAULT 0,
 		constructorId int NOT NULL DEFAULT 0,
 		points float,

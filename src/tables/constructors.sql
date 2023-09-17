@@ -7,10 +7,10 @@ SET
 CREATE TABLE
 	dbo.constructors (
 		constructorId INT  NOT NULL,
-		constructorRef varchar(255) NOT NULL DEFAULT '',
-		name varchar(255) NOT NULL DEFAULT '',
+		constructorRef varchar(255) NOT NULL,
+		name varchar(255) NOT NULL,
 		nationality varchar(255),
-		url varchar(2048) NOT NULL DEFAULT '',
+		url varchar(2048) NOT NULL,
 		nationalityID INT,
 		CONSTRAINT PK_constructors_constructorId PRIMARY KEY CLUSTERED (constructorId ASC)
 		WITH

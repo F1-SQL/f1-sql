@@ -7,14 +7,14 @@ SET
 CREATE TABLE
 	dbo.drivers (
 		driverId INT  NOT NULL,
-		driverRef varchar(255) NOT NULL DEFAULT '',
+		driverRef varchar(255) NOT NULL,
 		number INT,
 		code varchar(3),
-		forename varchar(255) NOT NULL DEFAULT '',
-		surname varchar(255) NOT NULL DEFAULT '',
+		forename varchar(255) NOT NULL,
+		surname varchar(255) NOT NULL,
 		dob date,
 		nationality varchar(255),
-		url varchar(2048) NOT NULL DEFAULT '',
+		url varchar(2048) NOT NULL,
 		nationalityID INT,
 		CONSTRAINT PK_driverss_driverId PRIMARY KEY CLUSTERED (driverId ASC)
 		WITH

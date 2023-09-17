@@ -7,14 +7,14 @@ SET
 CREATE TABLE
 	dbo.circuits (
 		circuitId int  NOT NULL,
-		circuitRef varchar(255) NOT NULL DEFAULT '',
-		name varchar(255) NOT NULL DEFAULT '',
+		circuitRef varchar(255) NOT NULL,
+		name varchar(255) NOT NULL,
 		location varchar(255),
 		country varchar(255),
 		lat float,
 		lng float,
 		alt int,
-		url varchar(255) NOT NULL DEFAULT '',
+		url varchar(255) NOT NULL,
 		locationID INT,
 		countryID INT,
 		circuitDirectionID INT,
