@@ -397,9 +397,25 @@ foreach ($instance in $sqlInstance) {
             Exit
         }
 
+        try {
+            Write-Host "INFO: Performing tempCircuits Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\tempCircuits.sql' -f $rootPath)
+        }
+        catch {
+            Exit
+        }
+
         try {            
             Write-Host "INFO: Performing circuits Data Updates" -ForegroundColor Yellow
             Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\circuits.sql' -f $rootpath)
+        }
+        catch {
+            Exit
+        }
+
+        try {            
+            Write-Host "INFO: Performing circuitMap Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\circuitMap.sql' -f $rootpath)
         }
         catch {
             Exit
@@ -452,13 +468,24 @@ foreach ($instance in $sqlInstance) {
         catch {
             Exit
         }
-    } 
 
+        try {   
+            Write-Host "INFO: Performing lapTimes Data Updates" -ForegroundColor Yellow         
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\resultDriverConstructor.sql' -f $rootpath)
+        }
+        catch {
+            Exit
+        }
+    } 
+    
     Write-Host "INFO: Removing redundant tables" -ForegroundColor Yellow
-    Remove-DbaDbTable -SqlInstance $svr -Table 'results','sprintResults'
+    Remove-DbaDbTable -SqlInstance $svr -Table 'results','sprintResults','tempCircuits' -Confirm:$false
 
     Write-Host "INFO: Renaming resultsNew to results" -ForegroundColor Yellow     
     Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -Query "EXEC sp_rename 'resultsnew', 'results';"
+
+    Write-Host "INFO: Renaming PK_resultsNew_resultId to PK_results_resultId" -ForegroundColor Yellow     
+    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -Query "EXEC sp_rename N'dbo.PK_resultsNew_resultId', N'PK_results_resultId', N'OBJECT'"
 
     if ($database) {
 
