@@ -180,7 +180,7 @@ else {
     Write-Host "WARN: The directory $sourceFilesFullPath already exists, skipping creation" -ForegroundColor Magenta
 }
 
-$existingFiles = Get-ChildItem -Path $sourceFilesFullPath -Filter *.csv -Recurse
+$existingFiles = Get-ChildItem -Path $sourceFilesFullPath -Filter *.csv
 
 foreach ($instance in $sqlInstance) {
     
@@ -350,6 +350,7 @@ foreach ($instance in $sqlInstance) {
         Write-Host "INFO: Performing Data Updates" -ForegroundColor Yellow
 
         try {
+            Write-Host "INFO: Performing positionText Data Updates" -ForegroundColor Yellow
             Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\positionText.sql' -f $rootPath)
         }
         catch {
@@ -357,6 +358,7 @@ foreach ($instance in $sqlInstance) {
         }
 
         try {            
+            Write-Host "INFO: Performing drivers Data Updates" -ForegroundColor Yellow
             Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\drivers.sql' -f $rootpath)
         }
         catch {
@@ -364,13 +366,15 @@ foreach ($instance in $sqlInstance) {
         }
 
         try {
+            Write-Host "INFO: Performing constructors Data Updates" -ForegroundColor Yellow
             Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\constructors.sql' -f $rootpath)
         }
         catch {
             Exit
         }
 
-        try {            
+        try {         
+            Write-Host "INFO: Performing results Data Updates" -ForegroundColor Yellow   
             Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\results.sql' -f $rootpath)
         }
         catch {
@@ -378,6 +382,7 @@ foreach ($instance in $sqlInstance) {
         }
 
         try {            
+            Write-Host "INFO: Performing sprintResults Data Updates" -ForegroundColor Yellow
             Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\sprintResults.sql' -f $rootpath)
         }
         catch {
@@ -385,6 +390,15 @@ foreach ($instance in $sqlInstance) {
         }
 
         try {            
+            Write-Host "INFO: Performing resultsNew Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\resultsNew.sql' -f $rootpath)
+        }
+        catch {
+            Exit
+        }
+
+        try {            
+            Write-Host "INFO: Performing circuits Data Updates" -ForegroundColor Yellow
             Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\circuits.sql' -f $rootpath)
         }
         catch {
@@ -392,6 +406,7 @@ foreach ($instance in $sqlInstance) {
         }
 
         try {            
+            Write-Host "INFO: Performing constructorResults Data Updates" -ForegroundColor Yellow
             Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\constructorResults.sql' -f $rootpath)
         }
         catch {
@@ -399,6 +414,7 @@ foreach ($instance in $sqlInstance) {
         }
         
         try {            
+            Write-Host "INFO: Performing driverStandings Data Updates" -ForegroundColor Yellow
             Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\driverStandings.sql' -f $rootpath)
         }
         catch {
@@ -406,14 +422,15 @@ foreach ($instance in $sqlInstance) {
         }
 
         try {
+            Write-Host "INFO: Performing constructorStandings Data Updates" -ForegroundColor Yellow
             Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\constructorStandings.sql' -f $rootpath)            
         }
         catch {
             Exit
         }
 
-
         try {
+            Write-Host "INFO: Performing pitStops Data Updates" -ForegroundColor Yellow
             Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\pitStops.sql' -f $rootpath)            
         }
         catch {
@@ -421,19 +438,27 @@ foreach ($instance in $sqlInstance) {
         }
 
         try {
+            Write-Host "INFO: Performing qualifying Data Updates" -ForegroundColor Yellow
             Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\qualifying.sql' -f $rootpath)            
         }
         catch {
             Exit
         }
 
-        try {            
+        try {   
+            Write-Host "INFO: Performing lapTimes Data Updates" -ForegroundColor Yellow         
             Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\lapTimes.sql' -f $rootpath)
         }
         catch {
             Exit
         }
     } 
+
+    Write-Host "INFO: Removing redundant tables" -ForegroundColor Yellow
+    Remove-DbaDbTable -SqlInstance $svr -Table 'results','sprintResults'
+
+    Write-Host "INFO: Renaming resultsNew to results" -ForegroundColor Yellow     
+    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -Query "EXEC sp_rename 'resultsnew', 'results';"
 
     if ($database) {
 
