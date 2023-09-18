@@ -13,13 +13,5 @@ CREATE TABLE
 		time varchar(255),
 		milliseconds INT,
 		time_converted TIME(3),
-		CONSTRAINT PK_lapTimes_raceId_driverId_lap PRIMARY KEY CLUSTERED (raceId ASC, driverId ASC, lap ASC)
-		WITH
-			(
-				PAD_INDEX = OFF,
-				IGNORE_DUP_KEY = OFF,
-				ALLOW_ROW_LOCKS = ON,
-				ALLOW_PAGE_LOCKS = ON
-			) ON [PRIMARY]
 	) ON [PRIMARY] 
 	GO

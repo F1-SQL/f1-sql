@@ -51,301 +51,521 @@
         Performs a full backup of all databases on the sql2016 instance to the https://dbatoolsaz.blob.core.windows.net/azbackups/ container on Azure blob storage using the Shared Access Signature sql credential "https://dbatoolsaz.blob.core.windows.net/azbackups" registered on the sql2016 instance.
     #>
 
-    [CmdletBinding()]
-    Param(
-        [Parameter(Mandatory=$True, Position=0, ValueFromPipeline=$true, ValueFromPipelineByPropertyName = $true)]
-        [string[]]
-        $sqlInstance,
-        [Parameter(Mandatory=$True, Position=1, ValueFromPipeline=$false)]
-        [System.String]
-        $databaseName,
-        [Parameter(Mandatory=$True, Position=2, ValueFromPipeline=$false)]
-        [System.Boolean]
-        $cleanInstance,
-        [Parameter(Mandatory=$True, Position=3, ValueFromPipeline=$false)]
-        [System.Boolean]
-        $backupDatabase,
-        [Parameter(Mandatory=$True, Position=4, ValueFromPipeline=$false)]
-        [System.Boolean]
-        $downloadZip
+[CmdletBinding()]
+Param(
+    [Parameter(Mandatory = $True, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+    [string[]]
+    $sqlInstance,
+    [Parameter(Mandatory = $True, Position = 1, ValueFromPipeline = $false)]
+    [System.String]
+    $databaseName,
+    [Parameter(Mandatory = $True, Position = 2, ValueFromPipeline = $false)]
+    [System.Boolean]
+    $cleanInstance,
+    [Parameter(Mandatory = $True, Position = 3, ValueFromPipeline = $false)]
+    [System.Boolean]
+    $backupDatabase,
+    [Parameter(Mandatory = $True, Position = 4, ValueFromPipeline = $false)]
+    [System.Boolean]
+    $downloadZip
     )
     
-    $currentYear = (Get-Date).Year.ToString()
-    $rootpath = $PSScriptRoot
-    
-    $races=@("Bahrain","Saudi Arabia","Australia","Azerbaijan","United States","Monaco","Spain","Canada","Austria","Great Britain","Hungary","Belgium","Italy","Netherlands","Japan","Qatar","Austin","Mexico","Brazil","Las Vegas","Abu Dhabi")
-    $raceName = $races | Out-GridView -PassThru
-    
-    $raceName = $raceName.Replace(' ','_')
-    $raceName += "_" + $currentYear
-    
-    $sourceFiles = "\src\csv\"
-    $sourceFilesFullPath = $rootpath + $sourceFiles
+$global:progressPreference = 'silentlyContinue'
 
-    $supplementaryData = $rootpath + "\src\supplementarydata"
-
-    $archiveFolder = "\src\archivedfiles\"
-    $archiveLocation = $rootpath + $archiveFolder
-    $archiveLocationDate = $archiveLocation + $raceName + "\"
-
-    $sourceLocation = "https://ergast.com/downloads/f1db_csv.zip"
+$currentYear = (Get-Date).Year.ToString()
+$rootpath = $PSScriptRoot
     
-    $zipName = 'SequelFormula_csv_' + $raceName + '.zip'
-    $zipLocation = $rootpath + $sourceFiles 
-    $zipLocationFull = $zipLocation + $zipName
+$races = @("Bahrain", "Saudi Arabia", "Australia", "Azerbaijan", "United States", "Monaco", "Spain", "Canada", "Austria", "Great Britain", "Hungary", "Belgium", "Italy", "Netherlands", "Japan", "Qatar", "Austin", "Mexico", "Brazil", "Las Vegas", "Abu Dhabi")
+$raceName = $races | Out-GridView -PassThru
+    
+$raceName = $raceName.Replace(' ', '_')
+$raceName += "_" + $currentYear
+    
+$sourceFiles = "\src\sourceFiles\"
+$sourceFilesFullPath = $rootpath + $sourceFiles
 
-    if(-Not(Test-Path $zipLocationFull) -and $downloadZip -eq $true)
-    {
-        Write-Host "INFO: Zip file $zipName does not exist" -ForegroundColor Yellow
-        Write-Host "INFO: Attempting to download zip file from $sourceLocaiton to $ziplocation" -ForegroundColor Yellow
-        Invoke-WebRequest -Uri $sourceLocation -OutFile $zipLocationFull
-    } else {
-        Write-Host "INFO: Zip file $zipName already exists will not re-download" -ForegroundColor Yellow
-    } 
+$supplementaryData = $rootpath + "\src\supplementarydata"
 
-    if(Test-Path $zipLocationFull -PathType Leaf)
-    {
-        Write-Host "INFO: Attempting to extract files from $zipLocationFull into $sourceFilesFullPath" -ForegroundColor Yellow
-        Expand-Archive $zipLocationFull -DestinationPath $sourceFilesFullPath -Force    
-    } else {
-        Write-Host "WARN: Zip file does not exist in $zipLocation" -ForegroundColor Red
-        Exit 
-    }
-    
-    $replacementChar = "_"
+$archiveFolder = "\src\sourceFiles\archivedfiles\"
+$archiveLocation = $rootpath + $archiveFolder
+$archiveLocationDate = $archiveLocation + $raceName + "\"
 
-    Write-Host "INFO: Getting all of the .csv files from" $sourceFilesFullPath -ForegroundColor Yellow
-    $files = Get-ChildItem $sourceFilesFullPath -Filter *.csv | Where-Object -FilterScript {$_.Name -match $replacementChar}
+$sourceLocation = "https://ergast.com/downloads/f1db_csv.zip"
     
-    $allFiles = Get-ChildItem $sourceFilesFullPath -Filter *.csv
-    $total = $allFiles | Measure-Object | ForEach-Object{$_.Count}  
+$zipName = 'SequelFormula_csv_' + $raceName + '.zip'
+$zipLocation = $rootpath + $sourceFiles 
+$zipLocationFull = $zipLocation + $zipName
+
+$replacementChar = "_"
+
+if (-Not(Test-Path $zipLocationFull) -and $downloadZip -eq $true) {
+    Write-Host "INFO: Zip file $zipName does not exist" -ForegroundColor Yellow
+    Write-Host "INFO: Attempting to download zip file from $sourceLocaiton to $ziplocation" -ForegroundColor Yellow
+    Invoke-WebRequest -Uri $sourceLocation -OutFile $zipLocationFull
+}
+else {
+    Write-Host "INFO: Zip file $zipName already exists will not re-download" -ForegroundColor Yellow
+} 
+
+if (Test-Path $zipLocationFull -PathType Leaf) {
+    Write-Host "INFO: Attempting to extract files from $zipLocationFull into $sourceFilesFullPath" -ForegroundColor Yellow
+    Expand-Archive $zipLocationFull -DestinationPath $sourceFilesFullPath -Force    
+}
+else {
+    Write-Host "ERROR: Zip file does not exist in $zipLocation" -ForegroundColor Red
+    Exit 
+}
     
-    Write-Host "INFO: A total of" $total ".csv files were found" -ForegroundColor Yellow
+Write-Host "INFO: Getting all of the .csv files from" $sourceFilesFullPath -ForegroundColor Yellow
+$files = Get-ChildItem $sourceFilesFullPath -Filter *.csv | Where-Object -FilterScript { $_.Name -match $replacementChar }
     
-    foreach($file in $files)
-    {
-        try {     
+$allFiles = Get-ChildItem $sourceFilesFullPath -Filter *.csv
+$total = $allFiles | Measure-Object | ForEach-Object { $_.Count }  
+    
+Write-Host "INFO: A total of" $total ".csv files were found" -ForegroundColor Yellow
+    
+foreach ($file in $files) {
+    try {     
             
-            Write-Host "INFO: Attempting to rename" $file "to match table name" $file.Name.Replace("_","")  -ForegroundColor Yellow
-            Rename-Item -path $file -NewName $file.Name.Replace("_","") -Force
-            Write-Host "SUCCESS: Renamed" $file.Name "sucessfully to match table name" -ForegroundColor Green
+        Write-Host "INFO: Attempting to rename" $file "to match table name" $file.Name.Replace("_", "")  -ForegroundColor Yellow
+        Rename-Item -path $file -NewName $file.Name.Replace("_", "") -Force
+        Write-Host "SUCCESS: Renamed" $file.Name "sucessfully to match table name" -ForegroundColor Green
     
-        }
-        catch {
-            Write-Host "ERROR: Renaming" $file "failed The Error was: $_" -ForegroundColor Red
-            Exit
-        }
     }
+    catch {
+        Write-Host "ERROR: Renaming" $file "failed The Error was: $_" -ForegroundColor Red
+        Exit
+    }
+}
 
-    $allFiles = Get-ChildItem $sourceFilesFullPath -Filter *.csv
-    $total = $files | Measure-Object | ForEach-Object{$_.Count}  
+$allFiles = Get-ChildItem $sourceFilesFullPath -Filter *.csv
+$total = $files | Measure-Object | ForEach-Object { $_.Count }  
     
-    Write-Host "INFO: A total of $total .csv files were found that need \N values removing." -ForegroundColor Yellow
+Write-Host "INFO: A total of $total .csv files were found that need \N values removing." -ForegroundColor Yellow
     
-    foreach($renamedfile in $allFiles)
-    {
-        try {
-            $path = $sourceFilesFullPath + $renamedfile.Name
-            Write-Host "INFO: Attempting to replace \N values with empty strings in" $path -ForegroundColor Yellow
-            $result = Get-Content $path
-            $result | ForEach-Object {$_-replace ('\\N'),''} | Set-Content $path
-        }
-        catch {
-            Write-Host "ERROR: Replacing the \N values in" $path" failed" -ForegroundColor Red
-            Exit
-        }  
+foreach ($renamedfile in $allFiles) {
+    try {
+        $path = $sourceFilesFullPath + $renamedfile.Name
+        Write-Host "INFO: Attempting to replace \N values with empty strings in" $path -ForegroundColor Yellow
+        $result = Get-Content $path
+        $result | ForEach-Object { $_ -replace ('\\N'), '' } | Set-Content $path
     }
+    catch {
+        Write-Host "ERROR: Replacing the \N values in" $path" failed" -ForegroundColor Red
+        Exit
+    }  
+} 
     
-    $global:progressPreference = 'silentlyContinue'
+if (-Not(Test-Path -Path $archiveLocation)) {
+    Write-Host "INFO: Attempting to create the directory $archiveLocation" -ForegroundColor Yellow
+    New-Item -ItemType Directory -Path $archiveLocation -Force -ErrorAction Stop
+}
+else {
+    Write-Host "WARN: The directory $archiveLocation already exists" -ForegroundColor Magenta
+}
     
-    if(-Not(Test-Path -Path $archiveLocation))
-    {
-        Write-Host "INFO: Attempting to create the directory $archiveLocation" -ForegroundColor Yellow
-        New-Item -ItemType Directory -Path $archiveLocation -Force -ErrorAction Stop
-    } else {
-        Write-Host "ERROR: The directory $archiveLocation already exists" -ForegroundColor Gray
-    }
-    
-    if(-Not(Test-Path -Path $archiveLocationDate))
-    {
-        Write-Host "INFO: Attempting to create the directory $archiveLocationDate" -ForegroundColor Yellow
-        New-Item -ItemType Directory -Path $archiveLocationDate -Force -ErrorAction Stop
-    } else {
-        Write-Host "The directory $archiveLocationDate already exists" -ForegroundColor Gray
-    }
+if (-Not(Test-Path -Path $archiveLocationDate)) {
+    Write-Host "INFO: Attempting to create the directory $archiveLocationDate" -ForegroundColor Yellow
+    New-Item -ItemType Directory -Path $archiveLocationDate -Force -ErrorAction Stop
+}
+else {
+    Write-Host "WARN: The directory $archiveLocationDate already exists" -ForegroundColor Magenta
+}
 
-    if(-Not(Test-Path -Path $sourceFilesFullPath))
-    {
-        Write-Host "INFO: Attempting to create the directory $sourceFilesFullPath" -ForegroundColor Yellow
-        New-Item -ItemType Directory -Path $sourceFilesFullPath -Force -ErrorAction Stop
-    } else {
-        Write-Host "INFO: The directory $sourceFilesFullPath already exists, skipping creation" -ForegroundColor Yellow
-    }
+if (-Not(Test-Path -Path $sourceFilesFullPath)) {
+    Write-Host "INFO: Attempting to create the directory $sourceFilesFullPath" -ForegroundColor Yellow
+    New-Item -ItemType Directory -Path $sourceFilesFullPath -Force -ErrorAction Stop
+}
+else {
+    Write-Host "WARN: The directory $sourceFilesFullPath already exists, skipping creation" -ForegroundColor Magenta
+}
 
-    $existingFiles = Get-ChildItem -Path $sourceFilesFullPath -Filter *.csv -Recurse
+$existingFiles = Get-ChildItem -Path $sourceFilesFullPath -Filter *.csv
 
-    foreach($instance in $sqlInstance)
-    {
+foreach ($instance in $sqlInstance) {
     
-        Write-Host "INFO: Atempting to open a connection to $instance ..." -ForegroundColor Yellow
-        $svr = Connect-dbaInstance -SqlInstance $instance
+    Write-Host "INFO: Atempting to open a connection to $instance ..." -ForegroundColor Yellow
+    $svr = Connect-dbaInstance -SqlInstance $instance
         
-        $version = Get-DbaBuildReference -SqlInstance $svr | Select-Object -ExpandProperty NameLevel        
+    $version = Get-DbaBuildReference -SqlInstance $svr | Select-Object -ExpandProperty NameLevel        
         
-        $backupName = $version + "_" + $databaseName + "_" + $raceName + ".bak"
-        $backupFolder = "\backups\"
-        $backupCompressName = $version + "_" + $databaseName + "_" + $raceName + '.7zip'
-        $backupLocation = $rootpath + $backupFolder + $raceName + "\"
-        $backupFullPath = $backupLocation + $backupName          
+    $backupName = $version + "_" + $databaseName + "_" + $raceName + ".bak"
+    $backupFolder = "\backups\"
+    $backupCompressName = $version + "_" + $databaseName + "_" + $raceName + '.7zip'
+    $backupLocation = $rootpath + $backupFolder + $raceName + "\"
+    $backupFullPath = $backupLocation + $backupName          
         
-        if(-Not(Test-Path -Path $backupLocation))
+    if (-Not(Test-Path -Path $backupLocation)) {
+        Write-Host "INFO: Attempting to create the directory $backupLocation" -ForegroundColor Yellow
+        New-Item -ItemType Directory -Path $backupLocation -Force -ErrorAction Stop
+    }
+    else {
+        Write-Host "WARN: The directory $backupLocation already exists" -ForegroundColor Magenta
+    }       
+        
+    $database = Get-DbaDatabase -SqlInstance $svr -Database $databaseName
+        
+    if ($database) {
+        Write-Host "WARN: Database already exists $databaseName from" $instance -ForegroundColor Magenta
+        Write-Host "INFO: Attempting to drop $databaseName from" $instance -ForegroundColor Yellow
+        Remove-DbaDatabase -SqlInstance $svr -Database $databaseName -Confirm:$false
+        Write-Host "INFO: Attempting to create $databaseName" -ForegroundColor Yellow
+        New-DbaDatabase -SqlInstance $svr -Name $databaseName
+        Write-Host "SUCCESS: Database" $databaseName" created" -ForegroundColor Green
+    }
+    else {
+        Write-Host "INFO: Attempting to create $databaseName" -ForegroundColor Yellow
+        New-DbaDatabase -SqlInstance $svr -Name $databaseName
+        Write-Host "SUCCESS: Database" $databaseName" created" -ForegroundColor Green
+    }
+        
+    $database = Get-DbaDatabase -SqlInstance $svr -Database $databaseName
+        
+    if ($database) {
+
+        $tableFolder = "\src\tables\"
+        $tableLocation = $rootpath + $tableFolder
+        $tableFiles = Get-ChildItem $tableLocation -Filter *.sql
+
+        if($tableFiles.Length -gt 0)
         {
-            Write-Host "INFO: Attempting to create the directory $backupLocation" -ForegroundColor Yellow
-            New-Item -ItemType Directory -Path $backupLocation -Force -ErrorAction Stop
-        } else {
-            Write-Host "ERROR: The directory $backupLocation already exists" -ForegroundColor Gray
-        }       
-        
-        $database = Get-DbaDatabase -SqlInstance $svr -Database $databaseName
-        
-        if($database)
-        {
-            Write-Host "WARN: Database already exists $databaseName from" $instance -ForegroundColor Red
-            Write-Host "INFO: Attempting to drop $databaseName from" $instance -ForegroundColor Yellow
-            Remove-DbaDatabase -SqlInstance $svr -Database $databaseName -Confirm:$false
-            Write-Host "INFO: Attempting to create $databaseName" -ForegroundColor Yellow
-            New-DbaDatabase -SqlInstance $svr -Name $databaseName
-            Write-Host "SUCCESS: Database" $databaseName" created" -ForegroundColor Green
-        } else 
-        {
-            Write-Host "INFO: Attempting to create $databaseName" -ForegroundColor Yellow
-            New-DbaDatabase -SqlInstance $svr -Name $databaseName
-            Write-Host "SUCCESS: Database" $databaseName" created" -ForegroundColor Green
-        }
-        
-        $database = Get-DbaDatabase -SqlInstance $svr -Database $databaseName
-        
-        if($database)
-        {
-            $tableFolder = "\src\tables\"
-            $tableLocation = $rootpath + $tableFolder
-            $tableFiles = Get-ChildItem $tableLocation -Filter *.sql
-
-            foreach($tableFile in $tableFiles)
-            {
-                Write-Host "INFO: Attempting to create $tableFile" -ForegroundColor Yellow
-                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $tableFile
+            foreach ($tableFile in $tableFiles) {
+    
+                try {                
+                    Write-Host "INFO: Attempting to create $tableFile" -ForegroundColor Yellow
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $tableFile                
+                }
+                catch {
+                    Write-Host "ERROR: Creating $tableFile" -ForegroundColor Red
+                    Exit
+                }
             }
+        } else {
+            Write-Host "WARN: No files exist in $tableLocation" -ForegroundColor Magenta
+            Exit
+        }
 
-            # Write-Host "INFO: Creating tables" -ForegroundColor Yellow
-            # Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\SequelFormula_tables.sql' -f $rootpath)
-            # #Pause the script for 20 seconds to make sure that the build database/table scripts has completed. 
-            # Start-Sleep -Seconds 20
             
-            #Get all of the files again, do this now, as we renamed them earlier
-            $files = Get-ChildItem $sourceFilesFullPath -Filter *.csv
+        #Get all of the files again, do this now, as we renamed them earlier
+        $files = Get-ChildItem $sourceFilesFullPath -Filter *.csv
             
-            #Now we can attempt to import all of the CSV files 
-            foreach($file in $files)
-            {
-                $fileWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($file)
+        #Now we can attempt to import all of the CSV files 
+        foreach ($file in $files) {
+
+            $fileWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($file)
+            
+            try {                
                 Write-Host "INFO: Attempting to import data into" $fileWithoutExtension "from" $file -ForegroundColor Yellow
                 $filePath = $sourceFilesFullPath + $file.Name    
-            
-                Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $fileWithoutExtension -Delimiter "," -NoProgress -KeepIdentity
-            }
-            } else {
-                
-                Write-Host "WARN: Creating tables not possible, $databaseName doesn't exist" -ForegroundColor Red
-                Exit
-            }
-
-        if($supplementaryData)
-        {
-            $supplementaryDataFiles = Get-ChildItem -Path $supplementaryData -Filter *.csv  
-            
-            foreach($supplementaryDataFile in $supplementaryDataFiles)
-            {
-                $supplementaryDataWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($supplementaryDataFile)
-                Write-Host "INFO: Attempting to import data from " $supplementaryDataFile.FullName " into " $supplementaryDataWithoutExtension -ForegroundColor Yellow
-                Import-DbaCsv -Path $supplementaryDataFile.FullName -SqlInstance $svr -Database $databaseName -Table $supplementaryDataWithoutExtension -Delimiter "," -NoProgress
-            }
-            
-        } else {
-            Write-Host "WARN: No supplementary data to import" -ForegroundColor Red
-        }    
-
-        if($database)
-        {
-            Write-Host "INFO: Running data quality fixes" -ForegroundColor Yellow
-            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\SequelFormula_data_quality.sql' -f $rootpath)
-        } 
-
-        if($database)
-        {
-            Write-Host "INFO: Performing Data Updates" -ForegroundColor Yellow
-            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\SequelFormula_data_updates.sql' -f $rootpath)
-        } 
-
-        if($database)
-        {
-            Write-Host "INFO: Creating keys" -ForegroundColor Yellow
-            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\SequelFormula_foreign_keys.sql' -f $rootpath)
-        } 
-        
-        if($backupDatabase -eq $True)
-        {
-            Write-Host "INFO: Attempting to create a database backup." -ForegroundColor Yellow
-            
-            if(Test-Path -Path $backupFullPath)
-            {
-                Write-Host "WARN: Database backup already exists, removing" -ForegroundColor Red
-                Remove-Item -Path $backupFullPath
-            } 
-            
-            Backup-DbaDatabase -SqlInstance $svr -Database $databaseName -Path $backupLocation -FilePath $backupName -Type Full 
-
-            Write-Host "INFO: Attempting to 7zip the backup" -ForegroundColor Yellow
-            try
-            {
-                #https://github.com/thoemmi/7Zip4Powershell 
-                $compressedPath = $backupLocation + $backupCompressName
-                Compress-7Zip -Path $backupLocation -Filter *.bak -ArchiveFileName $compressedPath -CompressionLevel Ultra                
-                Write-Host "INFO: Compressed backup sucessfully"              
-                Remove-Item -Path $backupFullPath -Force
+                Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $fileWithoutExtension -Delimiter "," -NoProgress -KeepIdentity  
             }
             catch {
-                Write-Host "ERROR: Compressing backup failed" -ForegroundColor Red
+                Write-Host "ERROR: Importing data into" $fileWithoutExtension "from" $file -ForegroundColor Red
+                Exit
             }
-
-            Write-Host "SUCCESS: Database backup has been completed." -ForegroundColor Green
-
-        } else {
-            Write-Host "WARN: No backup has been taken as backupDatabase is set to False." -ForegroundColor Red
-        }        
-        
-        if($cleanInstance -eq $True -and $backupDatabase -eq $True)
-        {
-            Write-Host "INFO: Dropping database $databaseName from $instance" -ForegroundColor Yellow
-            Remove-DbaDatabase -SqlInstance $svr -Database $databaseName -Confirm:$false 
-        } else {
-            Write-Host "WARN: $databaseName not dropped as database is not set to backup" -ForegroundColor Red
         }
-
-        Write-Host "SUCCESS: Database build complete on $instance" -ForegroundColor Green
+    }
+    else {
+                
+        Write-Host "WARN: Creating tables not possible, $databaseName doesn't exist" -ForegroundColor Magenta
+        Exit
     }
 
-    foreach($fileName in $existingFiles)
+    if($database)
     {
-        $file = [io.path]::GetFileNameWithoutExtension($fileName)
-        $extension = [io.path]::GetExtension($fileName)
-        $newName = $archiveLocationDate + $file + "_" + $raceName +  $extension
-        Write-Host "INFO: Moving $filename to the archive" -ForegroundColor Yellow
-        Move-Item -Path $filename -Destination $newName -Force
-        
-        if(Test-Path -Path $filename)
+        $primaryKeyFolder = "\src\constraints\primaryKeys\"
+        $primaryKeyLocation = $rootpath + $primaryKeyFolder
+        $primaryKeyFiles = Get-ChildItem $primaryKeyLocation -Filter *.sql
+
+        if($primaryKeyFiles.Length -gt 0)
         {
-            Write-Host "INFO: $filename archived, deleting" -ForegroundColor Yellow
-            Remove-Item -Path $fileName -Force
+            foreach ($primaryKeyFile in $primaryKeyFiles) {
+                Write-Host "INFO: Attempting to apply $primaryKeyFile" -ForegroundColor Yellow
+                try {                
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $primaryKeyFile                
+                }
+                catch {
+                    Write-Host "ERROR: Applying $primaryKeyFile" -ForegroundColor Red
+                    Exit
+                }
+            }
+        } else {
+            Write-Host "WARN: No files exist in $primaryKeyFolder" -ForegroundColor Magenta
         }
+    } else {
+        Write-Host "ERROR: $database does not exist, cannot proceed" -ForegroundColor Red
+        Exit
     }
+
+    if ($supplementaryData) {
+        
+        $supplementaryDataFiles = Get-ChildItem -Path $supplementaryData -Filter *.csv  
+
+        if($supplementaryData.Length -gt 0)
+        {
+            foreach ($supplementaryDataFile in $supplementaryDataFiles) {
+                $supplementaryDataWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($supplementaryDataFile)
+                
+                try {                    
+                    Write-Host "INFO: Attempting to import data from " $supplementaryDataFile.FullName " into " $supplementaryDataWithoutExtension -ForegroundColor Yellow
+                    Import-DbaCsv -Path $supplementaryDataFile.FullName -SqlInstance $svr -Database $databaseName -Table $supplementaryDataWithoutExtension -Delimiter "," -NoProgress
+                }
+                catch {
+                    Write-Host "ERROR: Error applying $supplementaryDataFile" -ForegroundColor Red
+                }
+            }            
+        }
+        else {
+            Write-Host "WARN: No files exist in $supplementaryData" -ForegroundColor Magenta
+        }            
+    } else {
+        Write-Host "ERROR: Supplementary data folder does not exist" -ForegroundColor Red
+    }
+
+    if ($database) {
+        $dataQualityFolder = "\src\dataQuality\"
+        $dataQualityLocation = $rootpath + $dataQualityFolder
+        $dataQualityFiles = Get-ChildItem $dataQualityLocation -Filter *.sql
+
+        if($dataQualityFiles.Length -gt 0)
+        {
+            foreach ($dataQualityFile in $dataQualityFiles) {
+    
+                try {                
+                    Write-Host "INFO: Attempting to apply $dataQualityFile" -ForegroundColor Yellow
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $dataQualityFile
+                }
+                catch {
+                    Write-Host "ERROR: Error applying $dataQualityFile" -ForegroundColor Red
+                    Exit
+                }
+            }
+        } else {
+            Write-Host "INFO: No files exist in $supplementaryData" -ForegroundColor Yellow
+        }
+    } 
+
+    if ($database) {
+
+        Write-Host "INFO: Performing Data Updates" -ForegroundColor Yellow
+
+        try {
+            Write-Host "INFO: Performing positionText Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\positionText.sql' -f $rootPath)
+        }
+        catch {
+            Exit
+        }
+
+        try {            
+            Write-Host "INFO: Performing drivers Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\drivers.sql' -f $rootpath)
+        }
+        catch {
+            Exit
+        }
+
+        try {
+            Write-Host "INFO: Performing constructors Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\constructors.sql' -f $rootpath)
+        }
+        catch {
+            Exit
+        }
+
+        try {         
+            Write-Host "INFO: Performing results Data Updates" -ForegroundColor Yellow   
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\results.sql' -f $rootpath)
+        }
+        catch {
+            Exit
+        }
+
+        try {            
+            Write-Host "INFO: Performing sprintResults Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\sprintResults.sql' -f $rootpath)
+        }
+        catch {
+            Exit
+        }
+
+        try {            
+            Write-Host "INFO: Performing resultsNew Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\resultsNew.sql' -f $rootpath)
+        }
+        catch {
+            Exit
+        }
+
+        try {
+            Write-Host "INFO: Performing tempCircuits Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\tempCircuits.sql' -f $rootPath)
+        }
+        catch {
+            Exit
+        }
+
+        try {            
+            Write-Host "INFO: Performing circuits Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\circuits.sql' -f $rootpath)
+        }
+        catch {
+            Exit
+        }
+
+        try {            
+            Write-Host "INFO: Performing circuitMap Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\circuitMap.sql' -f $rootpath)
+        }
+        catch {
+            Exit
+        }
+
+        try {            
+            Write-Host "INFO: Performing constructorResults Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\constructorResults.sql' -f $rootpath)
+        }
+        catch {
+            Exit
+        }
+        
+        try {            
+            Write-Host "INFO: Performing driverStandings Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\driverStandings.sql' -f $rootpath)
+        }
+        catch {
+            Exit
+        }
+
+        try {
+            Write-Host "INFO: Performing constructorStandings Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\constructorStandings.sql' -f $rootpath)            
+        }
+        catch {
+            Exit
+        }
+
+        try {
+            Write-Host "INFO: Performing pitStops Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\pitStops.sql' -f $rootpath)            
+        }
+        catch {
+            Exit
+        }
+
+        try {
+            Write-Host "INFO: Performing qualifying Data Updates" -ForegroundColor Yellow
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\qualifying.sql' -f $rootpath)            
+        }
+        catch {
+            Exit
+        }
+
+        try {   
+            Write-Host "INFO: Performing lapTimes Data Updates" -ForegroundColor Yellow         
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\lapTimes.sql' -f $rootpath)
+        }
+        catch {
+            Exit
+        }
+
+        try {   
+            Write-Host "INFO: Performing lapTimes Data Updates" -ForegroundColor Yellow         
+            Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File ('{0}\src\dataUpdates\resultDriverConstructor.sql' -f $rootpath)
+        }
+        catch {
+            Exit
+        }
+    } 
+    
+    Write-Host "INFO: Removing redundant tables" -ForegroundColor Yellow
+    Remove-DbaDbTable -SqlInstance $svr -Table 'results','sprintResults','tempCircuits' -Confirm:$false
+
+    Write-Host "INFO: Renaming resultsNew to results" -ForegroundColor Yellow     
+    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -Query "EXEC sp_rename 'resultsnew', 'results';"
+
+    Write-Host "INFO: Renaming PK_resultsNew_resultId to PK_results_resultId" -ForegroundColor Yellow     
+    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -Query "EXEC sp_rename N'dbo.PK_resultsNew_resultId', N'PK_results_resultId', N'OBJECT'"
+
+    if ($database) {
+
+        Write-Host "INFO: Creating foreign keys" -ForegroundColor Yellow
+
+        $foreignKeyFolder = "\src\constraints\foreignKeys\"
+        $foreignKeyLocation = $rootpath + $foreignKeyFolder
+        $foreignKeyFiles = Get-ChildItem $foreignKeyLocation -Filter *.sql
+
+        foreach ($foreignKeyFile in $foreignKeyFiles) {
+
+            try {
+                Write-Host "INFO: Attempting to apply $foreignKeyFile" -ForegroundColor Yellow
+                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $foreignKeyFile
+            }
+            catch {
+                Write-Host "ERROR: Applying $foreignKeyFile" -ForegroundColor Red
+                Exit
+            }
+        }
+    } 
+        
+    if ($backupDatabase -eq $True) {
+
+        Write-Host "INFO: backupDatabase is set to true, attempting backup routine." -ForegroundColor Yellow
+        
+        if (Test-Path -Path $backupFullPath) {
+            Write-Host "WARN: Database backup already exists, removing" -ForegroundColor Magenta
+            Remove-Item -Path $backupFullPath
+        } 
+        
+        try {            
+            Write-Host "INFO: Attempting to create a database backup." -ForegroundColor Yellow
+            Backup-DbaDatabase -SqlInstance $svr -Database $databaseName -Path $backupLocation -FilePath $backupName -Type Full 
+        }
+        catch {
+            Write-Host "ERROR: Creating database backup." -ForegroundColor Red
+            Exit
+        }
+
+        try {
+            #https://github.com/thoemmi/7Zip4Powershell 
+            $compressedPath = $backupLocation + $backupCompressName
+            Write-Host "INFO: Attempting to 7zip the backup" -ForegroundColor Yellow
+            Compress-7Zip -Path $backupLocation -Filter *.bak -ArchiveFileName $compressedPath -CompressionLevel Ultra                
+            Write-Host "INFO: Compressed backup sucessfully"              
+            Remove-Item -Path $backupFullPath -Force
+        }
+        catch {
+            Write-Host "ERROR: Compressing backup failed" -ForegroundColor Red
+            Exit
+        }
+
+        Write-Host "SUCCESS: Database backup has been completed." -ForegroundColor Green
+
+    }
+    else {
+        Write-Host "WARN: No backup has been taken as backupDatabase is set to False." -ForegroundColor Magenta
+    }        
+        
+    if ($cleanInstance -eq $True -and $backupDatabase -eq $True) {
+        Write-Host "INFO: Dropping database $databaseName from $instance" -ForegroundColor Yellow
+        Remove-DbaDatabase -SqlInstance $svr -Database $databaseName -Confirm:$false 
+    }
+    else {
+        Write-Host "WARN: $databaseName not dropped as database is not set to backup" -ForegroundColor Magenta
+    }
+}
+
+foreach ($fileName in $existingFiles) {
+    $file = [io.path]::GetFileNameWithoutExtension($fileName)
+    $extension = [io.path]::GetExtension($fileName)
+    $newName = $archiveLocationDate + $file + "_" + $raceName + $extension
+    Write-Host "INFO: Moving $filename to the archive" -ForegroundColor Yellow
+    Move-Item -Path $filename -Destination $newName -Force
+    
+    if (Test-Path -Path $filename) {
+        Write-Host "INFO: $filename archived, deleting" -ForegroundColor Yellow
+        Remove-Item -Path $fileName -Force
+    }
+}
+
+Write-Host "SUCCESS: Database build complete on $instance" -ForegroundColor Green

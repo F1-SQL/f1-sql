@@ -10,8 +10,8 @@ CREATE TABLE
 		year INT NOT NULL DEFAULT 0,
 		round INT NOT NULL DEFAULT 0,
 		circuitId INT NOT NULL DEFAULT 0,
-		name varchar(255) NOT NULL DEFAULT '',
-		date date NOT NULL DEFAULT '0000-00-00',
+		name varchar(255) NOT NULL,
+		date date NOT NULL,
 		time time,
 		url varchar(2048),
 		fp1_date date,
@@ -24,13 +24,5 @@ CREATE TABLE
 		quali_time time,
 		sprint_date date,
 		sprint_time time,
-		CONSTRAINT PK_races_raceId PRIMARY KEY CLUSTERED (raceId ASC)
-		WITH
-			(
-				PAD_INDEX = OFF,
-				IGNORE_DUP_KEY = OFF,
-				ALLOW_ROW_LOCKS = ON,
-				ALLOW_PAGE_LOCKS = ON
-			) ON [PRIMARY]
 	) ON [PRIMARY] 
 	GO

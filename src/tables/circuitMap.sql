@@ -7,16 +7,8 @@ SET
 CREATE TABLE
     dbo.circuitMap (
         [circuitId] INT NOT NULL,
-	[latitude] DECIMAL(8,6) NOT NULL,
-	[longitudes] DECIMAL(9,6) NOT NULL,
-  [url] varchar(255),
-        CONSTRAINT PK_circuitMap_circuitId PRIMARY KEY CLUSTERED (circuitId ASC)
-        WITH
-            (
-                PAD_INDEX = OFF,
-                IGNORE_DUP_KEY = OFF,
-                ALLOW_ROW_LOCKS = ON,
-                ALLOW_PAGE_LOCKS = ON
-            ) ON [PRIMARY]
+        [latitude] DECIMAL(8,6) NOT NULL,
+        [longitudes] DECIMAL(9,6) NOT NULL,
+        [url] varchar(255),
     ) ON [PRIMARY] 
     GO

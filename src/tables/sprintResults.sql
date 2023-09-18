@@ -26,13 +26,5 @@ CREATE TABLE
 		time_converted time(3),
 		[timeDifference] DATETIME NULL,
 		[fastestLapTime_converted] TIME(3) NULL,
-		CONSTRAINT PK_sprintResults_sprintResultId PRIMARY KEY CLUSTERED (resultId ASC)
-		WITH
-			(
-				PAD_INDEX = OFF,
-				IGNORE_DUP_KEY = OFF,
-				ALLOW_ROW_LOCKS = ON,
-				ALLOW_PAGE_LOCKS = ON
-			) ON [PRIMARY]
 	) ON [PRIMARY]
 	 GO

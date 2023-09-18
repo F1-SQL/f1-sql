@@ -1,0 +1,3 @@
+ALTER TABLE [dbo].[driverNumbers] ADD CONSTRAINT PK_driverNumbers_driverID FOREIGN KEY (driverID) REFERENCES [dbo].[drivers] (driverID);
+ALTER TABLE [dbo].[driverNumbers] ADD CONSTRAINT PK_driverNumbers_constructorID FOREIGN KEY (constructorID) REFERENCES [dbo].[constructors] (constructorId);
+ALTER TABLE [dbo].[driverNumbers] ADD CONSTRAINT PK_driverNumbers_season FOREIGN KEY (season) REFERENCES [dbo].[seasons](year);

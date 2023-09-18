@@ -23,19 +23,6 @@ CREATE TABLE
 		rank INT DEFAULT 0,
 		fastestLapTime varchar(255),
 		fastestLapSpeed varchar(255),
-		statusId INT NOT NULL DEFAULT 0,
-		positionTextID INT,
-		[timeDifference] DATETIME NULL,
-		[fastestLapTime_Converted] TIME(3) NULL,
-		[fastestLapSpeed_Decimal] DECIMAL(18,3) NULL,
-		time_converted time(3),
-		CONSTRAINT PK_results_resultId PRIMARY KEY CLUSTERED (resultId ASC)
-		WITH
-			(
-				PAD_INDEX = OFF,
-				IGNORE_DUP_KEY = OFF,
-				ALLOW_ROW_LOCKS = ON,
-				ALLOW_PAGE_LOCKS = ON
-			) ON [PRIMARY]
+		statusId INT NOT NULL DEFAULT 0		
 	) ON [PRIMARY] 
 	GO

@@ -14,13 +14,5 @@ CREATE TABLE
 		duration varchar(255),
 		milliseconds INT,
 		[duration_converted] DECIMAL(18,3),
-		CONSTRAINT PK_pitStops_raceId_driverId_stop PRIMARY KEY CLUSTERED (raceId ASC, driverId ASC, stop ASC)
-		WITH
-			(
-				PAD_INDEX = OFF,
-				IGNORE_DUP_KEY = OFF,
-				ALLOW_ROW_LOCKS = ON,
-				ALLOW_PAGE_LOCKS = ON
-			) ON [PRIMARY]
 	) ON [PRIMARY] 
 	GO

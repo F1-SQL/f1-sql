@@ -1,0 +1,75 @@
+{
+    "Formula1RaceCalendar": [
+      {
+        "RaceName": "Australian Grand Prix",
+        "Date": "2023-03-19",
+        "Location": "Melbourne, Australia",
+        "Circuit": "Albert Park Circuit",
+        "Round": 1
+      },
+      {
+        "RaceName": "Bahrain Grand Prix",
+        "Date": "2023-03-26",
+        "Location": "Sakhir, Bahrain",
+        "Circuit": "Bahrain International Circuit",
+        "Round": 2
+      },
+      {
+        "RaceName": "Vietnamese Grand Prix",
+        "Date": "2023-04-09",
+        "Location": "Hanoi, Vietnam",
+        "Circuit": "Hanoi Street Circuit",
+        "Round": 3
+      },
+      {
+        "RaceName": "Chinese Grand Prix",
+        "Date": "2023-04-16",
+        "Location": "Shanghai, China",
+        "Circuit": "Shanghai International Circuit",
+        "Round": 4
+      },
+      {
+        "RaceName": "Spanish Grand Prix",
+        "Date": "2023-04-30",
+        "Location": "Barcelona, Spain",
+        "Circuit": "Circuit de Barcelona-Catalunya",
+        "Round": 5
+      },
+      {
+        "RaceName": "Monaco Grand Prix",
+        "Date": "2023-05-14",
+        "Location": "Monte Carlo, Monaco",
+        "Circuit": "Circuit de Monaco",
+        "Round": 6
+      },
+      {
+        "RaceName": "Azerbaijan Grand Prix",
+        "Date": "2023-05-28",
+        "Location": "Baku, Azerbaijan",
+        "Circuit": "Baku City Circuit",
+        "Round": 7
+      },
+      {
+        "RaceName": "Canadian Grand Prix",
+        "Date": "2023-06-11",
+        "Location": "Montreal, Canada",
+        "Circuit": "Circuit Gilles Villeneuve",
+        "Round": 8
+      },
+      {
+        "RaceName": "French Grand Prix",
+        "Date": "2023-06-25",
+        "Location": "Le Castellet, France",
+        "Circuit": "Circuit Paul Ricard",
+        "Round": 9
+      },
+      {
+        "RaceName": "Austrian Grand Prix",
+        "Date": "2023-07-09",
+        "Location": "Spielberg, Austria",
+        "Circuit": "Red Bull Ring",
+        "Round": 10
+      }
+    ]
+  }
+  
