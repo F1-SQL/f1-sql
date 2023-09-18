@@ -72,11 +72,21 @@ Param(
     
 $global:progressPreference = 'silentlyContinue'
 
+$todayDate = (Get-Date).Date
+
 $currentYear = (Get-Date).Year.ToString()
 $rootpath = $PSScriptRoot
     
 $races = @("Bahrain", "Saudi Arabia", "Australia", "Azerbaijan", "United States", "Monaco", "Spain", "Canada", "Austria", "Great Britain", "Hungary", "Belgium", "Italy", "Netherlands", "Japan", "Qatar", "Austin", "Mexico", "Brazil", "Las Vegas", "Abu Dhabi")
 $raceName = $races | Out-GridView -PassThru
+
+$jsonData = $rootpath + "\src\raceCalendar.json"
+$raceCalendar = $jsonData | ConvertFrom-Json
+
+foreach ($race in $raceCalendar.Formula1RaceCalendar) {
+    $raceName = $race.RaceName
+    $raceDate = [DateTime]::ParseExact($race.Date, "yyyy-MM-dd", $null)   
+}
     
 $raceName = $raceName.Replace(' ', '_')
 $raceName += "_" + $currentYear
