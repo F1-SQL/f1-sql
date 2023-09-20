@@ -67,19 +67,40 @@ Param(
     $backupDatabase,
     [Parameter(Mandatory = $True, Position = 4, ValueFromPipeline = $false)]
     [System.Boolean]
-    $downloadZip
+    $downloadZip,
+    [Parameter(Mandatory = $True, Position = 5, ValueFromPipeline = $false)]
+    [System.Int32]
+    $round
     )
     
 $global:progressPreference = 'silentlyContinue'
 
 $currentYear = (Get-Date).Year.ToString()
 $rootpath = $PSScriptRoot
-    
-$races = @("Bahrain", "Saudi Arabia", "Australia", "Azerbaijan", "United States", "Monaco", "Spain", "Canada", "Austria", "Great Britain", "Hungary", "Belgium", "Italy", "Netherlands", "Japan", "Qatar", "Austin", "Mexico", "Brazil", "Las Vegas", "Abu Dhabi")
-$raceName = $races | Out-GridView -PassThru
-    
+
+$jsonData = $rootpath + "\src\raceCalendar.json"
+$raceCalendarStr = Get-Content $jsonData | Out-String
+
+try {
+    $raceCalendar = $raceCalendarStr | ConvertFrom-Json
+}
+catch {
+    Write-Host "ERROR: Issue converting to a JSON Object" -ForegroundColor Red
+    Exit
+}
+
+Write-Host "INFO: Getting the details from the JSON based on the round number"
+$selectedRace = $raceCalendar.Formula1RaceCalendar | Where-Object { $_.Round -eq $round }
+
+Write-Host "INFO: Getting the race name from the JSON" -ForegroundColor Yellow
+foreach ($race in $selectedRace) {
+    $raceName = $race.RaceName
+}
+
+Write-Host "INFO: Replacing spaces in race name with _" -ForegroundColor Yellow
 $raceName = $raceName.Replace(' ', '_')
-$raceName += "_" + $currentYear
+Write-Host "INFO: Building race name with round ($round) and year ($currentYear)" -ForegroundColor Yellow
+$raceName += "_" + $round.ToString() + "_" + $currentYear
     
 $sourceFiles = "\src\sourceFiles\"
 $sourceFilesFullPath = $rootpath + $sourceFiles
