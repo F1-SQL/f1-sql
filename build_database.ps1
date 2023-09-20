@@ -67,29 +67,33 @@ Param(
     $backupDatabase,
     [Parameter(Mandatory = $True, Position = 4, ValueFromPipeline = $false)]
     [System.Boolean]
-    $downloadZip
+    $downloadZip,
+    [Parameter(Mandatory = $True, Position = 5, ValueFromPipeline = $false)]
+    [System.Int32]
+    $round
     )
     
 $global:progressPreference = 'silentlyContinue'
 
-$todayDate = (Get-Date).Date
-
 $currentYear = (Get-Date).Year.ToString()
 $rootpath = $PSScriptRoot
     
-$races = @("Bahrain", "Saudi Arabia", "Australia", "Azerbaijan", "United States", "Monaco", "Spain", "Canada", "Austria", "Great Britain", "Hungary", "Belgium", "Italy", "Netherlands", "Japan", "Qatar", "Austin", "Mexico", "Brazil", "Las Vegas", "Abu Dhabi")
-$raceName = $races | Out-GridView -PassThru
+# $races = @("Bahrain", "Saudi Arabia", "Australia", "Azerbaijan", "United States", "Monaco", "Spain", "Canada", "Austria", "Great Britain", "Hungary", "Belgium", "Italy", "Netherlands", "Japan", "Qatar", "Austin", "Mexico", "Brazil", "Las Vegas", "Abu Dhabi")
+# $raceName = $races | Out-GridView -PassThru
 
 $jsonData = $rootpath + "\src\raceCalendar.json"
-$raceCalendar = $jsonData | ConvertFrom-Json
+$raceCalendarStr = Get-Content $jsonData | Out-String
+$raceCalendar = $raceCalendarStr | ConvertFrom-Json
+$selectedRace = $raceCalendar.Formula1RaceCalendar | Where-Object { $_.Round -eq $round }
 
-foreach ($race in $raceCalendar.Formula1RaceCalendar) {
+foreach ($race in $selectedRace) {
     $raceName = $race.RaceName
-    $raceDate = [DateTime]::ParseExact($race.Date, "yyyy-MM-dd", $null)   
 }
-    
+
+Write-Host "INFO: Replacing spaces in race name with _" -ForegroundColor Yellow
 $raceName = $raceName.Replace(' ', '_')
-$raceName += "_" + $currentYear
+Write-Host "INFO: Building race name with round ($round) and year ($currentYear)" -ForegroundColor Yellow
+$raceName += "_" + $round.ToString() + "_" + $currentYear
     
 $sourceFiles = "\src\sourceFiles\"
 $sourceFilesFullPath = $rootpath + $sourceFiles
