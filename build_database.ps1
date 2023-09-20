@@ -77,9 +77,6 @@ $global:progressPreference = 'silentlyContinue'
 
 $currentYear = (Get-Date).Year.ToString()
 $rootpath = $PSScriptRoot
-    
-# $races = @("Bahrain", "Saudi Arabia", "Australia", "Azerbaijan", "United States", "Monaco", "Spain", "Canada", "Austria", "Great Britain", "Hungary", "Belgium", "Italy", "Netherlands", "Japan", "Qatar", "Austin", "Mexico", "Brazil", "Las Vegas", "Abu Dhabi")
-# $raceName = $races | Out-GridView -PassThru
 
 $jsonData = $rootpath + "\src\raceCalendar.json"
 $raceCalendarStr = Get-Content $jsonData | Out-String
