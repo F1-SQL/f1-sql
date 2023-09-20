@@ -80,9 +80,19 @@ $rootpath = $PSScriptRoot
 
 $jsonData = $rootpath + "\src\raceCalendar.json"
 $raceCalendarStr = Get-Content $jsonData | Out-String
-$raceCalendar = $raceCalendarStr | ConvertFrom-Json
+
+try {
+    $raceCalendar = $raceCalendarStr | ConvertFrom-Json
+}
+catch {
+    Write-Host "ERROR: Issue converting to a JSON Object" -ForegroundColor Red
+    Exit
+}
+
+Write-Host "INFO: Getting the details from the JSON based on the round number"
 $selectedRace = $raceCalendar.Formula1RaceCalendar | Where-Object { $_.Round -eq $round }
 
+Write-Host "INFO: Getting the race name from the JSON" -ForegroundColor Yellow
 foreach ($race in $selectedRace) {
     $raceName = $race.RaceName
 }
