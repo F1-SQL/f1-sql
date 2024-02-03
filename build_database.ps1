@@ -21,14 +21,14 @@
 
     .NOTES
         Tags: FormulaOne, F1, Database, Data.
-        Author: Richard Howell, richinsql.com
+        Author: Richard Howell, sequelformula.com
 
-        Website: https://richinsql.com
-        Copyright: (c) 2022 by Rich In SQL, licensed under MIT
+        Website: https://sequelformula.com
+        Copyright: (c) 2022 by Sequel Formula, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
     .LINK
-        https://richinsql.com/projects/formula-one-database/
+        https://sequelformula.com/projects/formula-one-database/
 
     .EXAMPLE
         PS C:\> .\build_database.ps1 -databaseName SequelFormula -sqlInstance 'loclhost' -downloadFiles $true -cleanInstance $false
