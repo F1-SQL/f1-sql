@@ -112,7 +112,34 @@ $archiveLocation = $rootpath + $archiveFolder
 $archiveLocationDate = $archiveLocation + $raceName + "\"
 
 $sourceLocation = "https://ergast.com/downloads/f1db_csv.zip"
+
+#https://livetiming.formula1.com/static/2023/Index.json
+
+$base_url = 'https://api.openf1.org/v1/'
+
+$fileLinks = @(
+    -join($base_url,"drivers&year=",$currentYear, "&csv=true"),
+    -join($base_url,"meetings?year=", $currentYear, "&csv=true"),
+    -join($base_url,"laps?meeting_key=9161&csv=true"),
+    -join($base_url,"intervals?meeting_key=9165&csv=true"),
+    -join($base_url,"sessions?year=", $currentYear, "&csv=true"),
+    -join($base_url,"sessions?session_name=Sprint&year=", $currentYear, "&csv=true"),
+    -join($base_url,"pit?session_key=9158&csv=true"),
+    -join($base_url,"position?meeting_key=1217&csv=true"),
+    -join($base_url,"stints?session_key=9165&csv=true"),
+    -join($base_url,"weather?meeting_key=1208&csv=true")
+)
+
+$number = 1
+
+foreach ($link in $fileLinks)
+{   
+    $number ++ 
+    $filename = -join("C:\Temp\F1\test",$number, ".csv")
+    Invoke-WebRequest -Uri $link -OutFile $filename
     
+}
+
 $zipName = 'SequelFormula_csv_' + $raceName + '.zip'
 $zipLocation = $rootpath + $sourceFiles 
 $zipLocationFull = $zipLocation + $zipName
