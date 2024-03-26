@@ -1,0 +1,1 @@
+ALTER TABLE [SequelFormulaNew].[dbo].[weather] DROP COLUMN date
