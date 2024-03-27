@@ -1,1 +1,0 @@
-ALTER TABLE [SequelFormulaNew].[dbo].[meetings] DROP COLUMN country_code, country_key, country_name,location

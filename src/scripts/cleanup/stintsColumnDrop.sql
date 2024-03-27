@@ -1,1 +1,0 @@
-ALTER TABLE [SequelFormulaNew].[dbo].[stints] DROP COLUMN compound
