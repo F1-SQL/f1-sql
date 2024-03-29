@@ -71,18 +71,40 @@
         $round
         )
         
-    $global:progressPreference = 'silentlyContinue'    
+    $global:progressPreference = 'silentlyContinue' 
+    
+    $jsonData = $filelocation + "\raceCalendar.json"
+    $raceCalendarStr = Get-Content $jsonData | Out-String
+
+    try {
+        $raceCalendar = $raceCalendarStr | ConvertFrom-Json
+    }
+    catch {
+        Write-Host "ERROR: Issue converting to a JSON Object" -ForegroundColor Red
+        Exit
+    }
+
+    Write-Host "INFO: Getting the details from the JSON based on the round number"
+    $selectedRace = $raceCalendar.Formula1RaceCalendar | Where-Object { $_.Round -eq $round }
+
+    Write-Host "INFO: Getting the race name from the JSON" -ForegroundColor Yellow
+    foreach ($race in $selectedRace) {
+        $raceName = $race.RaceName
+    }
+
+    Write-Host "INFO: Replacing spaces in race name with _" -ForegroundColor Yellow
+    $raceName = $raceName.Replace(' ', '_')
+    Write-Host "INFO: Building race name with round ($round) and year ($currentYear)" -ForegroundColor Yellow
+    $raceName += "_" + $round.ToString() + "_" + $currentYear
     
     $staticFilesFullPath = $filelocation + "\static\"
 
     $sourceFiles = $filelocation
     $sourceFilesFullPath = $filelocation + $sourceFiles
 
-    $backupName = $version + "_" + $databaseName + "_" + $raceName + ".bak"
     $backupFolder = "\backups\"
-    $backupCompressName = $version + "_" + $databaseName + "_" + $raceName + '.7zip'
     $backupLocation = $rootpath + $backupFolder + $raceName + "\"
-    $backupFullPath = $backupLocation + $backupName 
+    $backupFullPath = $backupLocation + $backupName  
 
     if (-Not(Test-Path -Path $backupLocation)) {
         Write-Host "INFO: Attempting to create the directory $backupLocation" -ForegroundColor Yellow
@@ -157,8 +179,11 @@
         }
 
         if ($backupDatabase -eq $True) {
-    
+
             Write-Host "INFO: backupDatabase is set to true, attempting backup routine." -ForegroundColor Yellow
+            
+            $backupName = $version + "_" + $databaseName + "_" + $raceName + ".bak"
+            $backupCompressName = $version + "_" + $databaseName + "_" + $raceName + '.7zip'               
             
             if (Test-Path -Path $backupFullPath) {
                 Write-Host "WARN: Database backup already exists, removing" -ForegroundColor Magenta
