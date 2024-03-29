@@ -63,15 +63,34 @@
         [Parameter(Mandatory = $True, Position = 3, ValueFromPipeline = $false)]
         [System.Boolean]
         $backupDatabase,
+        [Parameter(Mandatory = $True, Position = 4, ValueFromPipeline = $false)]
+        [string[]]
+        $filelocation,
         [Parameter(Mandatory = $True, Position = 5, ValueFromPipeline = $false)]
         [System.Int32]
         $round
         )
         
-    $global:progressPreference = 'silentlyContinue'
+    $global:progressPreference = 'silentlyContinue'    
     
-    $sourceFiles = "\src\sourceFiles\"
-    $sourceFilesFullPath = $rootpath + $sourceFiles
+    $staticFilesFullPath = $filelocation + "\static\"
+
+    $sourceFiles = $filelocation
+    $sourceFilesFullPath = $filelocation + $sourceFiles
+
+    $backupName = $version + "_" + $databaseName + "_" + $raceName + ".bak"
+    $backupFolder = "\backups\"
+    $backupCompressName = $version + "_" + $databaseName + "_" + $raceName + '.7zip'
+    $backupLocation = $rootpath + $backupFolder + $raceName + "\"
+    $backupFullPath = $backupLocation + $backupName 
+
+    if (-Not(Test-Path -Path $backupLocation)) {
+        Write-Host "INFO: Attempting to create the directory $backupLocation" -ForegroundColor Yellow
+        New-Item -ItemType Directory -Path $backupLocation -Force -ErrorAction Stop
+    }
+    else {
+        Write-Host "WARN: The directory $backupLocation already exists" -ForegroundColor Magenta
+    } 
         
     Write-Host "INFO: Getting all of the .csv files from" $sourceFilesFullPath -ForegroundColor Yellow
     $files = Get-ChildItem $sourceFilesFullPath -Filter *.csv | Where-Object -FilterScript { $_.Name -match $replacementChar }
@@ -86,37 +105,19 @@
         Write-Host "INFO: Atempting to open a connection to $instance ..." -ForegroundColor Yellow
         $svr = Connect-dbaInstance -SqlInstance $instance
             
-        $version = Get-DbaBuildReference -SqlInstance $svr | Select-Object -ExpandProperty NameLevel        
-            
-        $backupName = $version + "_" + $databaseName + "_" + $raceName + ".bak"
-        $backupFolder = "\backups\"
-        $backupCompressName = $version + "_" + $databaseName + "_" + $raceName + '.7zip'
-        $backupLocation = $rootpath + $backupFolder + $raceName + "\"
-        $backupFullPath = $backupLocation + $backupName          
-            
-        if (-Not(Test-Path -Path $backupLocation)) {
-            Write-Host "INFO: Attempting to create the directory $backupLocation" -ForegroundColor Yellow
-            New-Item -ItemType Directory -Path $backupLocation -Force -ErrorAction Stop
-        }
-        else {
-            Write-Host "WARN: The directory $backupLocation already exists" -ForegroundColor Magenta
-        }       
+        $version = Get-DbaBuildReference -SqlInstance $svr | Select-Object -ExpandProperty NameLevel      
     
-        $databaseName = "SequelFormulaNew"
         $svr = Connect-dbaInstance -SqlInstance localhost -Database $databaseName
         $database = Get-DbaDatabase -SqlInstance $svr -Database $databaseName
-            
-        if ($database) {
-    
+
+        if(!$database)
+        {
             Write-Host "INFO: Attempting to create $databaseName database" -ForegroundColor Yellow
-    
-            if(!$database)
-            {
-                New-DbaDatabase -SqlInstance $svr -Name $databaseName
-            } else
-            {
-                Write-Host "INFO: Database Already Exists" -ForegroundColor Red
-            }
+            New-DbaDatabase -SqlInstance $svr -Name $databaseName
+
+        } else
+        {
+            Write-Host "INFO: Database Already Exists" -ForegroundColor Green
     
             $sourceFilesFullPath = "D:\workspace\Sequel Formula\Sequel-Formula-Files\Australian_Grand_Prix_2024\"
     
@@ -135,14 +136,26 @@
                     Write-Host "ERROR: Importing data into" $fileWithoutExtension "from" $file -ForegroundColor Red
                     Exit
                 }
-            }        
-        }
-        else {
-                    
-            Write-Host "WARN: Creating tables not possible, $databaseName doesn't exist" -ForegroundColor Magenta
-            Exit
-        }
+            }
             
+            $staticFiles = Get-ChildItem $staticFilesFullPath -Filter *.csv
+    
+            foreach ($staticFile in $staticFiles) {
+    
+                $fileWithoutExtension = [System.IO.Path]::GetFileNameWithoutExtension($file)
+                        
+                try {                
+                    Write-Host "INFO: Attempting to import data into" $fileWithoutExtension "from" $staticFile -ForegroundColor Yellow
+                    $filePath = $staticFilesFullPath + $staticFile.Name    
+                    Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $fileWithoutExtension -Delimiter "," -AutoCreateTable
+                }
+                catch {
+                    Write-Host "ERROR: Importing data into" $fileWithoutExtension "from" $staticFile -ForegroundColor Red
+                    Exit
+                }
+            }
+        }
+
         if ($backupDatabase -eq $True) {
     
             Write-Host "INFO: backupDatabase is set to true, attempting backup routine." -ForegroundColor Yellow
