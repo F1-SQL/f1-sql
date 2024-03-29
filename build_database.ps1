@@ -72,6 +72,9 @@
         )
         
     $global:progressPreference = 'silentlyContinue' 
+
+    $currentYear = (Get-Date).Year.ToString()
+    $rootpath = $PSScriptRoot
     
     $jsonData = $filelocation + "\raceCalendar.json"
     $raceCalendarStr = Get-Content $jsonData | Out-String
@@ -140,8 +143,6 @@
         } else
         {
             Write-Host "INFO: Database Already Exists" -ForegroundColor Green
-    
-            $sourceFilesFullPath = "D:\workspace\Sequel Formula\Sequel-Formula-Files\Australian_Grand_Prix_2024\"
     
             $files = Get-ChildItem $sourceFilesFullPath -Filter *.csv
     
