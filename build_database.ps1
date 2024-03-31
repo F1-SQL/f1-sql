@@ -64,11 +64,8 @@
         [System.Boolean]
         $backupDatabase,
         [Parameter(Mandatory = $True, Position = 4, ValueFromPipeline = $false)]
-        [string[]]
-        $filelocation,
-        [Parameter(Mandatory = $True, Position = 4, ValueFromPipeline = $false)]
-        [string[]]
-        $schemalocation,
+        [System.String]
+        $fileLocation,
         [Parameter(Mandatory = $True, Position = 5, ValueFromPipeline = $false)]
         [System.Int32]
         $round
@@ -79,7 +76,12 @@
     $currentYear = (Get-Date).Year.ToString()
     $rootpath = $PSScriptRoot
     
-    $jsonData = $filelocation + "\raceCalendar.json"
+    Write-Host "INFO: Using $fileLocation" -ForegroundColor Yellow
+
+    $jsonData = -join($fileLocation,"\raceCalendar.json")
+
+    Write-Host "INFO: Using $jsonData" -ForegroundColor Yellow
+
     $raceCalendarStr = Get-Content $jsonData | Out-String
 
     try {
@@ -91,7 +93,6 @@
     }
 
     #Get the Race Details from the JSON file.
-
     Write-Host "INFO: Getting the details from the JSON based on the round number"
     $selectedRace = $raceCalendar.Formula1RaceCalendar | Where-Object { $_.Round -eq $round }
 
@@ -103,25 +104,20 @@
     Write-Host "INFO: Replacing spaces in race name with _" -ForegroundColor Yellow
     $raceName = $raceName.Replace(' ', '_')
     Write-Host "INFO: Building race name with round ($round) and year ($currentYear)" -ForegroundColor Yellow
-    $raceName += "_" + $round.ToString() + "_" + $currentYear
+    $raceName += "_" + $currentYear
     
-    $staticFilesFullPath = $filelocation + "\static\"
-
-    $sourceFiles = $filelocation
-    $sourceFilesFullPath = $filelocation + $sourceFiles
-
-    $tableFolder = "\tables\"
-    $tableLocation = $schemalocation + $tableFolder
+    $staticFilesFullPath = $fileLocation + "\static\"
+    $sourceFilesFullPath = $fileLocation + $raceName + "\"
 
     $backupFolder = "\backups\"
     $backupLocation = $rootpath + $backupFolder + $raceName + "\"
-    $backupFullPath = $backupLocation + $backupName 
+    
     
     #Create the folders required for the script to run
-
     if (-Not(Test-Path -Path $backupLocation)) {
         Write-Host "INFO: Attempting to create the directory $backupLocation" -ForegroundColor Yellow
         New-Item -ItemType Directory -Path $backupLocation -Force -ErrorAction Stop
+        Write-Host "SUCCESS: Directory $backupLocation created successfully" -ForegroundColor Green
     }
     else {
         Write-Host "WARN: The directory $backupLocation already exists" -ForegroundColor Magenta
@@ -140,53 +136,30 @@
     
     foreach ($instance in $sqlInstance) {
         
-        Write-Host "INFO: Atempting to open a connection to $instance ..." -ForegroundColor Yellow
-        $svr = Connect-dbaInstance -SqlInstance localhost -Database $databaseName            
-        $sqlVersion = Get-DbaBuildReference -SqlInstance $svr | Select-Object -ExpandProperty NameLevel
-        
-        $database = Get-DbaDatabase -SqlInstance $svr -Database $databaseName
+        $database = Get-DbaDatabase -SqlInstance $sqlInstance -Database $databaseName
 
         if ($database) {
             Write-Host "WARN: Database already exists $databaseName from" $instance -ForegroundColor Magenta
             Write-Host "INFO: Attempting to drop $databaseName from" $instance -ForegroundColor Yellow
-            Remove-DbaDatabase -SqlInstance $svr -Database $databaseName -Confirm:$false
+            Remove-DbaDatabase -SqlInstance $sqlInstance -Database $databaseName -Confirm:$false
             Write-Host "INFO: Attempting to create $databaseName" -ForegroundColor Yellow
-            New-DbaDatabase -SqlInstance $svr -Name $databaseName
+            New-DbaDatabase -SqlInstance $sqlInstance -Name $databaseName
             Write-Host "SUCCESS: Database" $databaseName" created" -ForegroundColor Green
         }
         else {
             Write-Host "INFO: Attempting to create $databaseName" -ForegroundColor Yellow
-            New-DbaDatabase -SqlInstance $svr -Name $databaseName
+            New-DbaDatabase -SqlInstance $sqlInstance -Name $databaseName
             Write-Host "SUCCESS: Database" $databaseName" created" -ForegroundColor Green
         }
+
+        Write-Host "INFO: Atempting to open a connection to $instance ..." -ForegroundColor Yellow
+        $svr = Connect-dbaInstance -SqlInstance $sqlInstance -Database $databaseName            
+        $sqlVersion = Get-DbaBuildReference -SqlInstance $svr | Select-Object -ExpandProperty NameLevel
 
         $database = Get-DbaDatabase -SqlInstance $svr -Database $databaseName
 
         if($database)
-        {  
-            $tableFiles = Get-ChildItem $tableLocation -Filter *.sql
-    
-            if($tableFiles.Length -gt 0)
-            {
-                foreach ($tableFile in $tableFiles) {
-        
-                    try {                
-                        Write-Host "INFO: Attempting to create $tableFile" -ForegroundColor Yellow
-                        Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $tableFile 
-                        Write-Host "SUCCESS: $tableFile created successfully" -ForegroundColor Green
-                    }
-                    catch {
-                        Write-Host "ERROR: Creating $tableFile" -ForegroundColor Red
-                        Write-Host "ERROR: Exiting..." -ForegroundColor Red
-                        Exit
-                    }
-                }
-            } else {
-                Write-Host "ERROR: No files exist in $tableLocation" -ForegroundColor Magenta
-                Write-Host "ERROR: Exiting..." -ForegroundColor Red
-                Exit
-            } #Table creation ends here
-
+        {
             Write-Host "INFO: Beginning loop of race file import" -ForegroundColor Yellow
             foreach ($csvFile in $csvFiles) {
     
@@ -217,48 +190,29 @@
                     Write-Host "ERROR: Importing data into" $fileWithoutExtension "from" $staticFile -ForegroundColor Red
                     Exit
                 }
-            } #Static File Import Loop Ends Here
-
-            $primaryKeyFolder = "\constraints\primaryKeys\"
-            $primaryKeyLocation = $schemalocation + $primaryKeyFolder
-            $primaryKeyFiles = Get-ChildItem $primaryKeyLocation -Filter *.sql
+            } #Static File Import Loop Ends Here 
             
-            Write-Host "INFO: Creating primary keys" -ForegroundColor Yellow    
-            foreach ($primaryKeyFile in $primaryKeyFiles) {                
-    
-                try {
-                    Write-Host "INFO: Attempting to apply $primaryKeyFile" -ForegroundColor Yellow
-                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $primaryKeyFile
-                }
-                catch {
-                    Write-Host "ERROR: Applying $primaryKeyFile" -ForegroundColor Red
-                    Exit
-                }
+            $tables = Get-DbaDbTable -SqlInstance $svr -Database $databaseName            
+
+            $tableCount = $tables | Measure-Object
+            $tableCount = $tableCount.Count
+
+            Write-Host "INFO: $tableCount tables were created " $staticFile -ForegroundColor Yellow
+
+            if($tableCount -lt 19)
+            {
+                Write-Host "ERROR: Not all tables has imported" -ForegroundColor Red
+            } else {
+                Write-Host "SUCCESS: All tables have been imported" -ForegroundColor Green
             }
-
-            $foreignKeyFolder = "\constraints\foreignKeys\"
-            $foreignKeyLocation = $schemalocation + $foreignKeyFolder
-            $foreignKeyFiles = Get-ChildItem $foreignKeyLocation -Filter *.sql
-            
-            Write-Host "INFO: Creating primary keys" -ForegroundColor Yellow    
-            foreach ($foreignKeyFile in $foreignKeyFiles) {                
-    
-                try {
-                    Write-Host "INFO: Attempting to apply $foreignKeyFile" -ForegroundColor Yellow
-                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $foreignKeyFile
-                }
-                catch {
-                    Write-Host "ERROR: Applying $foreignKeyFile" -ForegroundColor Red
-                    Exit
-                }
-            }            
 
             if ($backupDatabase -eq $True) {
 
                 Write-Host "INFO: backupDatabase is set to true, attempting backup routine." -ForegroundColor Yellow
                 
                 $backupName = $sqlVersion + "_" + $databaseName + "_" + $raceName + ".bak"
-                $backupCompressName = $sqlVersion + "_" + $databaseName + "_" + $raceName + '.7zip'               
+                $backupCompressName = $sqlVersion + "_" + $databaseName + "_" + $raceName + '.7zip'  
+                $backupFullPath = $backupLocation + $backupName              
                 
                 if (Test-Path -Path $backupFullPath) {
                     Write-Host "WARN: Database backup already exists, removing" -ForegroundColor Magenta
@@ -267,7 +221,7 @@
                 
                 try {            
                     Write-Host "INFO: Attempting to create a database backup." -ForegroundColor Yellow
-                    Backup-DbaDatabase -SqlInstance $svr -Database $databaseName -Path $backupLocation -FilePath $backupName -Type Full 
+                    Backup-DbaDatabase -SqlInstance $svr -Database $databaseName -Path $backupLocation -FilePath $backupName -Type Full -IgnoreFileChecks
                     Write-Host "SUCCESS: Database backed up sucessfully" -ForegroundColor Green   
                 }
                 catch {
