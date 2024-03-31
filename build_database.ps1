@@ -93,7 +93,7 @@
     }
 
     #Get the Race Details from the JSON file.
-    Write-Host "INFO: Getting the details from the JSON based on the round number"
+    Write-Host "INFO: Getting the details from the JSON based on the round number" -ForegroundColor Yellow
     $selectedRace = $raceCalendar.Formula1RaceCalendar | Where-Object { $_.Round -eq $round }
 
     Write-Host "INFO: Getting the race name from the JSON" -ForegroundColor Yellow
@@ -103,15 +103,14 @@
 
     Write-Host "INFO: Replacing spaces in race name with _" -ForegroundColor Yellow
     $raceName = $raceName.Replace(' ', '_')
-    Write-Host "INFO: Building race name with round ($round) and year ($currentYear)" -ForegroundColor Yellow
+    Write-Host "INFO: Building race name and year ($currentYear)" -ForegroundColor Yellow
     $raceName += "_" + $currentYear
     
     $staticFilesFullPath = $fileLocation + "\static\"
     $sourceFilesFullPath = $fileLocation + $raceName + "\"
 
     $backupFolder = "\backups\"
-    $backupLocation = $rootpath + $backupFolder + $raceName + "\"
-    
+    $backupLocation = $rootpath + $backupFolder + $raceName + "\"    
     
     #Create the folders required for the script to run
     if (-Not(Test-Path -Path $backupLocation)) {
