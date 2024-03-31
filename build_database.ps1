@@ -65,6 +65,9 @@
         $backupDatabase,
         [Parameter(Mandatory = $True, Position = 4, ValueFromPipeline = $false)]
         [System.String]
+        $schemaLocation,
+        [Parameter(Mandatory = $True, Position = 4, ValueFromPipeline = $false)]
+        [System.String]
         $fileLocation,
         [Parameter(Mandatory = $True, Position = 5, ValueFromPipeline = $false)]
         [System.Int32]
@@ -110,7 +113,10 @@
     $sourceFilesFullPath = $fileLocation + $raceName + "\"
 
     $backupFolder = "\backups\"
-    $backupLocation = $rootpath + $backupFolder + $raceName + "\"    
+    $backupLocation = $rootpath + $backupFolder + $raceName + "\"  
+    
+    $scriptFolder = "\scripts\"
+    $scriptLocation = -join($fileLocation,$scriptFolder)
     
     #Create the folders required for the script to run
     if (-Not(Test-Path -Path $backupLocation)) {
@@ -203,7 +209,7 @@
                 Write-Host "ERROR: Not all tables has imported" -ForegroundColor Red
             } else {
                 Write-Host "SUCCESS: All tables have been imported" -ForegroundColor Green
-            }
+            }           
 
             if ($backupDatabase -eq $True) {
 
