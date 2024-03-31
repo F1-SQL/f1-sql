@@ -17,6 +17,15 @@
     .PARAMETER backupDatabase
         Performs a backup of the database
 
+    .PARAMETER schemaLocation
+        Performs a backup of the database
+
+    .PARAMETER fileLocation
+        Performs a backup of the database 
+        
+    .PARAMETER round
+        Performs a backup of the database 
+
     .NOTES
         Tags: FormulaOne, F1, Database, Data.
         Author: Richard Howell, sequelformula.com
@@ -32,21 +41,6 @@
         PS C:\> .\build_database.ps1 -databaseName SequelFormulaDevTest -sqlInstance localhost -cleanInstance $false -backupDatabase $false -fileLocation "D:\Sequel Formula\Sequel-Formula-Files" -schemaLocation "D:\Sequel Formula\Sequel-Formula-Database" -round 3
 
         This will perform a full database backup on the databases HR and Finance on SQL Server Instance Server1 to Server1 default backup directory.
-
-    .EXAMPLE
-        PS C:\> .\build_database.ps1 -databaseName SequelFormula -sqlInstance 'loclhost' -downloadFiles $true -cleanInstance $true
-
-        Backs up AdventureWorks2014 to sql2016 C:\temp folder.
-
-    .EXAMPLE
-        PS C:\> .\build_database.ps1 -databaseName SequelFormula -sqlInstance 'loclhost' -downloadFiles $false -cleanInstance $true
-
-        Performs a full backup of all databases on the sql2016 instance to their own containers under the https://dbatoolsaz.blob.core.windows.net/azbackups/ container on Azure blob storage using the sql credential "dbatoolscred" registered on the sql2016 instance.
-
-    .EXAMPLE
-        PS C:\> .\build_database.ps1 -databaseName SequelFormula -sqlInstance 'loclhost' -downloadFiles $false -cleanInstance $false
-
-        Performs a full backup of all databases on the sql2016 instance to the https://dbatoolsaz.blob.core.windows.net/azbackups/ container on Azure blob storage using the Shared Access Signature sql credential "https://dbatoolsaz.blob.core.windows.net/azbackups" registered on the sql2016 instance.
     #>
 
     [CmdletBinding()]
@@ -217,7 +211,7 @@
 
             try {     
                 Write-Host "INFO: Creating function $properCaseFunctionPath" -ForegroundColor Yellow           
-                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $properCaseFunctionsPath     
+                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $properCaseFunctionsPath    
                 Write-Host "SUCCESS: Function $properCaseFunctionPath created successfully" -ForegroundColor Green  
             }
             catch {
