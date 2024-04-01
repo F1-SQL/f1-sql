@@ -18,29 +18,27 @@
         Performs a backup of the database
 
     .PARAMETER schemaLocation
-        Performs a backup of the database
+        The location of the database schema
 
     .PARAMETER fileLocation
-        Performs a backup of the database 
+        The location of the CSV files that you want to import
         
     .PARAMETER round
-        Performs a backup of the database 
+        The round that you are running the script for, this is taken from the calendar JSON
 
     .NOTES
         Tags: FormulaOne, F1, Database, Data.
         Author: Richard Howell, sequelformula.com
 
-        Website: https://sequelformula.com
-        Copyright: (c) 2022 by Sequel Formula, licensed under MIT
+        Website: https://sequel-formula.com
+        Copyright: (c) 2024 by Sequel Formula, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
     .LINK
-        https://sequelformula.com/projects/formula-one-database/
+        https://sequel-formula.com
 
     .EXAMPLE
-        PS C:\> .\build_database.ps1 -databaseName SequelFormulaDevTest -sqlInstance localhost -cleanInstance $false -backupDatabase $false -fileLocation "D:\Sequel Formula\Sequel-Formula-Files" -schemaLocation "D:\Sequel Formula\Sequel-Formula-Database" -round 3
-
-        This will perform a full database backup on the databases HR and Finance on SQL Server Instance Server1 to Server1 default backup directory.
+        PS C:\> .\build_database.ps1 -databaseName SequelFormulaDevTest -sqlInstance localhost -cleanInstance $false -backupDatabase $false -fileLocation "D:\Sequel Formula\Sequel-Formula-Files" -schemaLocation "D:\Sequel Formula\Sequel-Formula-Database" -round 3        
     #>
 
     [CmdletBinding()]
@@ -153,8 +151,8 @@
         }
 
         Write-Host "INFO: Atempting to open a connection to $instance ..." -ForegroundColor Yellow
-        $svr = Connect-dbaInstance -SqlInstance $sqlInstance -Database $databaseName            
-        $sqlVersion = Get-DbaBuildReference -SqlInstance $svr | Select-Object -ExpandProperty NameLevel
+        $svr = Connect-dbaInstance -SqlInstance $sqlInstance -Database $databaseName             
+        $sqlVersion = Get-DbaBuildReference -SqlInstance $svr -Update | Select-Object -ExpandProperty NameLevel
 
         $database = Get-DbaDatabase -SqlInstance $svr -Database $databaseName
 
@@ -199,11 +197,11 @@
 
             Write-Host "INFO: $tableCount tables were created " $staticFile -ForegroundColor Yellow
 
-            if($tableCount -lt 19)
+            if($tableCount -lt $totalFilesFound)
             {
-                Write-Host "ERROR: Not all tables has imported" -ForegroundColor Red
+                Write-Host "ERROR: Not all CSV Files have been imported" -ForegroundColor Red
             } else {
-                Write-Host "SUCCESS: All tables have been imported" -ForegroundColor Green
+                Write-Host "SUCCESS: All CSV files have been imported" -ForegroundColor Green
             }
 
             $properCaseFunctionsPath = -join($schemaLocation,$scriptFolder,"functions/","ProperCaseFunction.sql")
@@ -229,162 +227,210 @@
             
             $circuitJsonPath = -join($schemaLocation,$scriptFolder)
             $circuitJsonFullPath = -join($circuitJsonPath,"circuits\","circuits.json")
-
-            # Read the JSON file
             $circuitJsonData = Get-Content -Raw -Path $circuitJsonFullPath | ConvertFrom-Json
-
-            # Sort the items based on the "order" property
             $circuitSortedItems = $circuitJsonData.items | Sort-Object order
 
-            # Loop over the sorted items and retrieve the filename
             foreach ($circuitItem in $circuitSortedItems) {
                 $filename = $circuitItem.filename 
                 $fullPath = -join($scriptLocation,$filename)
-                Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow  
-                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath                  
+                
+                try {                    
+                    Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow  
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath -ErrorAction Stop 
+                    Write-Host "SUCCESS: $filename executed" -ForegroundColor Green                  
+                }
+                catch {
+                    $_ | Format-List * -Force | Out-String
+                }
             }
-
-            ##
 
             $driversJsonFullPath = -join($scriptLocation,"drivers\","drivers.json")
             $driversJsonData = Get-Content -Raw -Path $driversJsonFullPath | ConvertFrom-Json
             $driversSortedItems = $driversJsonData.items | Sort-Object order
 
-            # Loop over the sorted items and retrieve the filename
+            
             foreach ($driversItem in $driversSortedItems) {
                 $filename = $driversItem.filename  
                 $fullPath = -join($scriptLocation,$filename)
-                Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow  
-                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath                 
-            }
+                
+                try {
+                    Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow  
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath -ErrorAction Stop
+                    Write-Host "SUCCESS: $filename executed" -ForegroundColor Green                                
+                }
+                catch {
+                    $_ | Format-List * -Force | Out-String
+                }
 
-            ##
+            }
 
             $intervalsJsonFullPath = -join($scriptLocation,"intervals\","intervals.json")
             $intervalsJsonData = Get-Content -Raw -Path $intervalsJsonFullPath | ConvertFrom-Json
             $intervalSortedItems = $intervalsJsonData.items | Sort-Object order
 
-            # Loop over the sorted items and retrieve the filename
+            
             foreach ($intervalsItem in $intervalSortedItems) {
                 $filename = $intervalsItem.filename 
                 $fullPath = -join($scriptLocation,$filename)
-                Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow  
-                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath                  
+                
+                try {
+                    Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow  
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath -ErrorAction Stop   
+                    Write-Host "SUCCESS: $filename executed" -ForegroundColor Green             
+                    
+                }
+                catch {
+                    $_ | Format-List * -Force | Out-String
+                }
             }
-
-            ##
 
             $lapsJsonFullPath = -join($scriptLocation,"laps\","laps.json")
             $lapsJsonData = Get-Content -Raw -Path $lapsJsonFullPath | ConvertFrom-Json
             $lapsSortedItems = $lapsJsonData.items | Sort-Object order
 
-            # Loop over the sorted items and retrieve the filename
+            
             foreach ($lapsItem in $lapsSortedItems) {
                 $filename = $lapsItem.filename    
                 $fullPath = -join($scriptLocation,$filename)
-                Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow  
-                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath               
+                
+                try {
+                    Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow  
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath -ErrorAction Stop
+                    Write-Host "SUCCESS: $filename executed" -ForegroundColor Green                                   
+                }
+                catch {
+                    $_ | Format-List * -Force | Out-String
+                }
             }
 
-            ##
-
             $meetingsJsonFullPath = -join($scriptLocation,"meetings\","meetings.json")
-
             $meetingsJsonData = Get-Content -Raw -Path $meetingsJsonFullPath | ConvertFrom-Json
-
             $meetingsSortedItems = $meetingsJsonData.items | Sort-Object order
 
             foreach ($meetingsItem in $meetingsSortedItems) {
                 $filename = $meetingsItem.filename  
                 $fullPath = -join($scriptLocation,$filename)
-                Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow  
-                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath                 
+                
+                try {
+                    Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow  
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath -ErrorAction Stop  
+                    Write-Host "SUCCESS: $filename executed" -ForegroundColor Green                                   
+                }
+                catch {
+                    $_ | Format-List * -Force | Out-String
+                }
             }
-
-            ##
 
             $pitStopsJsonFullPath = -join($scriptLocation,"pitStops\","pitStops.json")
             $pitStopsJsonData = Get-Content -Raw -Path $pitStopsJsonFullPath | ConvertFrom-Json
             $pitStopsSortedItems = $pitStopsJsonData.items | Sort-Object order
-
-            # Loop over the sorted items and retrieve the filename
+            
             foreach ($pitStopsItem in $pitStopsSortedItems) {
                 $filename = $pitStopsItem.filename 
                 $fullPath = -join($scriptLocation,$filename)
-                Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow
-                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath                  
+                
+                try {
+                    Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath -ErrorAction Stop  
+                    Write-Host "SUCCESS: $filename executed" -ForegroundColor Green                  
+                }
+                catch {
+                    $_ | Format-List * -Force | Out-String
+                }
             }
-
-            ##
 
             $positionJsonFullPath = -join($scriptLocation,"position\","position.json")
             $positionJsonData = Get-Content -Raw -Path $positionJsonFullPath | ConvertFrom-Json
             $positionSortedItems = $positionJsonData.items | Sort-Object order
-
-            # Loop over the sorted items and retrieve the filename
+            
             foreach ($positionItem in $positionSortedItems) {
                 $filename = $positionItem.filename  
                 $fullPath = -join($scriptLocation,$filename)
-                Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow
-                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath                 
+                
+                try {
+                    Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath -ErrorAction Stop
+                    Write-Host "SUCCESS: $filename executed" -ForegroundColor Green
+                }
+                catch {
+                    $_ | Format-List * -Force | Out-String
+                }
             }
-
-            ##
 
             $sessionsJsonFullPath = -join($scriptLocation,"sessions\","sessions.json")
             $sessionsJsonData = Get-Content -Raw -Path $sessionsJsonFullPath | ConvertFrom-Json
             $sessionsSortedItems = $sessionsJsonData.items | Sort-Object order
-
-            # Loop over the sorted items and retrieve the filename
+            
             foreach ($sessionsItem in $sessionsSortedItems) {
                 $filename = $sessionsItem.filename  
                 $fullPath = -join($scriptLocation,$filename)
-                Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow
-                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath                 
+                
+                try {
+                    Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath -ErrorAction Stop
+                    Write-Host "SUCCESS: $filename executed" -ForegroundColor Green
+                }
+                catch {
+                    $_ | Format-List * -Force | Out-String
+                }
             }
-            
-            ##
 
             $stintsJsonFullPath = -join($scriptLocation,"stints\","stints.json")
             $stintsJsonData = Get-Content -Raw -Path $stintsJsonFullPath | ConvertFrom-Json
             $stintsSortedItems = $stintsJsonData.items | Sort-Object order
-
-            # Loop over the sorted items and retrieve the filename
+            
             foreach ($stintsItem in $stintsSortedItems) {
                 $filename = $stintsItem.filename
                 $fullPath = -join($scriptLocation,$filename)
-                Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow
-                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath                   
+                
+                try {
+                    Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath -ErrorAction Stop
+                    Write-Host "SUCCESS: $filename executed" -ForegroundColor Green
+                    
+                }
+                catch {
+                    $_ | Format-List * -Force | Out-String
+                }
             }
-
-            ##
 
             $weatherJsonFullPath = -join($scriptLocation,"weather\","weather.json")
             $weatherJsonData = Get-Content -Raw -Path $weatherJsonFullPath | ConvertFrom-Json
             $weatherSortedItems = $weatherJsonData.items | Sort-Object order
-
-            # Loop over the sorted items and retrieve the filename
+            
             foreach ($weatherItem in $weatherSortedItems) {
                 $filename = $weatherItem.filename
-                $fullPath = -join($scriptLocation,$filename)
-                Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow
-                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath               
-            }           
-
-            ##
+                $fullPath = -join($scriptLocation,$filename)                
+                
+                try {
+                    Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath -ErrorAction Stop
+                    Write-Host "SUCCESS: $filename executed" -ForegroundColor Green
+                    
+                }
+                catch {
+                    $_ | Format-List * -Force | Out-String
+                }
+            }
 
             $cleanJsonFullPath = -join($scriptLocation,"cleanup\","cleanup.json")
             $cleanJsonData = Get-Content -Raw -Path $cleanJsonFullPath | ConvertFrom-Json
             $cleanSortedItems = $cleanJsonData.items | Sort-Object order
-
-            # Loop over the sorted items and retrieve the filename
+            
             foreach ($cleanItem in $cleanSortedItems) {
                 $filename = $cleanItem.filename
                 $fullPath = -join($scriptLocation,$filename)
-                Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath               
+                
+                try {
+                    Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath -ErrorAction Stop
+                    Write-Host "SUCCESS: $filename executed" -ForegroundColor Green
+                    
+                }
+                catch {
+                    $_ | Format-List * -Force | Out-String
+                }
             } 
-
-            ##
 
             if ($backupDatabase -eq $True) {
 
