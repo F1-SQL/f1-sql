@@ -112,14 +112,18 @@
     $scriptLocation = -join($schemaLocation,$scriptFolder)
     
     #Create the folders required for the script to run
-    if (-Not(Test-Path -Path $backupLocation)) {
-        Write-Host "INFO: Attempting to create the directory $backupLocation" -ForegroundColor Yellow
-        New-Item -ItemType Directory -Path $backupLocation -Force -ErrorAction Stop
-        Write-Host "SUCCESS: Directory $backupLocation created successfully" -ForegroundColor Green
-    }
-    else {
-        Write-Host "WARN: The directory $backupLocation already exists" -ForegroundColor Magenta
-    }
+    if($backupDatabase -eq $true) {
+        if (-Not(Test-Path -Path $backupLocation)) {
+            Write-Host "INFO: Attempting to create the directory $backupLocation" -ForegroundColor Yellow
+            New-Item -ItemType Directory -Path $backupLocation -Force -ErrorAction Stop
+            Write-Host "SUCCESS: Directory $backupLocation created successfully" -ForegroundColor Green
+        }
+        else {
+            Write-Host "WARN: The directory $backupLocation already exists" -ForegroundColor Magenta
+        }
+    } else {
+        Write-Host "WARN: Backup directory check skipped" -ForegroundColor Magenta
+    }   
 
     Write-Host "INFO: Getting all of the .csv files from" $sourceFilesFullPath -ForegroundColor Yellow    
     $csvFiles = Get-ChildItem $sourceFilesFullPath -Filter *.csv
@@ -400,6 +404,44 @@
             
             foreach ($weatherItem in $weatherSortedItems) {
                 $filename = $weatherItem.filename
+                $fullPath = -join($scriptLocation,$filename)                
+                
+                try {
+                    Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath -ErrorAction Stop
+                    Write-Host "SUCCESS: $filename executed" -ForegroundColor Green
+                    
+                }
+                catch {
+                    $_ | Format-List * -Force | Out-String
+                }
+            }
+
+            $teamRadioJsonFullPath = -join($scriptLocation,"teamRadio\","teamRadio.json")
+            $teamRadioJsonData = Get-Content -Raw -Path $teamRadioJsonFullPath | ConvertFrom-Json
+            $teamRadioSortedItems = $teamRadioJsonData.items | Sort-Object order
+            
+            foreach ($teamRadioItem in $teamRadioSortedItems) {
+                $filename = $teamRadioItem.filename
+                $fullPath = -join($scriptLocation,$filename)                
+                
+                try {
+                    Write-Host "INFO: Attempting to execute $filename" -ForegroundColor Yellow
+                    Invoke-DbaQuery -SqlInstance $svr -Database $databaseName -File $fullPath -ErrorAction Stop
+                    Write-Host "SUCCESS: $filename executed" -ForegroundColor Green
+                    
+                }
+                catch {
+                    $_ | Format-List * -Force | Out-String
+                }
+            } 
+            
+            $raceControlJsonFullPath = -join($scriptLocation,"raceControl\","raceControl.json")
+            $raceControlJsonData = Get-Content -Raw -Path $raceControlJsonFullPath | ConvertFrom-Json
+            $raceControlSortedItems = $raceControlJsonData.items | Sort-Object order
+            
+            foreach ($raceControlItem in $raceControlSortedItems) {
+                $filename = $raceControlItem.filename
                 $fullPath = -join($scriptLocation,$filename)                
                 
                 try {
