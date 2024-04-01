@@ -83,12 +83,12 @@
         $raceCalendar = $raceCalendarStr | ConvertFrom-Json
     }
     catch {
-        Write-Host "ERROR: Issue converting to a JSON Object" -ForegroundColor Red
+        Write-Host "ERROR: Issue converting race calendar to a JSON object" -ForegroundColor Red
         Exit
     }
 
     #Get the Race Details from the JSON file.
-    Write-Host "INFO: Getting the details from the JSON based on the round number" -ForegroundColor Yellow
+    Write-Host "INFO: Getting the details from the race calendar JSON based on the round number provided" -ForegroundColor Yellow
     $selectedRace = $raceCalendar.Formula1RaceCalendar | Where-Object { $_.Round -eq $round }
 
     Write-Host "INFO: Getting the race name from the JSON" -ForegroundColor Yellow
@@ -96,8 +96,11 @@
         $raceName = $race.RaceName
     }
 
-    Write-Host "INFO: Replacing spaces in race name with _" -ForegroundColor Yellow
+    Write-Host "INFO: $raceName has been deleted based on the round number provided" -ForegroundColor Yellow
+
+    Write-Host "INFO: Replacing spaces in race name with underscores" -ForegroundColor Yellow
     $raceName = $raceName.Replace(' ', '_')
+
     Write-Host "INFO: Building race name and year ($currentYear)" -ForegroundColor Yellow
     $raceName += "_" + $currentYear
     
@@ -106,12 +109,11 @@
     $sourceFilesFullPath = -join($fileLocation,"\",$raceName,"\")
 
     $backupFolder = "\backups\"
-    $backupLocation = $rootpath + $backupFolder + $raceName + "\"  
+    $backupLocation = -join($rootpath,$backupFolder,$raceName,"\")
     
     $scriptFolder = "\scripts\"
     $scriptLocation = -join($schemaLocation,$scriptFolder)
     
-    #Create the folders required for the script to run
     if($backupDatabase -eq $true) {
         if (-Not(Test-Path -Path $backupLocation)) {
             Write-Host "INFO: Attempting to create the directory $backupLocation" -ForegroundColor Yellow
@@ -141,23 +143,24 @@
         $database = Get-DbaDatabase -SqlInstance $sqlInstance -Database $databaseName
 
         if ($database) {
-            Write-Host "WARN: Database already exists $databaseName from" $instance -ForegroundColor Magenta
-            Write-Host "INFO: Attempting to drop $databaseName from" $instance -ForegroundColor Yellow
+            Write-Host "WARN: Database already exists $databaseName from $instance" -ForegroundColor Magenta
+            Write-Host "INFO: Attempting to drop $databaseName from $instance" -ForegroundColor Yellow
             Remove-DbaDatabase -SqlInstance $sqlInstance -Database $databaseName -Confirm:$false
             Write-Host "INFO: Attempting to create $databaseName" -ForegroundColor Yellow
             New-DbaDatabase -SqlInstance $sqlInstance -Name $databaseName
-            Write-Host "SUCCESS: Database" $databaseName" created" -ForegroundColor Green
+            Write-Host "SUCCESS: Database $databaseName created" -ForegroundColor Green
         }
         else {
             Write-Host "INFO: Attempting to create $databaseName" -ForegroundColor Yellow
             New-DbaDatabase -SqlInstance $sqlInstance -Name $databaseName
-            Write-Host "SUCCESS: Database" $databaseName" created" -ForegroundColor Green
+            Write-Host "SUCCESS: Database $databaseName created" -ForegroundColor Green
         }
 
         Write-Host "INFO: Atempting to open a connection to $instance ..." -ForegroundColor Yellow
         $svr = Connect-dbaInstance -SqlInstance $sqlInstance -Database $databaseName             
         $sqlVersion = Get-DbaBuildReference -SqlInstance $svr -Update | Select-Object -ExpandProperty NameLevel
 
+        Write-Host "INFO: Getting $databaseName from $instance" -ForegroundColor Yellow
         $database = Get-DbaDatabase -SqlInstance $svr -Database $databaseName
 
         if($database)
@@ -170,7 +173,8 @@
                 try {                
                     Write-Host "INFO: Attempting to import data into" $fileWithoutExtension "from" $csvFile -ForegroundColor Yellow
                     $filePath = $sourceFilesFullPath + $csvFile.Name    
-                    Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $fileWithoutExtension -Delimiter "," -AutoCreateTable
+                    Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $fileWithoutExtension -Delimiter "," -AutoCreateTable -NoProgress
+                    Write-Host "SUCCESS: Imported $fileWithoutExtension from $csvFile successfully" -ForegroundColor Green
                 }
                 catch {
                     Write-Host "ERROR: Importing data into" $fileWithoutExtension "from" $csvFile -ForegroundColor Red
@@ -187,6 +191,7 @@
                     Write-Host "INFO: Attempting to import data into" $fileWithoutExtension "from" $staticFile -ForegroundColor Yellow
                     $filePath = $staticFilesFullPath + $staticFile.Name    
                     Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $fileWithoutExtension -Delimiter "," -AutoCreateTable
+                    Write-Host "SUCCESS: Imported $fileWithoutExtension from $staticFile successfully" -ForegroundColor Green
                 }
                 catch {
                     Write-Host "ERROR: Importing data into" $fileWithoutExtension "from" $staticFile -ForegroundColor Red
@@ -194,18 +199,19 @@
                 }
             } #Static File Import Loop Ends Here 
             
+            Write-Host "INFO: Getting all the tables from $databaseName on $instance" -ForegroundColor Yellow
             $tables = Get-DbaDbTable -SqlInstance $svr -Database $databaseName            
 
             $tableCount = $tables | Measure-Object
             $tableCount = $tableCount.Count
 
-            Write-Host "INFO: $tableCount tables were created " $staticFile -ForegroundColor Yellow
+            Write-Host "INFO: $tableCount tables were created" -ForegroundColor Yellow
 
-            if($tableCount -lt $totalFilesFound)
+            if($tableCount -eq $totalFilesFound)
             {
-                Write-Host "ERROR: Not all CSV Files have been imported" -ForegroundColor Red
-            } else {
                 Write-Host "SUCCESS: All CSV files have been imported" -ForegroundColor Green
+            } else {
+                Write-Host "ERROR: Not all CSV Files have been imported" -ForegroundColor Red
             }
 
             $properCaseFunctionsPath = -join($schemaLocation,$scriptFolder,"functions/","ProperCaseFunction.sql")
@@ -478,9 +484,13 @@
 
                 Write-Host "INFO: backupDatabase is set to true, attempting backup routine." -ForegroundColor Yellow
                 
-                $backupName = $sqlVersion + "_" + $databaseName + "_" + $raceName + ".bak"
-                $backupCompressName = $sqlVersion + "_" + $databaseName + "_" + $raceName + '.7zip'  
-                $backupFullPath = $backupLocation + $backupName              
+                $backupName = -join($sqlVersion,"_",$databaseName,"_",$raceName,".bak")
+                Write-Host "INFO: Using $backupName" -ForegroundColor Yellow
+                $backupCompressName = -join($sqlVersion,"_",$databaseName,"_",$raceName,".7zip")
+                Write-Host "INFO: Using $backupCompressName for zip filename" -ForegroundColor Yellow                
+                $backupFullPath = -join($backupLocation,$backupName)
+                Write-Host "INFO: Saving backups to $backupLocation" -ForegroundColor Yellow
+                Write-Host "INFO: Backups path is $backupFullPath" -ForegroundColor Yellow
                 
                 if (Test-Path -Path $backupFullPath) {
                     Write-Host "WARN: Database backup already exists, removing" -ForegroundColor Magenta
@@ -499,7 +509,7 @@
         
                 try {
                     #https://github.com/thoemmi/7Zip4Powershell 
-                    $compressedPath = $backupLocation + $backupCompressName
+                    $compressedPath = -join($backupLocation,$backupCompressName)
                     Write-Host "INFO: Attempting to 7zip the backup" -ForegroundColor Yellow
                     Compress-7Zip -Path $backupLocation -Filter *.bak -ArchiveFileName $compressedPath -CompressionLevel Ultra                
                     Write-Host "SUCCESS: Compressed backup sucessfully" -ForegroundColor Green             
@@ -526,6 +536,11 @@
                 Write-Host "WARN: $databaseName not dropped as cleanInstance is not set to true" -ForegroundColor Magenta
             }
         }
+
+        Write-Host "SUCCESS: Database build complete on $instance" -ForegroundColor Green
+        Write-Host "SUCCESS: Compressed backup is available in $compressedPath" -ForegroundColor Green
+
     } #SQL Instance Loop Ends Here
+
+    Write-Host "END: Sequel Formula has completed" -ForegroundColor Green
     
-    Write-Host "SUCCESS: Database build complete on $instance" -ForegroundColor Green
