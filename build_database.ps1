@@ -564,15 +564,13 @@
                     Write-Host "INFO: Attempting to 7zip the backup" -ForegroundColor Yellow
                     Compress-7Zip -Path $backupLocation -Filter *.bak -ArchiveFileName $compressedPath -CompressionLevel Ultra                
                     Write-Host "SUCCESS: Compressed backup sucessfully" -ForegroundColor Green             
+                    Write-Host "SUCCESS: Compressed backup is available in $compressedPath" -ForegroundColor Green
                     Remove-Item -Path $backupFullPath -Force
                 }
                 catch {
                     Write-Host "ERROR: Compressing backup failed" -ForegroundColor Red
                     Exit
-                }
-        
-                Write-Host "SUCCESS: Database backup has been completed." -ForegroundColor Green
-        
+                }        
             }
             else {
                 Write-Host "WARN: No backup has been taken as backupDatabase is set to False." -ForegroundColor Magenta
@@ -585,11 +583,10 @@
             }
             else {
                 Write-Host "WARN: $databaseName not dropped as cleanInstance is not set to true" -ForegroundColor Magenta
-            }
+            }            
         }
 
         Write-Host "SUCCESS: Database build complete on $instance" -ForegroundColor Green
-        Write-Host "SUCCESS: Compressed backup is available in $compressedPath" -ForegroundColor Green
 
     } #SQL Instance Loop Ends Here
 
