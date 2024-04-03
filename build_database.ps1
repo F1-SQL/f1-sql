@@ -172,9 +172,35 @@
                         
                 try {                
                     Write-Host "INFO: Attempting to import data into" $fileWithoutExtension "from" $csvFile -ForegroundColor Yellow
-                    $filePath = $sourceFilesFullPath + $csvFile.Name    
-                    Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $fileWithoutExtension -Delimiter "," -AutoCreateTable -NoProgress
-                    Write-Host "SUCCESS: Imported $fileWithoutExtension from $csvFile successfully" -ForegroundColor Green
+                    $filePath = $sourceFilesFullPath + $csvFile.Name
+                    
+                    [int]$LinesInFile = 0
+                    $reader = New-Object IO.StreamReader $filePath
+                    
+                    # Skip the first line (header)
+                    $reader.ReadLine() | Out-Null
+                    
+                    # Count the remaining lines
+                    while($null -ne $reader.ReadLine()) {
+                        $LinesInFile++
+                    }
+                    
+                    # Close the reader
+                    $reader.Close()
+                    
+                    $result = Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $fileWithoutExtension -Delimiter "," -AutoCreateTable -NoProgress
+                    $rowCount = $result.RowsCopied
+
+                    if($rowCount -eq $LinesInFile)
+                    {
+                        Write-Host "SUCCESS: Imported $fileWithoutExtension from $csvFile successfully" -ForegroundColor Green
+
+                    } else 
+                    {
+                        Write-Host "ERROR: Imported $fileWithoutExtension from $csvFile successfully" -ForegroundColor Red
+                        Exit
+                    }
+                    
                 }
                 catch {
                     Write-Host "ERROR: Importing data into" $fileWithoutExtension "from" $csvFile -ForegroundColor Red
@@ -189,9 +215,34 @@
                         
                 try {                
                     Write-Host "INFO: Attempting to import data into" $fileWithoutExtension "from" $staticFile -ForegroundColor Yellow
-                    $filePath = $staticFilesFullPath + $staticFile.Name    
-                    Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $fileWithoutExtension -Delimiter "," -AutoCreateTable
-                    Write-Host "SUCCESS: Imported $fileWithoutExtension from $staticFile successfully" -ForegroundColor Green
+                    $filePath = $staticFilesFullPath + $staticFile.Name   
+                    
+                    [int]$LinesInFile = 0
+                    $reader = New-Object IO.StreamReader $filePath
+                    
+                    # Skip the first line (header)
+                    $reader.ReadLine() | Out-Null
+                    
+                    # Count the remaining lines
+                    while($null -ne $reader.ReadLine()) {
+                        $LinesInFile++
+                    }
+                    
+                    # Close the reader
+                    $reader.Close()                    
+
+                    $result = Import-DbaCsv -Path $filePath -SqlInstance $svr -Database $databaseName -Table $fileWithoutExtension -Delimiter "," -AutoCreateTable
+                    $rowCount = $result.RowsCopied
+                    
+                    if($rowCount -eq $LinesInFile)
+                    {
+                        Write-Host "SUCCESS: Imported $fileWithoutExtension from $staticFile successfully" -ForegroundColor Green
+
+                    } else 
+                    {
+                        Write-Host "ERROR: Imported $fileWithoutExtension from $staticFile successfully" -ForegroundColor Red
+                        Exit
+                    }
                 }
                 catch {
                     Write-Host "ERROR: Importing data into" $fileWithoutExtension "from" $staticFile -ForegroundColor Red
