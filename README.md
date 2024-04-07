@@ -1,13 +1,13 @@
 ![](images/git-banner.png)
 
-![Linter](https://github.com/Rich-In-SQL/Sequel-Formula/actions/workflows/powershell.yml/badge.svg)
-![GitHub Repo stars](https://img.shields.io/github/stars/rich-in-sql/sequel-formula)
+![Linter](https://github.com/Rich-In-SQL/F1-SQL/actions/workflows/powershell.yml/badge.svg)
+![GitHub Repo stars](https://img.shields.io/github/stars/rich-in-sql/F1-SQL)
 ![Prs Welcome](https://badgen.net/badge/PRs/Welcome/orange)
 ![Prs Welcome](https://badgen.net/badge/license/MIT/orange)
 
 
-# Sequel Formula
-Sequel Formula is a Microsoft SQL Server database designed and developed using the freely available data from [Ergast API](https://ergast.com/mrd/) 
+# F1 SQL
+F1 SQL is a Microsoft SQL Server database designed and developed using the freely available data from [Ergast API](https://ergast.com/mrd/) 
 
 This project is maintained for education and demonstration purposes.
 
@@ -21,7 +21,7 @@ If any data is missing or incorrect please submit an issue so that it can be upd
 
 ## Documentation
 
-If you are looking for documentation that is available [here](https://sequel-formula.com/)
+If you are looking for documentation that is available [here](https://F1-SQL.com/)
 
 ### Credits 
 
