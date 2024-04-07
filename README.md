@@ -16,10 +16,6 @@ You can download the latest release from the [releases](https://github.com/F1-SQ
 
 If any data is missing or incorrect please [submit an issue](https://github.com/F1-SQL/F1-SQL/issues) so that it can be updated, we also welcome [pull requests](https://github.com/F1-SQL/F1-SQL/pulls), so if that is your bag feel free to submit one and we will review it as soon as possible.
 
-**07/08/2023** - This includes data from the 2023 Belgian GP.
-
-If any data is missing or incorrect please submit an issue so that it can be updated, we also welcome pull requests, so if that is your bag feel free to submit one and we will review it as soon as possible.
-
 ## Documentation
 
 If you are looking for documentation that is available [here](https://F1-SQL.com/)
