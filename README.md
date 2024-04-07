@@ -22,3 +22,8 @@ If any data is missing or incorrect please submit an issue so that it can be upd
 ## Documentation
 
 If you are looking for documentation that is available [here](https://sequel-formula.com/)
+
+### Credits 
+
+Header photo by <a href="https://unsplash.com/@chethan_kanakamurthy?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Chethan Kanakamurthy</a> on <a href="https://unsplash.com/photos/a-black-and-white-photo-of-a-racing-car-DAhUu3oe64I?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
+  
