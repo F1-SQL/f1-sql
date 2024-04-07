@@ -1,6 +1,6 @@
 ![](images/git-banner.png)
 
-![GitHub Repo stars](https://img.shields.io/github/stars/rich-in-sql/F1-SQL)
+![GitHub Repo stars](https://img.shields.io/github/stars/F1-SQL)
 ![Prs Welcome](https://badgen.net/badge/PRs/Welcome/orange)
 ![Prs Welcome](https://badgen.net/badge/license/MIT/orange)
 
