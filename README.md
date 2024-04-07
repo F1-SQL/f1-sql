@@ -1,6 +1,5 @@
 ![](images/git-banner.png)
 
-![Linter](https://github.com/Rich-In-SQL/F1-SQL/actions/workflows/powershell.yml/badge.svg)
 ![GitHub Repo stars](https://img.shields.io/github/stars/rich-in-sql/F1-SQL)
 ![Prs Welcome](https://badgen.net/badge/PRs/Welcome/orange)
 ![Prs Welcome](https://badgen.net/badge/license/MIT/orange)
