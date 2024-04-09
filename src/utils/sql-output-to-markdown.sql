@@ -1,12 +1,10 @@
-USE [SequelFormula]
-GO
 /****** Object:  StoredProcedure [dbo].[Select2MD]    Script Date: 02/09/2023 08:34:23 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- Select statement
-ALTER PROCEDURE [dbo].[Select2MD]
+CREATE PROCEDURE [dbo].[Select2MD]
 /*
 Author: Tomaz Kastrun
 Source: https://www.sqlservercentral.com/articles/creating-markdown-formatted-text-for-results-from-sql-server-tables
