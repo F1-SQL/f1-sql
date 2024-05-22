@@ -16,17 +16,17 @@
 
     .NOTES
         Tags: FormulaOne, F1, Database, Data.
-        Author: Richard Howell, sequelformula.com
+        Author: Richard Howell, f1-sql.com
 
-        Website: https://sequelformula.com
-        Copyright: (c) 2024 by Sequel Formula, licensed under MIT
+        Website: https://f1-sql.com
+        Copyright: (c) 2024 by F1 SQL, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
     .LINK
-        https://sequelformula.com/projects/formula-one-database/
+        https://f1-sql.com/projects/formula-one-database/
 
     .EXAMPLE
-        PS C:\> .\file-downloader.ps1 -sourceFilesFullPath "C:\Sequel Formula\Sequel-Formula-Files\" -calendarPath "C:\Sequel Formula\Sequel-Formula\src\raceCalendar.json" -round 01
+        PS C:\> .\file-downloader.ps1 -sourceFilesFullPath "C:\f1-sql\f1-sql-Files\" -calendarPath "C:\f1-sql\f1-sql\src\raceCalendar.json" -round 01
 
         This will download the files for round 01 to the location provided using the specified calendar to get the round information.
 

@@ -28,17 +28,17 @@
 
     .NOTES
         Tags: FormulaOne, F1, Database, Data.
-        Author: Richard Howell, sequelformula.com
+        Author: Richard Howell, f1-sql.com
 
-        Website: https://sequel-formula.com
-        Copyright: (c) 2024 by Sequel Formula, licensed under MIT
+        Website: https://f1-sql.com
+        Copyright: (c) 2024 by F1 SQL, licensed under MIT
         License: MIT https://opensource.org/licenses/MIT
 
     .LINK
-        https://sequel-formula.com
+        https://f1-sql.com
 
     .EXAMPLE
-        PS C:\> .\build_database.ps1 -databaseName SequelFormulaDevTest -sqlInstance localhost -cleanInstance $false -backupDatabase $false -fileLocation "D:\Sequel Formula\Sequel-Formula-Files" -schemaLocation "D:\Sequel Formula\Sequel-Formula-Database" -round 3        
+        PS C:\> .\build_database.ps1 -databaseName F1SQL -sqlInstance localhost -cleanInstance $false -backupDatabase $false -fileLocation "D:\f1-sql\f1-sql-Files" -schemaLocation "D:\f1-sql\f1-sql-Database" -round 3        
     #>
 
     [CmdletBinding()]
