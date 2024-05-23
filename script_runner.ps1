@@ -6,7 +6,7 @@
         Gets the race round, race name and required dates so that the build database processes can be run.
 
     .PARAMETER fileLocation
-        The location of the f1 sql files
+        The location of the project files
         
     .PARAMETER round
         The round that you are running the script for, this is taken from the calendar JSON
@@ -33,8 +33,39 @@
         $fileLocation
         )
 
+$logName = 'F1SQL-RunnerLog-'
+$logFileName = $logName + (Get-Date -f yyyy-MM-dd-HH-mm) + ".log"
+$logFullPath =  -join($fileLocation,'logs\',$logFileName)
+$logFileLimit = (Get-Date).AddDays(-15)
+
+if(-Not(Test-Path -Path $logFullPath -PathType Leaf))
+{
+    try 
+    {
+        $null =  New-Item -ItemType File -Path $logFullPath -Force -ErrorAction Stop
+        Add-Content -Path $logFullPath -Value "$(Get-Date -f yyyy-MM-dd-HH-mm) - The log file '$logFileName' has been created"
+    }
+    catch 
+    {
+        Add-Content -Path $logFullPath -Value "$(Get-Date -f yyyy-MM-dd-HH-mm) - Unable to log file in '$logFullPath'. The Error was: $error"
+    }
+}
+
+try {
+    Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - Attempting to delete old log files"
+    Get-ChildItem -Path $logFullPath -Recurse -Force | Where-Object { !$_.PSIsContainer -and $_.CreationTime -lt $logFileLimit } | Remove-Item -Force
+    Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - Old log files deleted"
+
+}
+catch {
+    Add-Content -Path $logFullPath -Value "$(Get-Date -f yyyy-MM-dd-HH-mm) - Unable to delete old log files from '$logFullPath'. The Error was: $error"
+}
+
+Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - Attempting to delete old log files"
 $currentDate = (Get-Date)
+Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - Attempting to delete old log files"
 $today = $currentDate.Date
+Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - Attempting to delete old log files"
 $dayOfWeek = [int]$currentDate.DayOfWeek
 
 if ($dayOfWeek -eq 0) {
@@ -44,53 +75,58 @@ if ($dayOfWeek -eq 0) {
 $daysToPreviousFriday = $dayOfWeek + 2
 $daysToPreviousSunday = $dayOfWeek
 
+Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - Getting the friday of the previous week"
 $fridayDate = $currentDate.AddDays(-$daysToPreviousFriday).Date
+Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $fridayDate found, for the previous Sunday."
+Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - Getting Sunday of the previous week"
 $sundayDate = $currentDate.AddDays(-$daysToPreviousSunday).Date
+Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $sundayDate found, for the previous Sunday."
 
-$fileLocation = "D:\workspace\F1-SQL\f1-sql\"
 $scriptName = "build_database.ps1"
 $jsonPath = -join($fileLocation,"\raceCalendar.json")
 
 if(Test-Path $fileLocation)
 {
-    Write-Host "$fileLocation Exists" -ForegroundColor Green
+    Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $fileLocation Exists"
     if(Test-Path $jsonPath -PathType Leaf)
     {
-        Write-Host "Race Calendar Exists" -ForegroundColor Green
+        Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $jsonPath Exists"
         $raceCalendarStr = Get-Content $jsonPath | Out-String
         try {
             $raceCalendar = $raceCalendarStr | ConvertFrom-Json
         }
         catch {
-            Write-Host "There was an error processing the JSON" -ForegroundColor Red
+            Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - There was an error processing the JSON, The Error was: $error"
             Exit
-        }        
+        }
+
         $selectedRace = $raceCalendar.Formula1RaceCalendar | Where-Object { $_.Date -ge $fridayDate.ToString("yyyy-MM-dd") -and $_.Date -le $sundayDate.ToString("yyyy-MM-dd") }
         
         foreach ($race in $selectedRace) {
+            Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - Getting parameters from JSON"
             $raceDateStr = $race.Date
             $raceDate = [datetime]$raceDateStr
             $round = $race.Round   
-            $raceName = $race.RaceName 
+            $processDate = $race.ProcessDate
         }
 
-        $mondayAfterRace = $raceDate.AddDays(1).Date
+        Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $raceDate found, looks like this is round $round"
 
-        if($today -eq $mondayAfterRace)
+        if($today -eq $processDate)
         {
-            Write-Host "Let's Begin"  
+            Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - Process date is today, attempting to begin" 
             $commandPath = -join($fileLocation,$scriptName)
             Invoke-Expression "$commandPath -databaseName SequelFormula -sqlInstance 'RIS-001\SQLEXPRESS16','RIS-001\SQLEXPRESS17','RIS-001\SQLEXPRESS19','RIS-001\SQLEXPRESS22' -cleanInstance $true -backupDatabase $true -downloadzip $true -round $round" 
         } else 
         {
-            Write-Host "$today isn't the Monday after the race"
+            Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $today isn't the process date, ending"
             Exit
         }
     }else {
-        Write-Host "Race Calendar Doesn't Exist" -ForegroundColor Red
+        Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $jsonPath doesn't exist"
         Exit
     }
 } else {
-    Write-Host "Location Provided Doesn't Exist" -ForegroundColor Red
+    Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $fileLocation provided doesn't exist"
     Exit
 }
