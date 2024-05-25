@@ -83,15 +83,15 @@ $sundayDate = $currentDate.AddDays(-$daysToPreviousSunday).Date
 Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $sundayDate found, for the previous Sunday."
 
 $scriptName = "build_database.ps1"
-$jsonPath = -join($fileLocation,"\raceCalendar.json")
+$raceCalendarPath = -join($fileLocation,"\raceCalendar.json")
 
 if(Test-Path $fileLocation)
 {
     Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $fileLocation Exists"
-    if(Test-Path $jsonPath -PathType Leaf)
+    if(Test-Path $raceCalendarPath -PathType Leaf)
     {
-        Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $jsonPath Exists"
-        $raceCalendarStr = Get-Content $jsonPath | Out-String
+        Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $raceCalendarPath Exists"
+        $raceCalendarStr = Get-Content $raceCalendarPath | Out-String
         try {
             $raceCalendar = $raceCalendarStr | ConvertFrom-Json
         }
@@ -114,9 +114,15 @@ if(Test-Path $fileLocation)
 
         if($today -eq $processDate)
         {
-            Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - Process date is today, attempting to begin" 
-            $commandPath = -join($fileLocation,$scriptName)
-            Invoke-Expression "$commandPath -databaseName SequelFormula -sqlInstance 'RIS-001\SQLEXPRESS16','RIS-001\SQLEXPRESS17','RIS-001\SQLEXPRESS19','RIS-001\SQLEXPRESS22' -cleanInstance $true -backupDatabase $true -downloadzip $true -round $round" 
+            Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - Process date is today, attempting to begin"
+            Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - Attempting to download files" 
+            $raceFilesPath = -join($fileLocation,"\src\files")
+            $fileDownloaderPath -join($fileLocation,"file-downloader.ps1")
+            
+            Invoke-Expression "$fileDownloaderPath -sourceFilesFullPath $raceFilesPath -calendarPath $raceCalendarPath -round $round"
+            Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - Running database builder" 
+            $buildCommandPath = -join($fileLocation,$scriptName)
+            Invoke-Expression "$buildCommandPath -databaseName SequelFormula -sqlInstance 'RIS-001\SQLEXPRESS16','RIS-001\SQLEXPRESS17','RIS-001\SQLEXPRESS19','RIS-001\SQLEXPRESS22' -cleanInstance $true -backupDatabase $true -downloadzip $true -round $round" 
         } else 
         {
             Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $today isn't the process date, ending"
