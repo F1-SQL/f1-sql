@@ -68,6 +68,14 @@
         
     $global:progressPreference = 'silentlyContinue' 
 
+    Write-Host "INFO: Attempting to start SQL Server services" -ForegroundColor Yellow
+    try {
+        Get-Service | Where-Object { ($_.Name -like "*SQLEXPRESS*") -and ($_.Status -eq "Stopped") -and ($_.Name -NotLike "*TELEMETRY*") -and ($_.Name -NotLike "*Agent*") } | Start-Service
+    } catch {
+        Write-Host "ERROR: Some of the SQL Server services failed to start" -ForegroundColor Red
+        Exit
+    }
+
     $currentYear = (Get-Date).Year.ToString()
     $rootpath = $PSScriptRoot
     
@@ -592,3 +600,9 @@
 
     Write-Host "END: Sequel Formula has completed" -ForegroundColor Green
     
+    Write-Host "INFO: Attempting to stop SQL Server services" -ForegroundColor Yellow
+    try {
+        Get-Service | Where-Object { ($_.Name -like "*SQLEXPRESS*") -and ($_.Status -eq "Running") -and ($_.Name -NotLike "*TELEMETRY*") -and ($_.Name -NotLike "*Agent*") } | Stop-Service
+    } catch {
+        Write-Host "ERROR: Some of the SQL Server services failed to stop" -ForegroundColor Red        
+    }
