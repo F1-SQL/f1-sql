@@ -82,7 +82,7 @@ Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - Getti
 $sundayDate = $currentDate.AddDays(-$daysToPreviousSunday).Date
 Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $sundayDate found, for the previous Sunday."
 
-$scriptName = "build_database.ps1"
+$buildScriptName = "build_database.ps1"
 $raceCalendarPath = -join($fileLocation,"\raceCalendar.json")
 
 if(Test-Path $fileLocation)
@@ -121,7 +121,7 @@ if(Test-Path $fileLocation)
             
             Invoke-Expression "$fileDownloaderPath -sourceFilesFullPath $raceFilesPath -calendarPath $raceCalendarPath -round $round"
             Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - Running database builder" 
-            $buildCommandPath = -join($fileLocation,$scriptName)
+            $buildCommandPath = -join($fileLocation,$buildScriptName)
             Invoke-Expression "$buildCommandPath -databaseName SequelFormula -sqlInstance 'RIS-001\SQLEXPRESS16','RIS-001\SQLEXPRESS17','RIS-001\SQLEXPRESS19','RIS-001\SQLEXPRESS22' -cleanInstance $true -backupDatabase $true -downloadzip $true -round $round" 
         } else 
         {
@@ -129,7 +129,7 @@ if(Test-Path $fileLocation)
             Exit
         }
     }else {
-        Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $jsonPath doesn't exist"
+        Add-Content -Path $logFullPath -Value "$(Get-Date -f "yyyy-MM-dd-HH-mm") - $raceCalendarPath doesn't exist"
         Exit
     }
 } else {
