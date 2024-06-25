@@ -18,7 +18,7 @@ If any data is missing or incorrect please [submit an issue](https://github.com/
 
 ## Documentation
 
-If you are looking for documentation that is available [here](https://F1-SQL.com/)
+If you are looking for documentation that is available [here](https://F1SQL.com/)
 
 ### Credits 
 
