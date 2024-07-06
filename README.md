@@ -1,9 +1,9 @@
 ![](images/git-banner.png)
 
-[![GitHub Release](https://img.shields.io/github/v/release/F1-SQL/F1-SQL?style=for-the-badge&labelColor=%23333&color=%23d40000&)](https://github.com/F1-SQL/F1-SQL/releases)
-[![GitHub License](https://img.shields.io/github/license/F1-SQL/F1-SQL?style=for-the-badge&labelColor=%23333&color=%23d40000)](https://creativecommons.org/licenses/by/4.0/)
-[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/F1-SQL/F1-SQL/total?style=for-the-badge&labelColor=%23333&color=%23d40000)](https://github.com/f1db/f1db/releases)
-[![GitHub Repo stars](https://img.shields.io/github/stars/F1-SQL/F1-SQL?style=for-the-badge&labelColor=%23333&color=%23d40000)](https://github.com/F1-SQL/F1-SQL/stargazers)
+[![GitHub Release](https://img.shields.io/github/v/release/F1-SQL/f1-sql?style=for-the-badge&labelColor=%23333&color=%23d40000&)](https://github.com/F1-SQL/F1-SQL/releases)
+[![GitHub License](https://img.shields.io/github/license/F1-SQL/f1-sql?style=for-the-badge&labelColor=%23333&color=%23d40000)](https://creativecommons.org/licenses/by/4.0/)
+[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/F1-SQL/f1-sql/total?style=for-the-badge&labelColor=%23333&color=%23d40000)](https://github.com/f1db/f1db/releases)
+[![GitHub Repo stars](https://img.shields.io/github/stars/F1-SQL/f1-sql?style=for-the-badge&labelColor=%23333&color=%23d40000)](https://github.com/F1-SQL/f1-sql/stargazers)
 
 # F1 SQL
 F1 SQL is a Microsoft SQL Server database designed and developed using the freely available data from [Ergast API](https://ergast.com/mrd/) 
