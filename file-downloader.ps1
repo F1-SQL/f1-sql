@@ -70,16 +70,17 @@ foreach ($race in $selectedRace) {
 }
 
 $raceName = $raceName.replace(' ','_')
+$releaseVersion = -join($currentYear,".",$round,".","0")
 
-Write-Host "INFO: Creating the path for the selected race" -ForegroundColor Yellow
-$path = -join($sourceFilesFullPath,"/",$raceName,"_",$currentYear)
+Write-Host "INFO: Creating the path for the selected release" -ForegroundColor Yellow
+$path = -join($sourceFilesFullPath,"/",$releaseVersion)
 
 if(!(Test-Path -Path $path))
 {
-    Write-Host "INFO: Creating the directory for the selected race" -ForegroundColor Yellow
-    New-Item -Path $sourceFilesFullPath -Name $raceName -ItemType Directory -Force
+    Write-Host "INFO: Creating the directory for the selected release" -ForegroundColor Yellow
+    New-Item -Path $sourceFilesFullPath -Name $releaseVersion -ItemType Directory -Force
 } else {
-    Write-Host "SKIP: Not creating directory for the selected race as it already exists" -ForegroundColor Red
+    Write-Host "SKIP: Not creating directory for the selected release as it already exists" -ForegroundColor Red
 }
 
 $meetingPath = -join($path,"/","meetings",".csv")
@@ -236,12 +237,13 @@ catch {
     Write-Host "ERROR: Downloading $teamRadioCSV to $teamRadioPath" -ForegroundColor Red    
 }
 
+$expectedFiles = 9
 $allFiles = Get-ChildItem $path -Filter *.csv
 $total = $allFiles | Measure-Object | ForEach-Object { $_.Count }  
 
 if($total -ne 9)
 {
-    Write-Host "Error: $total Files were downloaded to $path" -ForegroundColor Red
+    Write-Host "Error: $total Files were downloaded to $path we expected $expectedFiles" -ForegroundColor Red
 } else {    
     Write-Host "Success: $total Files were downloaded to $path" -ForegroundColor Green    
 }
