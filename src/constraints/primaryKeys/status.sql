@@ -1,1 +1,0 @@
-ALTER TABLE dbo.status ADD CONSTRAINT PK_status_statusId PRIMARY KEY CLUSTERED (statusId ASC);

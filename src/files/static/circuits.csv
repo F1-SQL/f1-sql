@@ -1,0 +1,23 @@
+circuit_key,circuit_short_name,name,location_key,country_key,direction_key,type_key,alt,url
+10,melbourne,Albert Park Grand Prix Circuit,40,5,1,1,10,http://en.wikipedia.org/wiki/Melbourne_Grand_Prix_Circuit
+63,sakhir,Bahrain International Circuit,63,36,1,2,7,http://en.wikipedia.org/wiki/Bahrain_International_Circuit
+15,catalunya,Circuit de Barcelona-Catalunya,45,1,1,2,109,http://en.wikipedia.org/wiki/Circuit_de_Barcelona-Catalunya
+22,Monte Carlo,Circuit de Monaco,44,114,1,1,7,http://en.wikipedia.org/wiki/Circuit_de_Monaco
+23,Montreal,Circuit Gilles Villeneuve,46,46,1,1,13,http://en.wikipedia.org/wiki/Circuit_Gilles_Villeneuve
+2,silverstone,Silverstone Circuit,66,2,1,2,153,http://en.wikipedia.org/wiki/Silverstone_Circuit
+4,hungaroring,Hungaroring,11,14,1,2,264,http://en.wikipedia.org/wiki/Hungaroring
+7,Spa-Francorchamps,Circuit de Spa-Francorchamps,68,16,1,2,401,http://en.wikipedia.org/wiki/Circuit_de_Spa-Francorchamps
+39,monza,Autodromo Nazionale di Monza,47,13,1,2,162,http://en.wikipedia.org/wiki/Autodromo_Nazionale_Monza
+61,Singapore,Marina Bay Street Circuit,39,157,2,1,18,http://en.wikipedia.org/wiki/Marina_Bay_Street_Circuit
+14,interlagos,Autódromo José Carlos Pace,64,10,2,2,785,http://en.wikipedia.org/wiki/Aut%C3%B3dromo_Jos%C3%A9_Carlos_Pace
+46,suzuka,Suzuka Circuit,71,4,3,2,45,http://en.wikipedia.org/wiki/Suzuka_Circuit
+152,Las Vegas,Las Vegas Strip Street Circuit,32,19,2,1,642,https://en.wikipedia.org/wiki/Las_Vegas_Grand_Prix#Circuit
+70,Yas Marina Circuit,Yas Marina Circuit,1,21,2,2,3,http://en.wikipedia.org/wiki/Yas_Marina_Circuit
+65,Mexico City,Autódromo Hermanos Rodríguez,41,8,1,2,2227,http://en.wikipedia.org/wiki/Aut%C3%B3dromo_Hermanos_Rodr%C3%ADguez
+55,zandvoort,Circuit Park Zandvoort,75,133,1,2,6,http://en.wikipedia.org/wiki/Circuit_Zandvoort
+9,Austin,Circuit of the Americas,5,19,2,2,161,http://en.wikipedia.org/wiki/Circuit_of_the_Americas
+19,Spielberg,Red Bull Ring,69,17,1,2,678,http://en.wikipedia.org/wiki/Red_Bull_Ring
+144,baku,Baku City Circuit,6,30,2,1,-7,http://en.wikipedia.org/wiki/Baku_City_Circuit
+149,jeddah,Jeddah Corniche Circuit,28,153,2,1,15,http://en.wikipedia.org/wiki/Jeddah_Street_Circuit
+150,Lusail,Losail International Circuit,3,149,1,2,12,http://en.wikipedia.org/wiki/Losail_International_Circuit
+151,miami,Miami International Autodrome,42,19,2,1,0,http://en.wikipedia.org/wiki/Miami_International_Autodrome

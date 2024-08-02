@@ -1,1 +1,0 @@
-ALTER TABLE dbo.sprintResults ADD CONSTRAINT PK_sprintResults_sprintResultId PRIMARY KEY CLUSTERED (resultId ASC);

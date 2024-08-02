@@ -1,0 +1,1 @@
+ALTER TABLE dbo.constructorResults ADD CONSTRAINT PK_constructorResults_constructorResultsId PRIMARY KEY CLUSTERED (constructorResultsId ASC);

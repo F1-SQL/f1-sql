@@ -1,1 +1,0 @@
-ALTER TABLE dbo.lapTimes ADD CONSTRAINT PK_lapTimes_raceId_driverId_lap PRIMARY KEY CLUSTERED (raceId ASC, driverId ASC, lap ASC);

@@ -1,0 +1,9 @@
+ALTER TABLE dbo.sprintResults ADD CONSTRAINT DF_sprintResults_raceId DEFAULT ((0)) FOR raceId;
+ALTER TABLE dbo.sprintResults ADD CONSTRAINT DF_sprintResults_driverId DEFAULT ((0)) FOR driverId;
+ALTER TABLE dbo.sprintResults ADD CONSTRAINT DF_sprintResults_constructorId DEFAULT ((0)) FOR constructorId;
+ALTER TABLE dbo.sprintResults ADD CONSTRAINT DF_sprintResults_number DEFAULT ((0)) FOR number;
+ALTER TABLE dbo.sprintResults ADD CONSTRAINT DF_sprintResults_grid DEFAULT ((0)) FOR grid;
+ALTER TABLE dbo.sprintResults ADD CONSTRAINT DF_sprintResults_positionOrder DEFAULT ((0)) FOR positionOrder;
+ALTER TABLE dbo.sprintResults ADD CONSTRAINT DF_sprintResults_points DEFAULT ((0)) FOR points;
+ALTER TABLE dbo.sprintResults ADD CONSTRAINT DF_sprintResults_laps DEFAULT ((0)) FOR laps;
+ALTER TABLE dbo.sprintResults ADD CONSTRAINT DF_sprintResults_statusId DEFAULT ((0)) FOR statusId;

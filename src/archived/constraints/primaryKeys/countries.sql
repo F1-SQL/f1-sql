@@ -1,0 +1,1 @@
+ALTER TABLE dbo.countries ADD CONSTRAINT PK_countries_countryID PRIMARY KEY CLUSTERED (countryID ASC);

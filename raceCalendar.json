@@ -1,0 +1,221 @@
+{
+    "Formula1RaceCalendar": [
+      {
+        "RaceName": "Bahrain Grand Prix",
+        "MeetStartDate": "2024-02-29",
+        "RaceDate": "2024-03-02",
+        "DateToProcess": "2024-03-03",
+        "Location": "Sakhir, Bahrain",
+        "Circuit": "Bahrain International Circuit",
+        "Round": 1
+      },
+      {
+        "RaceName": "Saudi Arabian Grand Prix",
+        "MeetStartDate": "2024-03-07",
+        "RaceDate": "2024-03-09",
+        "DateToProcess": "2024-03-10",
+        "Location": "Jeddah, Saudi Arabia",
+        "Circuit": "Jeddah Corniche Circuit",
+        "Round": 2
+      },
+      {
+        "RaceName": "Australian Grand Prix",
+        "MeetStartDate": "2024-03-22",
+        "RaceDate": "2024-03-24",
+        "DateToProcess": "2024-03-25",
+        "Location": "Melbourne, Australia",
+        "Circuit": "Albert Park Circuit",
+        "Round": 3
+      },
+      {
+        "RaceName": "Japanese Grand Prix",
+        "MeetStartDate": "2024-04-05",
+        "RaceDate": "2024-04-07",
+        "DateToProcess": "2024-04-08",
+        "Location": "Suzuka, Japan",
+        "Circuit": "Suzuka International Racing Course",
+        "Round": 4
+      },
+      {
+        "RaceName": "Chinese Grand Prix",
+        "MeetStartDate": "2024-04-19",
+        "RaceDate": "2024-04-21",
+        "DateToProcess": "2024-04-22",
+        "Location": "Shanghai, China",
+        "Circuit": "Shanghai International Circuit",
+        "Round": 5
+      },
+      {
+        "RaceName": "Miami Grand Prix",
+        "MeetStartDate": "2024-04-03",
+        "RaceDate": "2024-05-05",
+        "DateToProcess": "2024-05-06",
+        "Location": "Miami, Florida",
+        "Circuit": "Miami International Autodrome",
+        "Round": 6
+      },
+      {
+        "RaceName": "Italian Grand Prix",
+        "MeetStartDate": "2024-05-17",
+        "RaceDate": "2024-05-19",
+        "DateToProcess": "2024-05-20",
+        "Location": "Imola, Italy",
+        "Circuit": "Autodromo Enzo E Dino Ferrari",
+        "Round": 7
+      },
+      {
+        "RaceName": "Monaco Grand Prix",
+        "MeetStartDate": "2024-05-24",
+        "RaceDate": "2024-05-26",
+        "DateToProcess": "2024-05-27",
+        "Location": "Monte Carlo, Monaco",
+        "Circuit": "Circuit de Monaco",
+        "Round": 8
+      },
+      {
+        "RaceName": "Canadian Grand Prix",
+        "MeetStartDate": "2024-06-07",
+        "RaceDate": "2024-06-09",
+        "DateToProcess": "2024-06-10",
+        "Location": "Montreal, Canada",
+        "Circuit": "Circuit Gilles-Villeneuve",
+        "Round": 9
+      },
+      {
+        "RaceName": "Spanish Grand Prix",
+        "MeetStartDate": "2024-06-21",
+        "RaceDate": "2024-06-23",
+        "DateToProcess": "2024-06-24",
+        "Location": "Montmeló, Barcelona",
+        "Circuit": "Circuit De Barcelona-Catalunya",
+        "Round": 10
+      },
+      {
+        "RaceName": "Austrian Grand Prix",
+        "MeetStartDate": "2024-06-28",
+        "RaceDate": "2024-06-30",
+        "DateToProcess": "2024-07-01",
+        "Location": "Spielberg, Austria",
+        "Circuit": "Red Bull Ring",
+        "Round": 11
+      },
+      {
+        "RaceName": "British Grand Prix",
+        "MeetStartDate": "2024-07-05",
+        "RaceDate": "2024-07-07",
+        "DateToProcess": "2024-07-08",
+        "Location": "Silverstone, United Kingdom",
+        "Circuit": "Silverstone Circuit",
+        "Round": 12
+      },
+      {
+        "RaceName": "Hungarian Grand Prix",
+        "MeetStartDate": "2024-07-19",
+        "RaceDate": "2024-07-21",
+        "DateToProcess": "2024-07-22",
+        "Location": "Mogyoród, Hungary",
+        "Circuit": "Hungaroring",
+        "Round": 13
+      },
+      {
+        "RaceName": "Belgium Grand Prix",
+        "MeetStartDate": "2024-07-26",
+        "RaceDate": "2024-07-28",
+        "DateToProcess": "2024-07-29",
+        "Location": "Francorchamps, Belgium",
+        "Circuit": "Circuit De Spa-Francorchamps",
+        "Round": 14
+      },
+      {
+        "RaceName": "Netherlands Grand Prix",
+        "MeetStartDate": "2024-08-23",
+        "RaceDate": "2024-08-25",
+        "DateToProcess": "2024-08-25",
+        "Location": "Zandvoort, Netherlands",
+        "Circuit": "Circuit Zandvoort",
+        "Round": 15
+      },
+      {
+        "RaceName": "Italian Grand Prix",
+        "MeetStartDate": "2024-08-30",
+        "RaceDate": "2024-09-01",
+        "DateToProcess": "2024-09-01",
+        "Location": "Spielberg, Austria",
+        "Circuit": "Monza, Italy",
+        "Round": 16
+      },
+      {
+        "RaceName": "Azerbaijan Grand Prix",
+        "MeetStartDate": "2024-09-13",
+        "RaceDate": "2024-09-15",
+        "DateToProcess": "2024-09-16",
+        "Location": "Baku, Azerbaijan",
+        "Circuit": "Baku City Circuit",
+        "Round": 17
+      },
+      {
+        "RaceName": "Singapore Grand Prix",
+        "MeetStartDate": "2024-09-20",
+        "RaceDate": "2024-09-22",
+        "DateToProcess": "2024-09-23",
+        "Location": "Marina Bay, Singapore",
+        "Circuit": "Marina Bay Street Circuit",
+        "Round": 18
+      },
+      {
+        "RaceName": "United States Grand Prix",
+        "MeetStartDate": "2024-10-18",
+        "RaceDate": "2024-10-20",
+        "DateToProcess": "2024-10-21",
+        "Location": "Austin, Texas",
+        "Circuit": "Circuit Of The Americas",
+        "Round": 19
+      },
+      {
+        "RaceName": "Mexican Grand Prix",
+        "MeetStartDate": "2024-10-25",
+        "RaceDate": "2024-10-27",
+        "DateToProcess": "2024-10-28",
+        "Location": "Mexico City, Mexico",
+        "Circuit": "AutóDromo Hermanos RodríGuez",
+        "Round": 20
+      },
+      {
+        "RaceName": "Brazil Grand Prix",
+        "MeetStartDate": "2024-11-01",
+        "RaceDate": "2024-11-03",
+        "DateToProcess": "2024-11-04",
+        "Location": "Interlagos, Brazil",
+        "Circuit": "AutóDromo José Carlos Pace",
+        "Round": 21
+      },
+      {
+        "RaceName": "Las Vegas Grand Prix",
+        "MeetStartDate": "2024-11-21",
+        "RaceDate": "2024-11-23",
+        "DateToProcess": "2024-11-24",
+        "Location": "Las Vegas, Nevada",
+        "Circuit": "Las Vegas Strip Circuit",
+        "Round": 22
+      },
+      {
+        "RaceName": "Qatar Grand Prix",
+        "MeetStartDate": "2024-11-29",
+        "RaceDate": "2024-12-01",
+        "DateToProcess": "2024-12-02",
+        "Location": "Lusail, Qatar",
+        "Circuit": "Lusail International Circuit",
+        "Round": 23
+      },
+      {
+        "RaceName": "Abu Dhabi Grand Prix",
+        "MeetStartDate": "2024-12-06",
+        "RaceDate": "2024-12-08",
+        "DateToProcess": "2024-12-09",
+        "Location": "Yas Island, Abu Dhabi",
+        "Circuit": "Yas Marina Circuit",
+        "Round": 24
+      }
+    ]
+  }
+  

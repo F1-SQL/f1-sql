@@ -1,1 +1,0 @@
-ALTER TABLE [dbo].[constructors] ADD CONSTRAINT FK_constructors_NationalityID FOREIGN KEY (NationalityID) REFERENCES [dbo].[nationalities] (NationalityID);

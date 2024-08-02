@@ -1,1 +1,0 @@
-ALTER TABLE dbo.locations ADD CONSTRAINT PK_locations_locationID PRIMARY KEY CLUSTERED (locationID ASC);

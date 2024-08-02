@@ -1,0 +1,83 @@
+INSERT INTO [dbo].[resultsNew]
+(
+	[raceId],
+	[resultTypeId], 
+	[driverId], 
+	[constructorId], 
+	[number], 
+	[grid], 
+	[position], 
+	[positionOrder], 
+	[points], 
+	[laps], 
+	[milliseconds], 
+	[fastestLap], 
+	[rank], 
+	[statusId], 
+	[positionTextID], 
+	[fastestLapTime], 
+	[fastestLapSpeed], 
+	[time]
+)
+SELECT 
+	[raceid],
+	'1',
+	[driverId], 
+	[constructorId], 
+	[number], 
+	[grid], 
+	[position], 
+	[positionOrder], 
+	[points], 
+	[laps], 
+	[milliseconds], 
+	[fastestLap], 
+	[rank], 
+	[statusId], 
+	[positionTextID], 
+	[fastestLapTime], 
+	[fastestLapSpeed],
+	[time]
+FROM 
+	[dbo].[results]
+
+GO
+
+INSERT INTO [dbo].[resultsNew]
+(
+	[raceId],
+	[resultTypeId], 
+	[driverId],
+	[constructorId], 
+	[number], 
+	[grid], 
+	[position], 
+	[positionOrder], 
+	[points], 
+	[laps], 
+	[milliseconds], 
+	[fastestLap],  
+	[statusId], 
+	[positionTextID], 
+	[fastestLapTime],  
+	[time]
+)
+SELECT 
+	[raceid],
+	'2',
+	[driverId], 
+	[constructorId], 
+	[number], 
+	[grid], 
+	[position],
+	[positionOrder], 
+	[points], 
+	[laps], 
+	[milliseconds], 
+	[fastestLap],  
+	[statusId], 
+	[positionTextID], 
+	[fastestLapTime],  
+	[time]
+FROM 
+	[dbo].[sprintResults]

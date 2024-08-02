@@ -1,1 +1,0 @@
-ALTER TABLE dbo.driverNumbers ADD CONSTRAINT PK_driverNumbers_driverNumberID PRIMARY KEY CLUSTERED (driverNumberID ASC);

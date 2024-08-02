@@ -1,0 +1,1 @@
+ALTER TABLE dbo.positionText ADD CONSTRAINT PK_positionText_positionTextID PRIMARY KEY CLUSTERED (positionTextID ASC);
