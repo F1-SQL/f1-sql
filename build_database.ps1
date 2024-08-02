@@ -112,12 +112,16 @@
     Write-Host "INFO: Building race name and year ($currentYear)" -ForegroundColor Yellow
     $raceName += "_" + $currentYear
     
+    $releaseVersion = -join($currentYear,".",$round,".","0")
+
+    Write-Host "INFO: Release version has been created $releaseVersion"
+
     $staticFilesFullPath = $fileLocation + "\static\"
 
-    $sourceFilesFullPath = -join($fileLocation,"\",$raceName,"\")
+    $sourceFilesFullPath = -join($fileLocation,"\",$releaseVersion,"\")
 
     $backupFolder = "\backups\"
-    $backupLocation = -join($rootpath,$backupFolder,$raceName,"\")
+    $backupLocation = -join($rootpath,$backupFolder,$releaseVersion,"\")
     
     $scriptFolder = "\scripts\"
     $scriptLocation = -join($schemaLocation,$scriptFolder)
@@ -135,7 +139,7 @@
         Write-Host "WARN: Backup directory check skipped" -ForegroundColor Magenta
     }   
 
-    Write-Host "INFO: Getting all of the .csv files from" $sourceFilesFullPath -ForegroundColor Yellow    
+    Write-Host "INFO: Getting all of the .csv files from $sourceFilesFullPath" -ForegroundColor Yellow    
     $csvFiles = Get-ChildItem $sourceFilesFullPath -Filter *.csv
     $staticFiles = Get-ChildItem $staticFilesFullPath -Filter *.csv 
     
@@ -144,14 +148,14 @@
 
     $totalFilesFound = $csvFileCount + $staticFileCount    
 
-    Write-Host "INFO: A total of" $totalFilesFound ".csv files were found" -ForegroundColor Yellow    
+    Write-Host "INFO: A total of $totalFilesFound .csv files were found" -ForegroundColor Yellow    
     
     foreach ($instance in $sqlInstance) {
         
         $database = Get-DbaDatabase -SqlInstance $sqlInstance -Database $databaseName
 
         if ($database) {
-            Write-Host "WARN: Database already exists $databaseName from $instance" -ForegroundColor Magenta
+            Write-Host "WARN: Database already exists $databaseName on $instance" -ForegroundColor Magenta
             Write-Host "INFO: Attempting to drop $databaseName from $instance" -ForegroundColor Yellow
             Remove-DbaDatabase -SqlInstance $sqlInstance -Database $databaseName -Confirm:$false
             Write-Host "INFO: Attempting to create $databaseName" -ForegroundColor Yellow
