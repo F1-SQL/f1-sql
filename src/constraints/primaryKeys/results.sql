@@ -1,1 +1,0 @@
-ALTER TABLE dbo.results ADD CONSTRAINT PK_results_resultId PRIMARY KEY CLUSTERED (resultId ASC);

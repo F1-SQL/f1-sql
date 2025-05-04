@@ -1,3 +1,0 @@
-ALTER TABLE [dbo].[driverStandings] ADD CONSTRAINT FK_DriverStandings_DriverID FOREIGN KEY (driverID) REFERENCES dbo.drivers (driverID);
-ALTER TABLE [dbo].[driverStandings] ADD CONSTRAINT FK_DriverStandings_RaceID FOREIGN KEY (RaceID) REFERENCES dbo.races (RaceID);
-ALTER TABLE [dbo].[driverStandings] ADD CONSTRAINT FK_DriverStandings_PositionTextID FOREIGN KEY (positionTextID) REFERENCES [dbo].[positionText] (positionTextID);

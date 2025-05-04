@@ -1,0 +1,1 @@
+ALTER TABLE dbo.circuits ADD CONSTRAINT PK_circuits_circuitId PRIMARY KEY CLUSTERED (circuitId ASC);

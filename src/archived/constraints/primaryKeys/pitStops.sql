@@ -1,0 +1,1 @@
+ALTER TABLE dbo.pitStops ADD CONSTRAINT PK_pitStops_raceId_driverId_stop PRIMARY KEY CLUSTERED (raceId ASC, driverId ASC, stop ASC);
