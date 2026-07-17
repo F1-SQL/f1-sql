@@ -35,12 +35,13 @@ def _sha(repository: Path) -> str:
 def _documents(
     core_root: Path, race: RaceSummary, included_rounds: int
 ) -> dict[str, bytes]:
+    race_date = race.scheduled_at_utc.strftime("%d/%m/%Y")
     notes = (
-        f"# F1 SQL {race.season}.{race.round}.0\n\n"
-        f"Automated cumulative release through round {race.round}, "
-        f"including {included_rounds} settled rounds.\n\n"
-        "The database backup was built and verified on SQL Server 2019, then "
-        "restore-forward tested on SQL Server 2022."
+        f"Adding the race data from the {race.race_name} {race_date} to the database.\n\n"
+        "This is a cumulative roll-up release: all previous race data remains "
+        f"available, and round {race.round} was added to the existing dataset. "
+        f"The release now contains rounds 1 through {race.round} ({included_rounds} "
+        "settled rounds)."
     )
     return {
         name: (core_root / name).read_bytes()

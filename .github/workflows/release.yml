@@ -201,4 +201,4 @@ jobs:
           gh release create "$TARGET" "${assets[@]}" \
             --repo "$GITHUB_REPOSITORY" \
             --title "F1 SQL $TARGET" \
-            --generate-notes
+            --notes-file "release-bundle/$TARGET/release-notes.md"

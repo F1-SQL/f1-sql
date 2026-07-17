@@ -30,6 +30,8 @@ def test_release_workflow_has_double_opt_in_protected_publish_gate() -> None:
     assert "name: production" in text
     assert "permissions:\n      contents: write" in text
     assert "gh release create" in text
+    assert '--notes-file "release-bundle/$TARGET/release-notes.md"' in text
+    assert "--generate-notes" not in text
     assert "release-bundle" in text
 
 
