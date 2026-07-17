@@ -118,10 +118,12 @@ class Result:
     status: str | None
     time: str | None
     fastest_lap: FastestLap | None
+    time_millis: int | None = None
 
     @classmethod
     def from_api(cls, value: Mapping[str, Any]) -> "Result":
         fastest = value.get("FastestLap")
+        time_value = value.get("Time") or {}
         return cls(
             season=int(value["season"]),
             round=int(value["round"]),
@@ -134,8 +136,9 @@ class Result:
             grid=_integer(value.get("grid")),
             laps=_integer(value.get("laps")),
             status=_text(value.get("status")),
-            time=_text(value.get("Time", {}).get("time")),
+            time=_text(time_value.get("time")),
             fastest_lap=FastestLap.from_api(fastest) if fastest else None,
+            time_millis=_integer(time_value.get("millis", time_value.get("milliseconds"))),
         )
 
 

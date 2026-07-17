@@ -52,6 +52,12 @@ def test_time_and_duration_normalization() -> None:
     assert parse_utc("2024-03-02T15:00:00", assume_utc=True) == datetime(2024, 3, 2, 15, tzinfo=UTC)
     assert duration_ms("1:31:44.742") == 5_504_742
     assert duration_ms("1:36.236") == 96_236
+    assert duration_ms("+22.457") == 22_457
+    assert duration_ms("+1 Lap") is None
+    result, _ = normalize_result(
+        replace(_result(), time="+22.457", time_millis=5_526_199), IdentityResolver()
+    )
+    assert result.duration_ms == 5_526_199
 
 
 def test_normalized_records_are_deterministic_and_retain_ids() -> None:
