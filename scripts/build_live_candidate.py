@@ -46,7 +46,6 @@ def main() -> int:
     parser.add_argument("target", type=BuildTarget.parse)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--workspace", type=Path)
-    parser.add_argument("--database-repository", type=Path, required=True)
     args = parser.parse_args()
 
     core_root = Path(__file__).resolve().parents[1]
@@ -76,10 +75,13 @@ def main() -> int:
     fastf1 = FastF1Adapter(settings)
     session = fastf1.load_session(args.target.season, args.target.round, "Race")
 
+    repository_sha = _sha(core_root)
     metadata: dict[str, object] = {
         "schema_version": "2.0.0",
-        "core_repository_sha": _sha(core_root),
-        "database_repository_sha": _sha(args.database_repository),
+        "core_repository_sha": repository_sha,
+        "database_repository_sha": repository_sha,
+        "database_repository": "https://github.com/F1-SQL/f1-sql",
+        "database_schema_path": "database/schema/v2",
         "source_versions": {
             "jolpica": "ergast-compatible-v1",
             "fastf1": fastf1.source_version,

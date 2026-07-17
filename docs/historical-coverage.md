@@ -14,7 +14,7 @@ from a later source.
 | telemetry, continuous intervals, team radio | out of v2 scope | out of v2 scope | deferred by ADR 0002 |
 
 Each backfill batch must record season/round bounds, source fingerprints, row
-counts, known gaps, and the exact core/database repository commits. Legacy
+counts, known gaps, and the exact monorepo commit and schema path. Legacy
 archives remain quarantined until their source terms and provenance are audited
 item by item.
 

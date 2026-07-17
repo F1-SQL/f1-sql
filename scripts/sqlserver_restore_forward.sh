@@ -6,7 +6,7 @@ set -euo pipefail
 container_name="${F1SQL_SQLSERVER_CONTAINER:-f1sql-sqlserver2022}"
 image="${F1SQL_SQLSERVER_IMAGE:-mcr.microsoft.com/mssql/server:2022-latest}"
 core_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-database_root="$(cd "$core_root/../f1-sql-database" && pwd)"
+database_root="$core_root/database"
 
 cleanup() { docker rm -f "$container_name" >/dev/null 2>&1 || true; }
 trap cleanup EXIT

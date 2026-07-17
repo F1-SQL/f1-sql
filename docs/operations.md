@@ -33,7 +33,8 @@ Required production setup before enabling publication:
 3. Add SQL Server 2019 and 2022 integration runners. The integration workflow
    generates disposable SA passwords for each container; no database password
    is stored in repository or environment secrets.
-4. Store the database repository SHA and source versions in the run manifest.
+4. Store the monorepo SHA, `database/schema/v2` path, and source versions in the
+   run manifest.
 5. Enable `F1SQL_RELEASE_BUNDLE_READY` only after the build job produces and
    verifies a complete release bundle.
 6. Add an approval gate after quality, backup, and restore verification.

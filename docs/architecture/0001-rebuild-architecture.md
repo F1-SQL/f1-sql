@@ -27,8 +27,8 @@ after each completed race weekend.
    content and a no-op release decision.
 5. SQL tables will be created from versioned DDL before data is loaded. Schema
    inference and post-import corrective table creation are prohibited.
-6. `f1-sql-core` will consume `f1-sql-database` at an exact Git commit. Release
-   manifests will record both repository commits and all source/library
+6. The core pipeline and SQL schema live in one monorepo. Release manifests
+   record the monorepo commit, schema path/version, and all source/library
    versions.
 7. GitHub Actions will provide scheduled detection and manual dispatch. A
    concurrency lock will prevent two release builds from running at once.
@@ -51,5 +51,5 @@ after each completed race weekend.
 * Initial historical ingestion is separate from the small post-race update.
 * Durable source snapshots are required for reproducible releases; transient
   GitHub Actions caches alone are insufficient.
-* Schema and ingestion changes may require coordinated changes across two
-  repositories, but the pinned schema commit keeps each release reproducible.
+* Schema and ingestion changes are reviewed atomically. The monorepo commit and
+  schema path keep each release reproducible without a second checkout.

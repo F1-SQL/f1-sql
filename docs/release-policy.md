@@ -49,7 +49,7 @@ Each public release contains:
 
 * the compressed SQL Server backup;
 * `manifest.json` with source fingerprints, retrieval times, dependency
-  versions, repository commits, schema version, and row counts;
+  versions, the monorepo commit, schema path/version, and row counts;
 * `quality-report.json`;
 * `checksums.sha256`;
 * `LICENSE-DATA`, `NOTICE`, and `ATTRIBUTION.md`; and

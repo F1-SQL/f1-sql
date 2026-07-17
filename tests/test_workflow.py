@@ -44,6 +44,8 @@ def test_release_workflow_separates_detection_from_validation() -> None:
     assert "scripts/build_live_candidate.py" in text
     assert "scripts/package_candidate_release.py" in text
     assert "needs: [detect, validation, build, restore_forward]" in text
+    assert "repository: F1-SQL/f1-sql-database" not in text
+    assert "--database-repository" not in text
 
 
 def test_security_automation_is_pinned_and_read_only() -> None:
@@ -73,11 +75,9 @@ def test_sqlserver_workflow_has_2019_build_and_2022_restore_forward_jobs() -> No
     assert all(re.fullmatch(r"[0-9a-f]{40}", sha) for _, sha in actions)
 
 
-def test_python_workflow_checks_out_schema_repository() -> None:
+def test_python_workflow_uses_monorepo_checkout() -> None:
     workflow = WORKFLOW.parent / "python.yml"
     text = workflow.read_text(encoding="utf-8")
-    assert "repository: F1-SQL/f1-sql-database" in text
-    assert "path: f1-sql-database" in text
-    assert "F1SQL_REQUIRE_DATABASE_SCHEMA: \"1\"" in text
+    assert "f1-sql-database" not in text
     actions = re.findall(r"uses: ([^\s]+)@([^\s]+)", text)
     assert all(re.fullmatch(r"[0-9a-f]{40}", sha) for _, sha in actions)

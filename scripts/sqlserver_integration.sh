@@ -9,7 +9,7 @@ backup_output="${F1SQL_BACKUP_OUTPUT:-}"
 load_sql="${F1SQL_LOAD_SQL:-}"
 python_bin="${F1SQL_PYTHON:-python3}"
 core_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-database_root="$(cd "$core_root/../f1-sql-database" && pwd)"
+database_root="$core_root/database"
 sqlcmd_path="/opt/mssql-tools18/bin/sqlcmd"
 
 cleanup() {

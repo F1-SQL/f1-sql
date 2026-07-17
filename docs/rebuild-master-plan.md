@@ -2,7 +2,7 @@
 
 * Status: Active
 * Started: 2026-07-17
-* Last updated: 2026-07-17 (Phase 8 production candidate build and SQL Server gates)
+* Last updated: 2026-07-17 (monorepo migration and unified schema/build workflow)
 
 This is the authoritative delivery checklist for the v2 rebuild. A checked item
 means its implementation and proportionate automated verification are present
@@ -18,6 +18,7 @@ item in that phase is complete.
 * [x] Define source ownership and reconciliation rules.
 * [x] Define the rebuild architecture and fail-closed release policy.
 * [x] Define schema-v2 principles and SQL Server 2019 as the baseline.
+* [x] Adopt the monorepo layout for core orchestration and the database schema.
 * [x] Quarantine legacy source material pending a provenance audit.
 * [x] **Acceptance:** project, data, schema, and release boundaries are explicit.
 
@@ -87,7 +88,7 @@ item in that phase is complete.
 * [x] Add provenance, external-identifier, build, release, and schema-history tables.
 * [x] Remove hard-coded database names and table inference.
 * [x] Implement ordered, transactional, idempotent loaders.
-* [x] Pin the database repository commit in the core build configuration and manifest.
+* [x] Pin the monorepo commit and `database/schema/v2` path in the build manifest.
 * [x] Add compatibility views only where legacy meaning can be preserved accurately.
 * [x] Add schema creation, migration, idempotency, and rollback tests.
 * [x] **Acceptance:** a database can be rebuilt from empty SQL Server using snapshots only.

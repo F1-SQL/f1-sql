@@ -101,11 +101,6 @@ jobs:
       F1SQL_BACKUP_OUTPUT: ${{ github.workspace }}/artifacts/F1SqlPhase5.bak
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-        with:
-          repository: F1-SQL/f1-sql-database
-          path: f1-sql-database
-          ref: ${{ vars.F1SQL_DATABASE_REF || 'main' }}
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: "3.11"
@@ -122,8 +117,7 @@ jobs:
           python scripts/build_live_candidate.py \
             "${{ needs.detect.outputs.target }}" \
             --workspace "$GITHUB_WORKSPACE" \
-            --output "$GITHUB_WORKSPACE/candidate" \
-            --database-repository "$GITHUB_WORKSPACE/f1-sql-database"
+            --output "$GITHUB_WORKSPACE/candidate"
       - name: Generate disposable SQL Server password
         run: echo "F1SQL_SQLSERVER_PASSWORD=F1SqlCI!$(openssl rand -hex 16)" >> "$GITHUB_ENV"
       - name: Build and verify SQL Server 2019 backup

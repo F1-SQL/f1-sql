@@ -46,13 +46,14 @@ The ownership and reconciliation rules are documented in
 * [Rebuild architecture](docs/architecture/0001-rebuild-architecture.md)
 * [Source ownership](docs/architecture/0002-source-ownership.md)
 * [Component-specific licensing](docs/architecture/0003-licensing.md)
+* [Monorepo layout](docs/architecture/0004-monorepo-layout.md)
 * [Master rebuild checklist](docs/rebuild-master-plan.md)
 * [Release policy](docs/release-policy.md)
 * [Legacy data provenance audit](docs/legacy-data-audit.md)
 * [Local development](docs/development.md)
 * [Normalization units and tolerances](docs/normalization.md)
 * [Historical coverage policy](docs/historical-coverage.md)
-* [Database schema repository](https://github.com/F1-SQL/f1-sql-database)
+* [Database schema](database/schema/v2/README.md)
 
 ## Releases
 
