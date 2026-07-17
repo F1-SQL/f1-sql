@@ -12,6 +12,8 @@ def test_schema_reference_requires_a_pinned_commit() -> None:
     )
     assert reference.commit_sha == "a" * 40
     assert reference.manifest_values()["schema_version"] == "2.0.0"
+    assert reference.manifest_values()["database_repository"] == "https://github.com/F1-SQL/f1-sql"
+    assert reference.manifest_values()["database_schema_path"] == "database/schema/v2"
 
 
 def test_schema_reference_rejects_unpinned_or_malformed_commit() -> None:

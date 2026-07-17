@@ -18,6 +18,6 @@ every admitted source artifact.
 | `intervals`, `teamRadio` | none in v2 | Deferred scope; do not import into a substitute shape. |
 
 Each batch must record its target cursor, source fingerprints, row counts,
-known gaps, corrections, and the core/database repository SHAs. A mapping
+known gaps, corrections, and the monorepo SHA and schema path. A mapping
 decision that cannot preserve the original meaning remains excluded until an
 explicit schema decision is approved.

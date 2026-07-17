@@ -1,0 +1,14 @@
+2024-03-25-09-23 - The log file 'SQL-Schema-Export-2024-03-25-09-23.log' has been created
+2024-03-25-09-23 - Attempting to delete old log files
+2024-03-25-09-23 - Old log files deleted
+2024-03-25-09-23 - Script starting
+2024-03-25-09-23 - Directory 'D:\workspace\Sequel Formula\Sequel-Formula-Database\Tables' doesn't exist, attempting to create.
+2024-03-25-09-23 - Successfully created directory 'D:\workspace\Sequel Formula\Sequel-Formula-Database\Tables'.
+2024-03-25-09-23 - 'D:\workspace\Sequel Formula\Sequel-Formula-Database\StoredProcedures' already existed
+2024-03-25-09-23 - 'D:\workspace\Sequel Formula\Sequel-Formula-Database\Views' already existed
+2024-03-25-09-23 - Directory 'D:\workspace\Sequel Formula\Sequel-Formula-Database\Constraints' doesn't exist, attempting to create.
+2024-03-25-09-23 - Successfully created directory 'D:\workspace\Sequel Formula\Sequel-Formula-Database\Constraints'.
+2024-03-25-09-23 - Attempting to export Table objects to 'D:\workspace\Sequel Formula\Sequel-Formula-Database\Tables' for instance 'localhost' from database 'SequelFormulaV2'
+2024-03-25-09-23 - Attempting to export constraints to D:\workspace\Sequel Formula\Sequel-Formula-Database\Constraints\constraints.sql
+2024-03-25-09-23 - Attempting to export Stored Procedures to 'D:\workspace\Sequel Formula\Sequel-Formula-Database\Tables' for instance 'localhost' from database 'SequelFormulaV2'
+2024-03-25-09-23 - Attempting to export Views to 'D:\workspace\Sequel Formula\Sequel-Formula-Database\Views' for instance 'localhost' from database 'SequelFormulaV2'

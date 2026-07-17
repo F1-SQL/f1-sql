@@ -37,6 +37,7 @@ class RunManifest:
     source_repository: str
     database_repository: str | None = None
     database_repository_sha: str | None = None
+    database_schema_path: str = "database/schema/v2"
     source_versions: Mapping[str, str] = field(default_factory=dict)
     stages: tuple[str, ...] = ()
     artifacts: tuple[ArtifactRecord, ...] = ()
@@ -49,6 +50,7 @@ class RunManifest:
         source_repository: str,
         database_repository: str | None = None,
         database_repository_sha: str | None = None,
+        database_schema_path: str = "database/schema/v2",
         source_versions: Mapping[str, str] | None = None,
     ) -> "RunManifest":
         return cls(
@@ -60,6 +62,7 @@ class RunManifest:
             source_repository=source_repository,
             database_repository=database_repository,
             database_repository_sha=database_repository_sha,
+            database_schema_path=database_schema_path,
             source_versions=dict(source_versions or {}),
         )
 

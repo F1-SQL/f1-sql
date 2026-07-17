@@ -1,4 +1,4 @@
-"""Pinned database-schema repository reference used by build manifests."""
+"""Pinned monorepo schema reference used by build manifests."""
 
 import os
 import re
@@ -15,7 +15,7 @@ class DatabaseSchemaReference:
     def from_env(cls, environ: dict[str, str] | None = None) -> "DatabaseSchemaReference":
         env = os.environ if environ is None else environ
         repository = env.get(
-            "F1SQL_DATABASE_REPOSITORY", "https://github.com/F1-SQL/f1-sql-database"
+            "F1SQL_DATABASE_REPOSITORY", "https://github.com/F1-SQL/f1-sql"
         )
         commit_sha = env.get("F1SQL_DATABASE_REPOSITORY_SHA", "")
         schema_version = env.get("F1SQL_SCHEMA_VERSION", "2.0.0")
@@ -30,4 +30,5 @@ class DatabaseSchemaReference:
             "database_repository": self.repository,
             "database_repository_sha": self.commit_sha,
             "schema_version": self.schema_version,
+            "database_schema_path": "database/schema/v2",
         }

@@ -1,0 +1,17 @@
+ALTER TABLE [dbo].[circuitDirection] ADD CONSTRAINT PK_DirectionKey PRIMARY KEY ([direction_key]);
+ALTER TABLE [dbo].[circuits] ADD CONSTRAINT PK_CircuitKey PRIMARY KEY ([circuit_key]);
+ALTER TABLE [dbo].[circuitTypes] ADD CONSTRAINT PK_TypeKey PRIMARY KEY ([type_key]);
+ALTER TABLE [dbo].[compoundTypes] ADD CONSTRAINT PK_CompoundKey PRIMARY KEY ([compound_key]);
+ALTER TABLE [dbo].[countries] ADD CONSTRAINT PK_CountryKey PRIMARY KEY ([country_key]);
+ALTER TABLE [dbo].[drivers] ADD CONSTRAINT PK_DriverMeetingSessionKey PRIMARY KEY (driver_key,meeting_key,session_key);
+ALTER TABLE [dbo].[laps] ADD CONSTRAINT PK_DriverKeyLap PRIMARY KEY (driver_key,lap_number,meeting_key,session_key);
+ALTER TABLE [dbo].[locations] ADD CONSTRAINT PK_LocationKey PRIMARY KEY ([location_key]);
+ALTER TABLE [dbo].[meetings] ADD CONSTRAINT PK_MeetingKey PRIMARY KEY ([meeting_key]);
+ALTER TABLE [dbo].[pitStops] ADD CONSTRAINT PK_DriverMeetingSessionKeyLap PRIMARY KEY ([driver_key],[lap_number],[meeting_key],[session_key]);
+ALTER TABLE [dbo].[seasons] ADD CONSTRAINT PK_SeasonKey PRIMARY KEY ([season_key]);
+ALTER TABLE [dbo].[sessions] ADD CONSTRAINT PK_SessionKey PRIMARY KEY ([session_key]);
+ALTER TABLE [dbo].[sessionTypes] ADD CONSTRAINT PK_SessionTypeKey PRIMARY KEY ([session_type_key]);
+ALTER TABLE [dbo].[teams] ADD CONSTRAINT PK_TeamKey PRIMARY KEY ([team_key]);
+ALTER TABLE [dbo].[stints] ADD CONSTRAINT PK_DriverMeetingSessionKeyStint PRIMARY KEY (driver_key,meeting_key,session_key,stint_number);
+ALTER TABLE [dbo].[weather] ADD CONSTRAINT PK_MeetingSessionKeyDate PRIMARY KEY ([Date],[meeting_key],[session_key]);
+ALTER TABLE [dbo].[position] ADD CONSTRAINT PK_DriverMeetingSessionKeyDate PRIMARY KEY ([date],[driver_key],[meeting_key],[session_key],[position]);

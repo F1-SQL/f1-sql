@@ -1,0 +1,1 @@
+EXEC sp_rename 'dbo.teamRadio.driver_number', 'driver_key', 'COLUMN';
