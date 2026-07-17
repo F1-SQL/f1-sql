@@ -4,7 +4,13 @@ from f1sql.schema_validation import validate_schema_directory
 
 
 def test_v2_schema_scripts_are_numbered_guarded_and_database_neutral() -> None:
-    schema = Path(__file__).parents[2] / "f1-sql-database" / "schema" / "v2"
+    workspace = Path(__file__).parents[1]
+    candidates = (
+        workspace.parent / "f1-sql-database" / "schema" / "v2",
+        workspace / "f1-sql-database" / "schema" / "v2",
+    )
+    schema = next((candidate for candidate in candidates if candidate.is_dir()), None)
+    assert schema is not None, "f1-sql-database checkout is required for schema validation"
     result = validate_schema_directory(schema)
     assert result.passed, result.issues
     assert result.scripts == (
