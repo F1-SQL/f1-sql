@@ -2,8 +2,9 @@
 
 The release workflow runs every Tuesday after the race weekend window and can
 also be started with **Run workflow**. It first runs the lightweight `f1sql
-detect` command. A settled round is emitted as a candidate only when its
-source fingerprint has not already been released.
+detect` command. It selects the latest settled round whose cumulative source
+fingerprint has not already been released, so a missed scheduled run catches
+up to the newest available round.
 
 The current workflow's validation job is deliberately non-publishing. It runs
 the offline test suite and initializes an isolated workspace. SQL Server 2019

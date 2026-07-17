@@ -3,6 +3,7 @@ from pathlib import Path
 import pytest
 
 from f1sql.cache import ArtifactStore
+from f1sql.cli import _latest_ready
 from f1sql.config import Settings
 from f1sql.contracts import BuildTarget
 from f1sql.fingerprint import canonical_json, sha256_json
@@ -15,6 +16,15 @@ def test_build_target_round_trip() -> None:
     assert BuildTarget.parse("2026.3").version == "2026.3.0"
     with pytest.raises(ValueError):
         BuildTarget.parse("2026")
+
+
+def test_latest_ready_round_is_selected_for_cumulative_release() -> None:
+    decisions = [
+        {"round": 1, "target": "2026.1.0", "status": "ready"},
+        {"round": 9, "target": "2026.9.0", "status": "ready"},
+        {"round": 10, "target": "2026.10.0", "status": "settling"},
+    ]
+    assert _latest_ready(decisions)["target"] == "2026.9.0"
 
 
 def test_canonical_json_is_stable() -> None:
