@@ -19,7 +19,7 @@ def test_release_workflow_pins_actions_and_keeps_read_permissions() -> None:
     assert actions
     assert all(re.fullmatch(r"[0-9a-f]{40}", sha) for _, sha in actions)
     assert "permissions:\n  contents: read" in text
-    assert "actions/cache@6849a6489940f00c2f30c0fb92c6274307ccb58a" in text
+    assert "actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9" in text
 
 
 def test_release_workflow_has_double_opt_in_protected_publish_gate() -> None:
