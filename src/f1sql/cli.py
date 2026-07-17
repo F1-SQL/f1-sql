@@ -5,6 +5,7 @@ import json
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from . import __version__
 from .cache import ArtifactStore
@@ -56,6 +57,11 @@ def _released_fingerprints(output_dir: Path) -> dict[str, str]:
     return released
 
 
+def _latest_ready(decisions: list[dict[str, Any]]) -> dict[str, Any] | None:
+    ready = [item for item in decisions if item["status"] == ReadinessStatus.READY]
+    return max(ready, key=lambda item: int(item["round"])) if ready else None
+
+
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     if args.command == "fingerprint":
@@ -90,13 +96,12 @@ def main(argv: list[str] | None = None) -> int:
                 decisions.append(
                     {
                         "target": target.version,
+                        "round": race.round,
                         "status": decision.status.value,
                         "source_fingerprint": fingerprint,
                     }
                 )
-            ready = next(
-                (item for item in decisions if item["status"] == ReadinessStatus.READY), None
-            )
+            ready = _latest_ready(decisions)
             result = {
                 "season": season,
                 "ready": ready is not None,
