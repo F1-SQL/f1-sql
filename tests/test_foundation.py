@@ -55,3 +55,4 @@ def test_manifest_round_trip(tmp_path: Path) -> None:
     assert loaded.run_id == manifest.run_id
     assert loaded.source_versions == {"fastf1": "3.8.1"}
     assert loaded.database_repository_sha == "b" * 40
+    assert loaded.database_schema_path == "database/schema/v2"
