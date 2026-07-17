@@ -16,7 +16,8 @@ docker run --name "$container_name" -e ACCEPT_EULA=Y -e MSSQL_PID=Developer \
   -d "$image" >/dev/null
 
 for attempt in $(seq 1 60); do
-  if docker logs "$container_name" 2>&1 | grep -q "SQL Server is now ready for client connections"; then
+  logs="$(docker logs "$container_name" 2>&1 || true)"
+  if [[ "$logs" == *"SQL Server is now ready for client connections"* ]]; then
     break
   fi
   if [ "$attempt" = 60 ]; then
