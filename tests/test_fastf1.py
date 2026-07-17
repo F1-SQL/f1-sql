@@ -18,6 +18,12 @@ class FakeSession:
             raise RuntimeError("timing data has not settled")
 
 
+class LazyUnavailableSession(FakeSession):
+    @property
+    def laps(self) -> Any:
+        raise RuntimeError("lap timing has not loaded")
+
+
 class FakeProvider:
     __version__ = "3.8.1"
 
@@ -89,6 +95,21 @@ def test_fastf1_missing_delayed_cancelled_and_pre2018_paths(tmp_path: Path) -> N
     legacy_snapshot = legacy.load_session(2017, 1, "Race")
     assert legacy_snapshot.coverage == "historical_limited"
     assert legacy_snapshot.available == ("results",)
+
+
+def test_fastf1_lazy_unavailable_fields_are_optional(tmp_path: Path) -> None:
+    schedule, values = _fixtures()
+    adapter = FastF1Adapter(
+        Settings.from_env({}, cwd=tmp_path),
+        FakeProvider(schedule, LazyUnavailableSession(values)),
+    )
+
+    snapshot = adapter.load_session(2024, 1, "Race")
+
+    assert snapshot.status == "complete"
+    assert "results" in snapshot.available
+    assert "laps" in snapshot.missing
+    assert any(error.startswith("laps.laps:") for error in snapshot.errors)
 
 
 def test_fastf1_event_matching_fails_closed(tmp_path: Path) -> None:

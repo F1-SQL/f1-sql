@@ -242,16 +242,22 @@ class FastF1Adapter:
             )
         available: dict[str, tuple[Mapping[str, Any], ...]] = {}
         missing: list[str] = []
+        errors: list[str] = []
         for name, attributes in self._data_fields.items():
-            value = next(
-                (
-                    getattr(session, attribute, None)
-                    for attribute in attributes
-                    if hasattr(session, attribute)
-                ),
-                None,
-            )
-            records = tuple(_jsonable(item) for item in _rows(value))
+            value: Any = None
+            for attribute in attributes:
+                try:
+                    value = getattr(session, attribute)
+                except Exception as exc:  # FastF1 lazy fields can raise DataNotLoadedError
+                    errors.append(f"{name}.{attribute}: {exc}")
+                    continue
+                if value is not None:
+                    break
+            try:
+                records = tuple(_jsonable(item) for item in _rows(value))
+            except Exception as exc:  # a partially loaded dataframe may fail conversion
+                errors.append(f"{name}: {exc}")
+                records = ()
             if records:
                 available[name] = records
             else:
@@ -267,7 +273,7 @@ class FastF1Adapter:
             available = {"results": available["results"]} if "results" in available else {}
             missing = [name for name in self._data_fields if name != "results"]
         return self._snapshot(
-            season, round, identifier, coverage, status, available, tuple(missing), ()
+            season, round, identifier, coverage, status, available, tuple(missing), errors
         )
 
     def _snapshot(
