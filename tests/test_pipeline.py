@@ -9,7 +9,13 @@ from test_jolpica import FixtureTransport, NamedFixtureTransport
 
 from f1sql.config import Settings
 from f1sql.contracts import BuildTarget
-from f1sql.pipeline import PipelineGateError, persist_fastf1_snapshot, run_offline_fixture_pipeline
+from f1sql.pipeline import (
+    FixtureInput,
+    PipelineGateError,
+    normalize_fixtures,
+    persist_fastf1_snapshot,
+    run_offline_fixture_pipeline,
+)
 from f1sql.release import verify_release
 from f1sql.sources.fastf1 import FastF1Adapter, SessionSnapshot
 from f1sql.sources.jolpica import JolpicaClient
@@ -162,6 +168,41 @@ def test_offline_pipeline_allows_missing_optional_fastf1_fields(tmp_path: Path) 
         "weather",
         "race_control",
     }
+
+
+def test_offline_pipeline_builds_cumulative_rounds(tmp_path: Path) -> None:
+    race, results, session, _, _ = _inputs(tmp_path)
+    second_race = replace(
+        race,
+        round=2,
+        race_name="Saudi Arabian Grand Prix",
+        scheduled_at_utc=datetime(2024, 3, 9, 17, tzinfo=UTC),
+    )
+    second_results = tuple(replace(item, round=2) for item in results)
+    second_session = replace(session, round=2)
+    fixtures = (
+        FixtureInput(race, results, session),
+        FixtureInput(second_race, second_results, second_session),
+    )
+
+    bundle = normalize_fixtures(fixtures)
+    assert {item.round for item in bundle.meetings} == {1, 2}
+    assert len(bundle.results) == len(results) * 2
+
+    result = run_offline_fixture_pipeline(
+        target=BuildTarget(2024, 2),
+        race=second_race,
+        results=second_results,
+        session=second_session,
+        fixtures=fixtures,
+        output_root=tmp_path / "releases",
+        documents=_documents(),
+        metadata=_metadata(),
+    )
+    assert result.quality.passed is True
+    assert result.load_plan.operations[4].table == "Meeting"
+    assert len(result.load_plan.operations[4].rows) == 2
+    assert len(result.load_plan.operations[7].rows) == len(results) * 2
 
 
 def test_fastf1_snapshot_persistence_is_content_addressed(tmp_path: Path) -> None:

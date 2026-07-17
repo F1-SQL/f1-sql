@@ -106,7 +106,10 @@ def _jsonable(value: Any) -> Any:
 def build_load_plan(bundle: NormalizationBundle) -> LoadPlan:
     """Prepare rows in FK-safe order; execution remains a separate SQL adapter."""
 
-    seasons = tuple({"season": meeting.season} for meeting in bundle.meetings)
+    seasons = tuple(
+        {"season": season}
+        for season in sorted({meeting.season for meeting in bundle.meetings})
+    )
     operations: list[TableLoad] = [
         TableLoad("Season", ("season",), _rows(seasons, ("season",))),
         TableLoad("Circuit", ("key",), _rows(bundle.circuits, ("key",))),

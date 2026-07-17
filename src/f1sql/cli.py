@@ -11,7 +11,11 @@ from .cache import ArtifactStore
 from .config import Settings
 from .contracts import BuildTarget
 from .fingerprint import sha256_json
-from .readiness import ReadinessStatus, decide, source_fingerprint
+from .readiness import (
+    ReadinessStatus,
+    cumulative_source_fingerprint,
+    decide,
+)
 from .sources.jolpica import JolpicaClient, persist_snapshots
 
 
@@ -80,7 +84,8 @@ def main(argv: list[str] | None = None) -> int:
             persist_snapshots(collection, ArtifactStore(settings.raw_dir), f"jolpica:{season}")
             for race in races:
                 target = BuildTarget(season, race.round)
-                fingerprint = source_fingerprint(race)
+                included_races = tuple(item for item in races if item.round <= race.round)
+                fingerprint = cumulative_source_fingerprint(included_races)
                 decision = decide(race, target, fingerprint, released, now, settings.settling_hours)
                 decisions.append(
                     {

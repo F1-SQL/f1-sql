@@ -16,6 +16,11 @@ session, runs quality/reconciliation gates, creates a SQL Server 2019 backup,
 restore-forward verifies it on SQL Server 2022, and uploads `release-bundle`.
 Publication remains skipped fail-closed until the protected flag is enabled.
 
+Production candidates are season-to-date snapshots: when round `N` is ready,
+the build fetches and normalizes every settled round from round 1 through `N`.
+The resulting SQL Server backup therefore grows with each release instead of
+containing only the newest race.
+
 For a dry run, leave `dry_run=true` (the default) and `publish=false`. The
 publish job explicitly rejects dry-run dispatches even if both the environment
 variable and the publish input are accidentally enabled.
