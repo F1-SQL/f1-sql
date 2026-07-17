@@ -1,0 +1,10 @@
+F1 SQL Database Schema
+Copyright 2022-2026 F1 SQL contributors
+
+SQL source, migrations, tests, and configuration are licensed under
+Apache-2.0. Human-readable documentation is licensed separately as described
+in LICENSE-DOCS.
+
+Generated databases and data releases are distributed from the f1-sql core
+repository under their applicable data licence; they are not relicensed by
+this schema repository.

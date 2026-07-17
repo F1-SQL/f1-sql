@@ -1,0 +1,35 @@
+{
+    "items": [
+      {
+        "filename": "/cleanup/driversColumnDrop.sql",
+        "order": 1,
+        "description": "This is the first file."
+      },
+      {
+        "filename": "/cleanup/intervalsColumnDrop.sql",
+        "order": 2,
+        "description": "This is the first file."
+      },
+      {
+        "filename": "/cleanup/meetingsColumnDrop.sql",
+        "order": 3,
+        "description": "This is the first file."
+      },      
+      {
+        "filename": "/cleanup/sessionColumnDrop.sql",
+        "order": 4,
+        "description": "This is the second file."
+      },
+      {
+        "filename": "/cleanup/stintsColumnDrop.sql",
+        "order": 5,
+        "description": "This is the third file."
+      },
+      {
+        "filename": "/cleanup/driverKeyFix_mv.sql",
+        "order": 6,
+        "description": "This is the third file."
+      }
+    ]
+  }
+  

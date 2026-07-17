@@ -1,0 +1,45 @@
+{
+    "items": [
+      {
+        "filename": "/meetings/meeting_date_to_datetime.sql",
+        "order": 1,
+        "description": "This is the first file."
+      },
+      {
+        "filename": "/meetings/meeting_gmt_offset_fix.sql",
+        "order": 2,
+        "description": "This is the second file."
+      },
+      {
+        "filename": "/meetings/meeting_gmt_offset_rename.sql",
+        "order": 3,
+        "description": "This is the second file."
+      },
+      {
+        "filename": "/meetings/meeting_locations.sql",
+        "order": 4,
+        "description": "This is the second file."
+      },
+      {
+        "filename": "/meetings/meeting_official_name_case_fix.sql",
+        "order": 5,
+        "description": "This is the second file."
+      },
+      {
+        "filename": "/meetings/meeting_types.sql",
+        "order": 6,
+        "description": "This is the second file."
+      },
+      {
+        "filename": "/meetings/meetings_seasons.sql",
+        "order": 7,
+        "description": "This is the second file."
+      },
+      {
+        "filename": "/meetings/meetings_datatype_change.sql",
+        "order": 8,
+        "description": "This is the second file."
+      }
+    ]
+  }
+  

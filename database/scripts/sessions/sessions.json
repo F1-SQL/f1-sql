@@ -1,0 +1,25 @@
+{
+    "items": [
+      {
+        "filename": "/sessions/session_sessionTypes.sql",
+        "order": 1,
+        "description": "This is the first file."
+      },
+      {
+        "filename": "/sessions/sessions_date_end_conversion.sql",
+        "order": 2,
+        "description": "This is the second file."
+      },
+      {
+        "filename": "/sessions/sessions_date_start_conversion.sql",
+        "order": 2,
+        "description": "This is the second file."
+      },
+      {
+        "filename": "/sessions/sessions_column_schema_changes.sql",
+        "order": 3,
+        "description": "This is the third file."
+      }
+    ]
+  }
+  
