@@ -203,11 +203,28 @@ def parse_utc(value: str | datetime, assume_utc: bool = False) -> datetime:
 
 
 def duration_ms(value: str | None) -> int | None:
-    """Convert F1 ``H:MM:SS.sss`` or ``M:SS.sss`` values to integer milliseconds."""
+    """Convert F1 duration or race-gap text to integer milliseconds.
+
+    Jolpica uses a leading ``+`` for a time gap to the winner. A lap-count
+    gap (for example ``+1 Lap``) has no millisecond representation and is
+    therefore preserved as missing.
+    """
 
     if value is None or value == "":
         return None
+    value = value.strip()
+    is_gap = value.startswith("+")
+    if is_gap:
+        value = value[1:].strip()
+        if re.fullmatch(r"\d+(?:\.\d+)?\s+laps?", value, re.IGNORECASE):
+            return None
     parts = value.split(":")
+    if is_gap and len(parts) == 1:
+        try:
+            seconds = Decimal(value)
+        except InvalidOperation as exc:
+            raise ValueError(f"invalid duration: +{value}") from exc
+        return int((seconds * 1000).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
     if len(parts) not in (2, 3):
         raise ValueError(f"invalid duration: {value}")
     try:
@@ -327,7 +344,11 @@ def normalize_result(
             position_text=result.position_text,
             points=Decimal(str(result.points)),
             laps=result.laps,
-            duration_ms=duration_ms(result.time),
+            duration_ms=(
+                result.time_millis
+                if result.time_millis is not None
+                else duration_ms(result.time)
+            ),
             status=result.status,
             external_ids={
                 "jolpica:driver": result.driver.driver_id,
