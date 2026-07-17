@@ -34,7 +34,7 @@ sqlcmd() {
 
 docker cp "$F1SQL_BACKUP_INPUT" "$container_name:/tmp/F1SqlPhase5.bak"
 docker exec -u 0 "$container_name" chmod 644 /tmp/F1SqlPhase5.bak
-docker cp "$database_root/tests/phase5_fixture_smoke.sql" "$container_name:/tmp/phase5_fixture_smoke.sql"
+docker cp "$database_root/tests/phase5_release_smoke.sql" "$container_name:/tmp/phase5_release_smoke.sql"
 sqlcmd -d master -b -Q "RESTORE VERIFYONLY FROM DISK = N'/tmp/F1SqlPhase5.bak' WITH CHECKSUM;"
 sqlcmd -d master -b -Q "RESTORE DATABASE F1SqlPhase5Restore FROM DISK = N'/tmp/F1SqlPhase5.bak' WITH MOVE N'F1SqlPhase5' TO N'/var/opt/mssql/data/F1SqlPhase5Restore.mdf', MOVE N'F1SqlPhase5_log' TO N'/var/opt/mssql/data/F1SqlPhase5Restore_log.ldf', CHECKSUM, RECOVERY; DBCC CHECKDB(N'F1SqlPhase5Restore') WITH NO_INFOMSGS, ALL_ERRORMSGS;"
-sqlcmd -d F1SqlPhase5Restore -b -i /tmp/phase5_fixture_smoke.sql
+sqlcmd -d F1SqlPhase5Restore -b -i /tmp/phase5_release_smoke.sql
