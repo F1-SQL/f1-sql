@@ -1,4 +1,7 @@
+import os
 from pathlib import Path
+
+import pytest
 
 from f1sql.schema_validation import validate_schema_directory
 
@@ -10,7 +13,10 @@ def test_v2_schema_scripts_are_numbered_guarded_and_database_neutral() -> None:
         workspace / "f1-sql-database" / "schema" / "v2",
     )
     schema = next((candidate for candidate in candidates if candidate.is_dir()), None)
-    assert schema is not None, "f1-sql-database checkout is required for schema validation"
+    if schema is None:
+        if os.environ.get("F1SQL_REQUIRE_DATABASE_SCHEMA") == "1":
+            pytest.fail("f1-sql-database checkout is required for schema validation")
+        pytest.skip("f1-sql-database checkout is not present")
     result = validate_schema_directory(schema)
     assert result.passed, result.issues
     assert result.scripts == (

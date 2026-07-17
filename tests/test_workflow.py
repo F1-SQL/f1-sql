@@ -78,5 +78,6 @@ def test_python_workflow_checks_out_schema_repository() -> None:
     text = workflow.read_text(encoding="utf-8")
     assert "repository: F1-SQL/f1-sql-database" in text
     assert "path: f1-sql-database" in text
+    assert "F1SQL_REQUIRE_DATABASE_SCHEMA: \"1\"" in text
     actions = re.findall(r"uses: ([^\s]+)@([^\s]+)", text)
     assert all(re.fullmatch(r"[0-9a-f]{40}", sha) for _, sha in actions)
