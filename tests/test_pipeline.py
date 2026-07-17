@@ -104,7 +104,7 @@ def test_offline_fixture_pipeline_reaches_a_verifiable_release(tmp_path: Path) -
 
 def test_offline_fixture_pipeline_blocks_bad_data_before_packaging(tmp_path: Path) -> None:
     race, results, session, _, _ = _inputs(tmp_path)
-    with pytest.raises(PipelineGateError):
+    with pytest.raises(PipelineGateError, match="result.key_unique"):
         run_offline_fixture_pipeline(
             target=BuildTarget(2024, 1),
             race=race,
@@ -134,6 +134,34 @@ def test_offline_fixture_pipeline_blocks_cross_source_winner_conflict(tmp_path: 
             documents=_documents(),
             metadata=_metadata(),
         )
+
+
+def test_offline_pipeline_allows_missing_optional_fastf1_fields(tmp_path: Path) -> None:
+    race, results, session, _, _ = _inputs(tmp_path)
+    sparse = replace(
+        session,
+        records={"results": session.records["results"]},
+        missing=("laps", "stints", "pit_stops", "weather", "race_control"),
+    )
+
+    result = run_offline_fixture_pipeline(
+        target=BuildTarget(2024, 1),
+        race=race,
+        results=results,
+        session=sparse,
+        output_root=tmp_path / "releases",
+        documents=_documents(),
+        metadata=_metadata(),
+    )
+
+    assert result.quality.passed is True
+    assert {gap.domain for gap in result.quality.coverage_gaps} == {
+        "lap",
+        "stint",
+        "pit_stop",
+        "weather",
+        "race_control",
+    }
 
 
 def test_fastf1_snapshot_persistence_is_content_addressed(tmp_path: Path) -> None:

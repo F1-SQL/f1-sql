@@ -30,7 +30,13 @@ from .normalization import (
     parse_utc,
     reconcile_result_sets,
 )
-from .quality import CoverageExpectation, CoverageGap, QualityReport, validate_bundle
+from .quality import (
+    CoverageExpectation,
+    CoverageGap,
+    QualityReport,
+    QualitySeverity,
+    validate_bundle,
+)
 from .readiness import source_fingerprint
 from .release import ReleasePackager, ReleasePlan
 from .sources.fastf1 import SessionSnapshot
@@ -39,6 +45,18 @@ from .sources.jolpica_models import RaceSummary, Result
 
 class PipelineGateError(RuntimeError):
     """Raised when an offline pipeline stage cannot pass its quality gate."""
+
+    def __init__(self, quality: QualityReport) -> None:
+        self.quality = quality
+        failures = []
+        for result in quality.rules:
+            if result.passed or result.rule.severity is not QualitySeverity.ERROR:
+                continue
+            messages = "; ".join(issue.message for issue in result.issues[:3])
+            suffix = f": {messages}" if messages else ""
+            failures.append(f"{result.rule.rule_id}{suffix}")
+        detail = "; ".join(failures) or "no failing rule details"
+        super().__init__(f"quality gate failed; release packaging was not attempted ({detail})")
 
 
 @dataclass(frozen=True, slots=True)
@@ -203,12 +221,17 @@ def run_offline_fixture_pipeline(
         CoverageExpectation("result", session_key, "jolpica"),
     ]
     for domain in ("lap", "stint", "pit_stop", "weather", "race_control"):
+        fastf1_field = {
+            "lap": "laps",
+            "stint": "stints",
+            "pit_stop": "pit_stops",
+        }.get(domain, domain)
         expectations.append(
             CoverageExpectation(
                 domain,
                 session_key,
                 "fastf1",
-                allow_gap=domain in session.missing,
+                allow_gap=fastf1_field in session.missing,
                 reason=f"FastF1 did not provide {domain} for this session",
             )
         )
@@ -219,7 +242,7 @@ def run_offline_fixture_pipeline(
         load_plan=load_plan,
     )
     if not quality.passed:
-        raise PipelineGateError("quality gate failed; release packaging was not attempted")
+        raise PipelineGateError(quality)
     assets: dict[str, bytes] = {
         **documents,
         "quality-report.json": (quality.to_json() + "\n").encode("utf-8"),
