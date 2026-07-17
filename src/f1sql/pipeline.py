@@ -1,10 +1,10 @@
 """Offline end-to-end pipeline assembly used by fixtures and CI acceptance tests."""
 
-from collections.abc import Mapping
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, replace
 from decimal import Decimal
 from pathlib import Path
-from typing import Any
+from typing import Any, TypeVar
 
 from .cache import ArtifactStore
 from .contracts import BuildTarget
@@ -37,10 +37,12 @@ from .quality import (
     QualitySeverity,
     validate_bundle,
 )
-from .readiness import source_fingerprint
+from .readiness import cumulative_source_fingerprint as cumulative_race_fingerprint
 from .release import ReleasePackager, ReleasePlan
 from .sources.fastf1 import SessionSnapshot
 from .sources.jolpica_models import RaceSummary, Result
+
+T = TypeVar("T")
 
 
 class PipelineGateError(RuntimeError):
@@ -67,15 +69,24 @@ class OfflinePipelineResult:
     release: ReleasePlan
 
 
-def normalize_fixture(
+@dataclass(frozen=True, slots=True)
+class FixtureInput:
+    """One season round's primary results and optional FastF1 session data."""
+
+    race: RaceSummary
+    results: tuple[Result, ...]
+    session: SessionSnapshot
+
+
+def _normalize_single_fixture(
     race: RaceSummary,
     results: tuple[Result, ...],
     session: SessionSnapshot,
+    resolver: IdentityResolver,
     session_type: str = "race",
 ) -> NormalizationBundle:
     """Convert representative Jolpica and FastF1 records into v2 models."""
 
-    resolver = IdentityResolver()
     meeting = normalize_race(race, resolver)
     circuit_key = meeting.circuit_key
     circuit = NormalizedCircuit(
@@ -165,14 +176,86 @@ def normalize_fixture(
     )
 
 
+def _merge_unique(
+    values: Iterable[T], key: Callable[[T], Any]
+) -> tuple[T, ...]:
+    unique: dict[Any, T] = {}
+    for value in values:
+        unique.setdefault(key(value), value)
+    return tuple(unique.values())
+
+
+def normalize_fixtures(
+    fixtures: Iterable[FixtureInput], session_type: str = "race"
+) -> NormalizationBundle:
+    """Normalize and merge all rounds included in a cumulative release."""
+
+    inputs = tuple(fixtures)
+    if not inputs:
+        raise ValueError("at least one fixture input is required")
+    resolver = IdentityResolver()
+    bundles = tuple(
+        _normalize_single_fixture(item.race, item.results, item.session, resolver, session_type)
+        for item in inputs
+    )
+    return NormalizationBundle(
+        drivers=_merge_unique(
+            (row for bundle in bundles for row in bundle.drivers), lambda row: row.key
+        ),
+        constructors=_merge_unique(
+            (row for bundle in bundles for row in bundle.constructors), lambda row: row.key
+        ),
+        circuits=_merge_unique(
+            (row for bundle in bundles for row in bundle.circuits), lambda row: row.key
+        ),
+        meetings=_merge_unique(
+            (row for bundle in bundles for row in bundle.meetings),
+            lambda row: (row.season, row.round),
+        ),
+        sessions=_merge_unique(
+            (row for bundle in bundles for row in bundle.sessions),
+            lambda row: (row.season, row.round, row.session_type),
+        ),
+        results=tuple(row for bundle in bundles for row in bundle.results),
+        laps=tuple(row for bundle in bundles for row in bundle.laps),
+        stints=tuple(row for bundle in bundles for row in bundle.stints),
+        pit_stops=tuple(row for bundle in bundles for row in bundle.pit_stops),
+        weather=tuple(row for bundle in bundles for row in bundle.weather),
+        race_control=tuple(row for bundle in bundles for row in bundle.race_control),
+        discrepancies=tuple(row for bundle in bundles for row in bundle.discrepancies),
+    )
+
+
+def normalize_fixture(
+    race: RaceSummary,
+    results: tuple[Result, ...],
+    session: SessionSnapshot,
+    session_type: str = "race",
+) -> NormalizationBundle:
+    """Normalize one round (compatibility wrapper for fixture tests and tools)."""
+
+    return normalize_fixtures((FixtureInput(race, results, session),), session_type)
+
+
 def reconcile_fixture_sources(
-    bundle: NormalizationBundle, session: SessionSnapshot
+    bundle: NormalizationBundle,
+    session: SessionSnapshot,
+    race: RaceSummary | None = None,
 ) -> tuple[Discrepancy, ...]:
     """Reconcile FastF1 session results against normalized Jolpica results."""
 
+    primary_results = (
+        bundle.results
+        if race is None
+        else tuple(
+            item
+            for item in bundle.results
+            if item.season == race.season and item.round == race.round
+        )
+    )
     normalized_by_number = {
         str(item.driver_number): item
-        for item in bundle.results
+        for item in primary_results
         if item.driver_number is not None
     }
     secondary = []
@@ -187,8 +270,14 @@ def reconcile_fixture_sources(
                 points=Decimal(str(row.get("Points", primary.points))),
             )
         )
-    _, discrepancies = reconcile_result_sets(bundle.results, tuple(secondary))
+    _, discrepancies = reconcile_result_sets(primary_results, tuple(secondary))
     return discrepancies
+
+
+def cumulative_source_fingerprint(fixtures: Iterable[FixtureInput]) -> str:
+    """Fingerprint the ordered schedule inputs included in a cumulative release."""
+
+    return cumulative_race_fingerprint(item.race for item in fixtures)
 
 
 def run_offline_fixture_pipeline(
@@ -204,37 +293,53 @@ def run_offline_fixture_pipeline(
     raw_artifacts: Mapping[str, bytes] | None = None,
     coverage_gaps: tuple[CoverageGap, ...] = (),
     dry_run: bool = False,
+    fixtures: Iterable[FixtureInput] | None = None,
+    source_fingerprint_value: str | None = None,
 ) -> OfflinePipelineResult:
-    """Run all offline stages and package only after the quality gate passes."""
+    """Run offline stages and package only after the quality gate passes.
 
-    bundle = normalize_fixture(race, results, session)
+    The legacy single-round arguments remain supported; ``fixtures`` enables
+    cumulative season-to-date releases.
+    """
+
+    inputs = tuple(fixtures or (FixtureInput(race, results, session),))
+    bundle = normalize_fixtures(inputs)
     bundle = replace(
         bundle,
-        discrepancies=bundle.discrepancies + reconcile_fixture_sources(bundle, session),
+        discrepancies=bundle.discrepancies
+        + tuple(
+            discrepancy
+            for item in inputs
+            for discrepancy in reconcile_fixture_sources(bundle, item.session, item.race)
+        ),
     )
     load_plan = build_load_plan(bundle)
-    session_key = (race.season, race.round, "race")
-    expectations = [
-        CoverageExpectation("meeting", (race.season, race.round), "jolpica"),
-        CoverageExpectation("session", session_key, "fastf1"),
-        CoverageExpectation("participant", session_key, "jolpica"),
-        CoverageExpectation("result", session_key, "jolpica"),
-    ]
-    for domain in ("lap", "stint", "pit_stop", "weather", "race_control"):
-        fastf1_field = {
-            "lap": "laps",
-            "stint": "stints",
-            "pit_stop": "pit_stops",
-        }.get(domain, domain)
-        expectations.append(
-            CoverageExpectation(
-                domain,
-                session_key,
-                "fastf1",
-                allow_gap=fastf1_field in session.missing,
-                reason=f"FastF1 did not provide {domain} for this session",
+    expectations: list[CoverageExpectation] = []
+    for item in inputs:
+        session_key = (item.race.season, item.race.round, "race")
+        expectations.extend(
+            (
+                CoverageExpectation("meeting", (item.race.season, item.race.round), "jolpica"),
+                CoverageExpectation("session", session_key, "fastf1"),
+                CoverageExpectation("participant", session_key, "jolpica"),
+                CoverageExpectation("result", session_key, "jolpica"),
             )
         )
+        for domain in ("lap", "stint", "pit_stop", "weather", "race_control"):
+            fastf1_field = {
+                "lap": "laps",
+                "stint": "stints",
+                "pit_stop": "pit_stops",
+            }.get(domain, domain)
+            expectations.append(
+                CoverageExpectation(
+                    domain,
+                    session_key,
+                    "fastf1",
+                    allow_gap=fastf1_field in item.session.missing,
+                    reason=f"FastF1 did not provide {domain} for this session",
+                )
+            )
     quality = validate_bundle(
         bundle,
         coverage_gaps=coverage_gaps,
@@ -255,7 +360,7 @@ def run_offline_fixture_pipeline(
         assets["database.bak"] = database_backup.read_bytes()
     release_metadata = {
         **metadata,
-        "source_fingerprint": source_fingerprint(race),
+        "source_fingerprint": source_fingerprint_value or cumulative_source_fingerprint(inputs),
         "normalized_fingerprint": bundle.fingerprint(),
         "load_plan_fingerprint": load_plan.fingerprint(),
     }

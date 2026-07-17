@@ -5,7 +5,12 @@ from pathlib import Path
 from f1sql.cache import ArtifactStore
 from f1sql.config import Settings
 from f1sql.contracts import BuildTarget
-from f1sql.readiness import ReadinessStatus, decide, source_fingerprint
+from f1sql.readiness import (
+    ReadinessStatus,
+    cumulative_source_fingerprint,
+    decide,
+    source_fingerprint,
+)
 from f1sql.sources.jolpica import JolpicaClient, persist_snapshots
 from f1sql.transport import TransportResponse
 
@@ -116,6 +121,7 @@ def test_readiness_blocks_settling_and_duplicate_releases() -> None:
         changed.status is ReadinessStatus.FINGERPRINT_CHANGED
     )
     assert source_fingerprint(race) == source_fingerprint(race)
+    assert cumulative_source_fingerprint((race,)) == cumulative_source_fingerprint((race,))
 
 
 def test_race_data_contracts_cover_results_and_standings() -> None:

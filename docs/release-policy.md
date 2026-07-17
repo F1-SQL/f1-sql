@@ -7,6 +7,10 @@ Database releases use `season.round.revision`:
 * `2026.12.0` is the first release after round 12 of the 2026 season.
 * `2026.12.1` is a correction using changed source data or build logic.
 
+Each release is cumulative for its season. A `2026.12.0` release contains
+rounds 1 through 12, while the version identifies round 12 as the newest
+available round. Earlier releases remain immutable snapshots.
+
 An existing release is immutable. Corrections always receive a new tag and
 release; assets are never silently replaced.
 
@@ -19,7 +23,8 @@ runs only when:
 1. Jolpica-F1 has the event, official race results, and required participants.
 2. FastF1 can load the required completed event sessions.
 3. The configured settling period after the race has elapsed.
-4. The source fingerprint differs from the latest release for that round.
+4. The cumulative source fingerprint differs from the latest release for that
+   target round.
 
 If data is unavailable, the workflow exits without failure and retries at the
 next scheduled run. A manual workflow accepts season, round, revision, and

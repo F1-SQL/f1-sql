@@ -1,4 +1,4 @@
-"""Fetch one settled race and build a verified release candidate directory.
+"""Fetch a settled season-to-date and build a verified release candidate directory.
 
 This command deliberately stops before SQL Server backup creation. The
 candidate directory contains the deterministic load plan consumed by the
@@ -15,7 +15,11 @@ from pathlib import Path
 from f1sql.config import Settings
 from f1sql.contracts import BuildTarget
 from f1sql.fingerprint import canonical_json
-from f1sql.pipeline import run_offline_fixture_pipeline
+from f1sql.pipeline import (
+    FixtureInput,
+    cumulative_source_fingerprint,
+    run_offline_fixture_pipeline,
+)
 from f1sql.sources.fastf1 import FastF1Adapter
 from f1sql.sources.jolpica import JolpicaClient
 from f1sql.sources.jolpica_models import RaceSummary, Result
@@ -28,10 +32,13 @@ def _sha(repository: Path) -> str:
     ).strip()
 
 
-def _documents(core_root: Path, race: RaceSummary) -> dict[str, bytes]:
+def _documents(
+    core_root: Path, race: RaceSummary, included_rounds: int
+) -> dict[str, bytes]:
     notes = (
         f"# F1 SQL {race.season}.{race.round}.0\n\n"
-        f"Automated release for the {race.race_name} meeting.\n\n"
+        f"Automated cumulative release through round {race.round}, "
+        f"including {included_rounds} settled rounds.\n\n"
         "The database backup was built and verified on SQL Server 2019, then "
         "restore-forward tested on SQL Server 2022."
     )
@@ -56,24 +63,50 @@ def main() -> int:
     races, season_collection = client.discover_completed_rounds_with_snapshots(
         args.target.season, now, settling_hours=0
     )
-    race = next(
+    target_race = next(
         (item for item in races if item.round == args.target.round),
         None,
     )
-    if race is None:
+    if target_race is None:
         raise RuntimeError(f"Jolpica did not return settled target {args.target.version}")
 
-    results_collection = client.collect(
-        f"{args.target.season}/{args.target.round}/results.json", item_key="Results"
-    )
-    results = tuple(
-        Result.from_api(
-            {**item, "season": args.target.season, "round": args.target.round}
-        )
-        for item in results_collection.items
-    )
+    included_races = tuple(item for item in races if item.round <= target_race.round)
     fastf1 = FastF1Adapter(settings)
-    session = fastf1.load_session(args.target.season, args.target.round, "Race")
+    fixtures: list[FixtureInput] = []
+    raw_artifacts: dict[str, bytes] = {
+        f"jolpica-season-{index:03d}.json": snapshot.body
+        for index, snapshot in enumerate(season_collection.snapshots)
+    }
+    for included_race in included_races:
+        results_collection = client.collect(
+            f"{args.target.season}/{included_race.round}/results.json",
+            item_key="Results",
+        )
+        results = tuple(
+            Result.from_api(
+                {**item, "season": args.target.season, "round": included_race.round}
+            )
+            for item in results_collection.items
+        )
+        session = fastf1.load_session(args.target.season, included_race.round, "Race")
+        fixtures.append(FixtureInput(included_race, results, session))
+        for index, snapshot in enumerate(results_collection.snapshots):
+            raw_artifacts[
+                f"jolpica-results-{args.target.season}-{included_race.round:02d}-{index:03d}.json"
+            ] = snapshot.body
+        raw_artifacts[
+            f"fastf1-session-{args.target.season}-{included_race.round:02d}.json"
+        ] = canonical_json(
+            {
+                "season": session.season,
+                "round": session.round,
+                "identifier": session.identifier,
+                "source_version": session.source_version,
+                "records": session.records,
+            }
+        ).encode("utf-8")
+
+    cumulative_fingerprint = cumulative_source_fingerprint(fixtures)
 
     repository_sha = _sha(core_root)
     metadata: dict[str, object] = {
@@ -82,32 +115,23 @@ def main() -> int:
         "database_repository_sha": repository_sha,
         "database_repository": "https://github.com/F1-SQL/f1-sql",
         "database_schema_path": "database/schema/v2",
+        "cumulative_through_round": target_race.round,
+        "included_rounds": [item.race.round for item in fixtures],
         "source_versions": {
             "jolpica": "ergast-compatible-v1",
             "fastf1": fastf1.source_version,
         },
         "build_timestamp_utc": now.isoformat().replace("+00:00", "Z"),
     }
-    raw_artifacts = {
-        "jolpica-season.json": season_collection.snapshots[0].body,
-        "jolpica-results.json": results_collection.snapshots[0].body,
-        "fastf1-session.json": canonical_json(
-            {
-                "season": session.season,
-                "round": session.round,
-                "identifier": session.identifier,
-                "source_version": session.source_version,
-                "records": session.records,
-            }
-        ).encode("utf-8"),
-    }
     result = run_offline_fixture_pipeline(
         target=args.target,
-        race=race,
-        results=results,
-        session=session,
+        race=target_race,
+        results=fixtures[-1].results,
+        session=fixtures[-1].session,
+        fixtures=fixtures,
+        source_fingerprint_value=cumulative_fingerprint,
         output_root=args.output / "unused-release-root",
-        documents=_documents(core_root, race),
+        documents=_documents(core_root, target_race, len(fixtures)),
         metadata=metadata,
         raw_artifacts=raw_artifacts,
         dry_run=True,
@@ -130,7 +154,10 @@ def main() -> int:
     (candidate / "quality-report.json").write_text(
         result.quality.to_json() + "\n", encoding="utf-8"
     )
-    for name, content in {**_documents(core_root, race), **raw_artifacts}.items():
+    for name, content in {
+        **_documents(core_root, target_race, len(fixtures)),
+        **raw_artifacts,
+    }.items():
         destination = candidate / (f"raw/{name}" if name.endswith(".json") else name)
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_bytes(content)

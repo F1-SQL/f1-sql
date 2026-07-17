@@ -1,6 +1,6 @@
 """Decisions that prevent duplicate or prematurely published race builds."""
 
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from datetime import datetime
 from enum import StrEnum
@@ -45,6 +45,19 @@ def source_fingerprint(race: RaceSummary) -> str:
             "scheduled_at_utc": race.scheduled_at_utc.isoformat().replace("+00:00", "Z"),
             "url": race.url,
             "has_sprint": race.has_sprint,
+        }
+    )
+
+
+def cumulative_source_fingerprint(races: Iterable[RaceSummary]) -> str:
+    """Fingerprint the ordered season schedule included through a target round."""
+
+    return sha256_json(
+        {
+            "races": [
+                source_fingerprint(race)
+                for race in sorted(races, key=lambda item: item.round)
+            ]
         }
     )
 
