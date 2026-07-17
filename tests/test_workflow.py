@@ -71,3 +71,12 @@ def test_sqlserver_workflow_has_2019_build_and_2022_restore_forward_jobs() -> No
     assert "F1SqlPhase5!2026" not in text
     actions = re.findall(r"uses: ([^\s]+)@([^\s]+)", text)
     assert all(re.fullmatch(r"[0-9a-f]{40}", sha) for _, sha in actions)
+
+
+def test_python_workflow_checks_out_schema_repository() -> None:
+    workflow = WORKFLOW.parent / "python.yml"
+    text = workflow.read_text(encoding="utf-8")
+    assert "repository: F1-SQL/f1-sql-database" in text
+    assert "path: f1-sql-database" in text
+    actions = re.findall(r"uses: ([^\s]+)@([^\s]+)", text)
+    assert all(re.fullmatch(r"[0-9a-f]{40}", sha) for _, sha in actions)
