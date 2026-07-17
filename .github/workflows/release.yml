@@ -37,7 +37,7 @@ jobs:
       status: ${{ steps.detect.outputs.status }}
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: "3.11"
       - uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809
@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: "3.11"
       - uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809
@@ -101,7 +101,7 @@ jobs:
       F1SQL_BACKUP_OUTPUT: ${{ github.workspace }}/artifacts/F1SqlPhase5.bak
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
           python-version: "3.11"
       - uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809
