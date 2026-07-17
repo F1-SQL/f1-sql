@@ -1,3 +1,21 @@
 .log
 /sourcefiles
 /backups
+
+# Python build and test output
+__pycache__/
+*.py[cod]
+*.egg-info/
+.coverage
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.venv/
+build/
+dist/
+
+# Local v2 pipeline state
+/.f1sql/
+/candidate/
+/release-output/
+/artifacts/

@@ -1,0 +1,41 @@
+F1 SQL Data Licence
+===================
+
+Scope
+-----
+
+Unless an upstream source requires a different compatible notice, F1 SQL's
+contributions to the following v2 material are distributed under the Creative
+Commons Attribution-NonCommercial-ShareAlike 4.0 International licence
+(CC BY-NC-SA 4.0):
+
+* downloaded, cached, staged, normalized, or exported Formula One data;
+* generated CSV, JSON, Parquet, database backup, BACPAC, and similar data
+  artifacts; and
+* data contained in F1 SQL release assets.
+
+Licence
+-------
+
+You may share and adapt this material provided that you:
+
+* give appropriate credit and identify changes;
+* do not use the material for commercial purposes; and
+* distribute adaptations under CC BY-NC-SA 4.0.
+
+The full legal code is available at:
+https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+This licence does not apply to the software, SQL source, workflows, or
+configuration files covered by `LICENSE`, or to documentation covered by
+`LICENSE-DOCS`.
+
+Third-party source material remains subject to its original terms; this file
+does not purport to relicense it. In particular, existing material below
+`src/archived/`, `src/files/`, and `src/sourceFiles/` predates the v2 licensing
+decision and is retained as historical reference pending a provenance audit.
+It is not an approved v2 release input merely because it is present in the
+repository.
+
+See `ATTRIBUTION.md`, `docs/legacy-data-audit.md`, and the manifest included
+with each release.

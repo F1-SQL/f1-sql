@@ -1,0 +1,14 @@
+[
+  {"id":"meeting.key_unique","severity":"error","description":"Each meeting season/round key occurs once."},
+  {"id":"session.key_unique","severity":"error","description":"Each session season/round/type key occurs once."},
+  {"id":"result.key_unique","severity":"error","description":"Each result session/driver key occurs once."},
+  {"id":"lap.key_unique","severity":"error","description":"Each driver lap key occurs once."},
+  {"id":"stint.key_unique","severity":"error","description":"Each driver stint key occurs once."},
+  {"id":"result.required_identity","severity":"error","description":"Each result has driver and constructor identities."},
+  {"id":"result.points_non_negative","severity":"error","description":"Championship points cannot be negative."},
+  {"id":"normalization.discrepancy_errors","severity":"error","description":"Error-severity reconciliation discrepancies block release."},
+  {"id":"*.session_reference","severity":"error","description":"Session-grained facts must reference an existing normalized session."},
+  {"id":"coverage.required","severity":"error","description":"Required event/session domain coverage meets its minimum row count."},
+  {"id":"load_plan.row_counts","severity":"error","description":"The normalized bundle and database load plan contain identical table counts."},
+  {"id":"coverage.gaps","severity":"info","description":"Provider and historical coverage gaps are reported separately from defects."}
+]
